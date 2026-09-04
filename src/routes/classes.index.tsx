@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Archive,
   BookOpen,
+  ChevronRight,
   GraduationCap,
   MoreHorizontal,
   Pencil,
@@ -11,6 +12,7 @@ import {
   SlidersHorizontal,
   Trash2,
   Users,
+
   
 } from "lucide-react";
 import { toast } from "sonner";
@@ -68,98 +70,90 @@ function ClassCard({
   tone: number;
 }) {
   const [menu, setMenu] = useState(false);
-  const accent = `color-mix(in oklab, var(--ev-${tone}) 55%, var(--card))`;
 
   return (
-    <div className="press flex overflow-hidden rounded-[22px] border border-border bg-card shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]">
-      <span
-        className="w-[3px] shrink-0 rounded-l-[22px]"
-        style={{ backgroundColor: accent }}
-        aria-hidden
-      />
-
-      <div className="flex flex-1 flex-col p-3.5 md:p-4">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
-            Grade {klass.grade}
-          </span>
-          {canManage && (
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Class actions"
-                onClick={() => setMenu((v) => !v)}
-                className="press -mr-1 inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
-              >
-                <MoreHorizontal className="size-4" />
-              </button>
-              {menu && (
-                <div className="absolute right-0 top-8 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
-                  {[
-                    { label: "Edit class", icon: Pencil },
-                    { label: klass.archived ? "Restore" : "Archive", icon: Archive },
-                    { label: "Delete", icon: Trash2, danger: true },
-                  ].map((action) => (
-                    <button
-                      key={action.label}
-                      type="button"
-                      onClick={() => {
-                        setMenu(false);
-                        toast.success(`${action.label} — ${klass.name}`);
-                      }}
-                      className={cn(
-                        "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
-                        action.danger ? "text-destructive" : "text-foreground",
-                      )}
-                    >
-                      <action.icon className="size-3.5" />
-                      {action.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        <Link
-          to="/classes/$classId"
-          params={{ classId: klass.id }}
-          className="flex flex-1 flex-col"
-          aria-label={klass.name}
+    <div className="press relative flex items-center gap-3.5 rounded-[20px] border border-border/70 bg-card px-4 py-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]">
+      <Link
+        to="/classes/$classId"
+        params={{ classId: klass.id }}
+        className="flex min-w-0 flex-1 items-center gap-3.5"
+        aria-label={klass.name}
+      >
+        <span
+          className="display flex size-11 shrink-0 items-center justify-center rounded-[14px] text-[17px] font-semibold tabular-nums"
+          style={{
+            backgroundColor: `var(--ev-${tone}-bg)`,
+            color: `color-mix(in oklab, var(--ev-${tone}) 78%, var(--foreground))`,
+          }}
+          aria-hidden
         >
-          <h3 className="display text-[16px] font-semibold leading-tight tracking-[-0.015em] text-foreground md:text-[17px]">
-            {klass.name}
-          </h3>
+          {klass.grade}
+        </span>
 
-          <div className="mt-1 flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground">
+        <span className="min-w-0 flex-1">
+          <span className="display block truncate text-[16px] font-semibold leading-tight tracking-[-0.015em] text-foreground">
+            {klass.name}
+          </span>
+          <span className="mt-1 flex items-center gap-1.5 truncate text-[12.5px] font-medium text-muted-foreground">
             <span className="truncate">{klass.board}</span>
             <span className="size-1 shrink-0 rounded-full bg-border" />
             <span className="shrink-0">{klass.term}</span>
-          </div>
-          {klass.stream && (
-            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{klass.stream}</p>
-          )}
+            {klass.stream && (
+              <>
+                <span className="size-1 shrink-0 rounded-full bg-border" />
+                <span className="truncate">{klass.stream}</span>
+              </>
+            )}
+          </span>
+          <span className="mt-1 block truncate text-[12px] font-medium text-muted-foreground/80 tabular-nums">
+            {klass.studentCount} students · {klass.subjectCount} subjects
+          </span>
+        </span>
+      </Link>
 
-          <div className="mt-3 flex flex-wrap gap-2">
-            {[
-              { icon: Users, label: `${klass.studentCount} students` },
-              { icon: BookOpen, label: `${klass.subjectCount} subjects` },
-            ].map((stat) => (
-              <span
-                key={stat.label}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground"
-              >
-                <stat.icon className="size-3.5 text-muted-foreground" />
-                {stat.label}
-              </span>
-            ))}
-          </div>
-        </Link>
-      </div>
+      {canManage ? (
+        <div className="relative shrink-0">
+          <button
+            type="button"
+            aria-label="Class actions"
+            onClick={() => setMenu((v) => !v)}
+            className="press inline-flex size-8 items-center justify-center rounded-full text-muted-foreground hover:bg-muted"
+          >
+            <MoreHorizontal className="size-4" />
+          </button>
+          {menu && (
+            <div className="absolute right-0 top-9 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
+              {[
+                { label: "Edit class", icon: Pencil },
+                { label: klass.archived ? "Restore" : "Archive", icon: Archive },
+                { label: "Delete", icon: Trash2, danger: true },
+              ].map((action) => (
+                <button
+                  key={action.label}
+                  type="button"
+                  onClick={() => {
+                    setMenu(false);
+                    toast.success(`${action.label} — ${klass.name}`);
+                  }}
+                  className={cn(
+                    "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
+                    action.danger ? "text-destructive" : "text-foreground",
+                  )}
+                >
+                  <action.icon className="size-3.5" />
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" aria-hidden />
+      )}
     </div>
   );
 }
+
 
 function ClassDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [name, setName] = useState("");
@@ -531,7 +525,7 @@ function Classes() {
             />
           </Card>
         ) : (
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
             {list.map((klass, i) => (
               <ClassCard
                 key={klass.id}
