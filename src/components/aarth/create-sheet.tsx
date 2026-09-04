@@ -353,7 +353,7 @@ export function CreateSheet({ open, onClose }: { open: boolean; onClose: () => v
                 </p>
                 <p className="text-[11px] font-medium text-muted-foreground/70">{group.hint}</p>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
+              <div className="flex flex-col gap-2.5">
                 {group.tools.map((tool) => (
                   <ToolTile key={tool.label} tool={tool} onClose={onClose} />
                 ))}
