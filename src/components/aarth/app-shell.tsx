@@ -6,6 +6,7 @@ import {
   BookOpen,
   CalendarDays,
   ChevronLeft,
+  CircleUser,
   ClipboardList,
   Compass,
   FileText,
@@ -17,7 +18,7 @@ import {
   Library,
   ListChecks,
   LogOut,
-  Menu,
+  
   Moon,
   NotebookPen,
   Plus,
@@ -86,7 +87,7 @@ const NAV: NavGroup[] = [
     ],
   },
   {
-    label: "More",
+    label: "Account",
     items: [
       { label: "Notifications", to: "/notifications", icon: Bell },
       { label: "Settings", to: "/settings", icon: Settings },
@@ -100,7 +101,7 @@ const TABS: { label: string; to: string; icon: typeof Home }[] = [
   { label: "Classes", to: "/classes", icon: GraduationCap },
   { label: "Create", to: "", icon: Plus },
   { label: "Library", to: "/content", icon: Library },
-  { label: "More", to: "/more", icon: Menu },
+  { label: "Profile", to: "/more", icon: CircleUser },
 ];
 
 const unread = notifications.filter((n) => !n.read).length;
