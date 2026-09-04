@@ -38,6 +38,30 @@ function GroupField({
 const bareInput =
   "mt-0.5 w-full border-0 bg-transparent p-0 text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70";
 
+function GoogleMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17Z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07Z"
+      />
+    </svg>
+  );
+}
+
+
 export function LoginScreen() {
   const navigate = useNavigate();
   const [mode, setMode] = useState<"login" | "reset" | "reset_sent">("login");
@@ -46,6 +70,17 @@ export function LoginScreen() {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+  function oauth() {
+    setBusy(true);
+    setTimeout(() => {
+      setBusy(false);
+      toast.success("Signed in with Google", {
+        description: "Welcome back to Aarth Educator.",
+      });
+      navigate({ to: "/classes" });
+    }, 900);
+  }
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -92,7 +127,27 @@ export function LoginScreen() {
               </p>
             </div>
 
-            <form onSubmit={submit} className="mt-7">
+            <div className="mt-7 space-y-2.5">
+              <button
+                type="button"
+                onClick={oauth}
+                disabled={busy}
+                className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-border bg-card text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-accent disabled:opacity-60"
+              >
+                <GoogleMark className="size-[18px]" />
+                Continue with Google
+              </button>
+            </div>
+
+            <div className="my-5 flex items-center gap-3">
+              <span className="h-px flex-1 bg-border" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+                or
+              </span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+
+            <form onSubmit={submit}>
               <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
                 <GroupField label="Email" {...(errors.email ? { error: errors.email } : {})}>
                   <input
