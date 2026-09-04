@@ -12,8 +12,12 @@
  */
 
 @theme inline {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:
+    "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", ui-sans-serif,
+    system-ui, sans-serif;
+
 
 
   --radius-sm: calc(var(--radius) - 6px);
