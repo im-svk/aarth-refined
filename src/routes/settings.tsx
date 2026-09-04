@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, LogOut, Moon, Palette, Shield, Sun, User } from "lucide-react";
+import { Building2, LogOut, Palette, Shield, User } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import {
@@ -135,8 +135,8 @@ function Settings() {
                 value={theme}
                 onChange={setTheme}
                 options={[
-                  { value: "light", label: "Light", icon: <Sun className="size-3.5" /> },
-                  { value: "dark", label: "Dark", icon: <Moon className="size-3.5" /> },
+                  { value: "light", label: "Light" },
+                  { value: "dark", label: "Dark" },
                   { value: "system", label: "System" },
                 ]}
               />
@@ -166,7 +166,7 @@ function Settings() {
                 <ListRow
                   icon={<Building2 className="size-4" />}
                   title={INSTITUTION.name}
-                  subtitle={`${INSTITUTION.city} · ${INSTITUTION.boards.join(", ")}`}
+                  subtitle={`${INSTITUTION.city} · ${INSTITUTION.state}`}
                   onClick={() => toast.success("Institution profile")}
                 />
                 <ListRow
