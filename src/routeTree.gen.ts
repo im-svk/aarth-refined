@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AcademicToolsRouteImport } from './routes/academic-tools'
 import { Route as AidocsRouteImport } from './routes/aidocs'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
@@ -44,11 +43,6 @@ import { Route as ClassesClassIdSubjectsSubjectIdRouteImport } from './routes/cl
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AcademicToolsRoute = AcademicToolsRouteImport.update({
-  id: '/academic-tools',
-  path: '/academic-tools',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AidocsRoute = AidocsRouteImport.update({
@@ -202,7 +196,6 @@ const ClassesClassIdSubjectsSubjectIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/academic-tools': typeof AcademicToolsRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -235,7 +228,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/academic-tools': typeof AcademicToolsRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -269,7 +261,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/academic-tools': typeof AcademicToolsRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -304,7 +295,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/academic-tools'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -337,7 +327,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/academic-tools'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -370,7 +359,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/academic-tools'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -404,7 +392,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AcademicToolsRoute: typeof AcademicToolsRoute
   AidocsRoute: typeof AidocsRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssignmentsRoute: typeof AssignmentsRoute
@@ -443,13 +430,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/academic-tools': {
-      id: '/academic-tools'
-      path: '/academic-tools'
-      fullPath: '/academic-tools'
-      preLoaderRoute: typeof AcademicToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aidocs': {
@@ -660,7 +640,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AcademicToolsRoute: AcademicToolsRoute,
   AidocsRoute: AidocsRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssignmentsRoute: AssignmentsRoute,
