@@ -96,7 +96,7 @@ const NAV: NavGroup[] = [
 const TABS: { label: string; to: string; icon: typeof Home }[] = [
   { label: "Home", to: "/dashboard", icon: Home },
   { label: "Classes", to: "/classes", icon: GraduationCap },
-  { label: "Create", to: "/academic-tools", icon: Plus },
+  { label: "Create", to: "", icon: Plus },
   { label: "Library", to: "/content", icon: Library },
   { label: "More", to: "/more", icon: Menu },
 ];
