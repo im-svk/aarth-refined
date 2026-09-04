@@ -25,7 +25,7 @@ import {
 } from "@/data/mock";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/classes")({
+export const Route = createFileRoute("/classes/")({
   head: () => ({
     meta: [
       { title: "Classes — Aarth Educator" },
