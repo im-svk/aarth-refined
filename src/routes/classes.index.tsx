@@ -301,7 +301,7 @@ function Classes() {
   const [year, setYear] = useState<string>(currentAcademicYear);
   const [query, setQuery] = useState("");
   const [dialog, setDialog] = useState(false);
-  
+  const [searchOpen, setSearchOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [loading] = useState(false);
 
@@ -326,13 +326,51 @@ function Classes() {
   return (
     <AppShell title="Classes" mobileHeader="none">
       <div className="space-y-4 md:space-y-6">
-        <div className="md:hidden" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-          <SearchField
-            value={query}
-            onChange={setQuery}
-            placeholder="Search classes"
-            className="w-full"
-          />
+        <div
+          className="flex items-center justify-between md:hidden"
+          style={{ paddingTop: "env(safe-area-inset-top)" }}
+        >
+          {!searchOpen ? (
+            <>
+              <div className="min-w-0">
+                <h1 className="display text-[1.5rem] font-semibold leading-tight tracking-[-0.02em] text-foreground">
+                  Classes
+                </h1>
+                <p className="mt-0.5 text-[12px] font-medium text-muted-foreground">
+                  {yearClasses.length} classes · {totalStudents} students
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-label="Search classes"
+                onClick={() => setSearchOpen(true)}
+                className="press inline-flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)]"
+              >
+                <Search className="size-[18px]" />
+              </button>
+            </>
+          ) : (
+            <div className="flex w-full items-center gap-2">
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search classes"
+                className="h-11 flex-1 rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50"
+              />
+              <button
+                type="button"
+                aria-label="Close search"
+                onClick={() => {
+                  setQuery("");
+                  setSearchOpen(false);
+                }}
+                className="press inline-flex h-11 items-center justify-center rounded-xl px-3 text-[13px] font-semibold text-muted-foreground"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
 
 
