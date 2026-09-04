@@ -56,7 +56,10 @@ export function SectionHeader({
   return (
     <div className={cn("flex items-end justify-between gap-4", className)}>
       <div>
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">{title}</h2>
+        <h2 className="text-[0.9375rem] font-semibold tracking-[-0.014em] text-foreground">
+          {title}
+        </h2>
+
         {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
       </div>
       {action}
