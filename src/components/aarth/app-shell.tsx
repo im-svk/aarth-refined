@@ -447,18 +447,21 @@ export function AppShell({
   back,
   children,
   wide,
+  mobileHeader = "default",
 }: {
   title: string;
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
+  mobileHeader?: "default" | "brand";
 }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar title={title} />
-        <MobileTopBar title={title} back={back} />
+        <MobileTopBar title={title} back={back} variant={mobileHeader} />
+
         <main
           className={cn(
             "mx-auto w-full flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8",
