@@ -12,7 +12,7 @@ export function PageHeader({
   actions,
   className,
 }: {
-  kicker?: string;
+  kicker?: ReactNode;
   title: ReactNode;
   subtitle?: ReactNode;
   actions?: ReactNode;
