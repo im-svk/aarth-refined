@@ -1,6 +1,15 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Archive, GraduationCap, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  Archive,
+  BookOpen,
+  GraduationCap,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Trash2,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import {
@@ -44,71 +53,106 @@ export const Route = createFileRoute("/classes/")({
 const inputClass =
   "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50";
 
-function ClassCard({ klass, canManage }: { klass: ClassRecord; canManage: boolean }) {
+const CARD_TONES = [1, 2, 3, 4, 5] as const;
+
+function ClassCard({
+  klass,
+  canManage,
+  tone,
+}: {
+  klass: ClassRecord;
+  canManage: boolean;
+  tone: number;
+}) {
   const [menu, setMenu] = useState(false);
+  const style = {
+    backgroundColor: `var(--ev-${tone}-bg)`,
+    borderColor: `color-mix(in oklab, var(--ev-${tone}) 22%, transparent)`,
+  } as React.CSSProperties;
+  const ink = { color: `var(--ev-${tone})` } as React.CSSProperties;
+
   return (
-    <Card accent className="p-5 pl-6">
-      <div className="flex items-start gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <Pill tone="tint">Class {klass.grade}</Pill>
-            {klass.stream && <Pill tone="outline">{klass.stream}</Pill>}
-          </div>
-          <Link to="/classes/$classId" params={{ classId: klass.id }} className="mt-3 block">
-            <h3 className="display text-xl text-foreground hover:text-primary">{klass.name}</h3>
-          </Link>
-          <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-            {klass.description}
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-            <span>{klass.subjectCount} subjects</span>
-            <span>·</span>
-            <span>{klass.studentCount} students</span>
-            <span>·</span>
-            <span>{klass.term}</span>
-            <span>·</span>
-            <span>{klass.board}</span>
-          </div>
+    <div
+      className="press relative overflow-hidden rounded-2xl border p-3.5 transition-shadow hover:shadow-[var(--shadow-card)] md:p-4"
+      style={style}
+    >
+      <Link
+        to="/classes/$classId"
+        params={{ classId: klass.id }}
+        className="block"
+        aria-label={klass.name}
+      >
+        <div className="flex items-center gap-2">
+          <span
+            className="inline-flex items-center rounded-full bg-background/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em]"
+            style={ink}
+          >
+            Grade {klass.grade}
+          </span>
+          {klass.stream && (
+            <span className="truncate text-[10px] font-semibold text-muted-foreground">
+              {klass.stream}
+            </span>
+          )}
         </div>
-        {canManage && (
-          <div className="relative">
-            <button
-              type="button"
-              aria-label="Class actions"
-              onClick={() => setMenu((v) => !v)}
-              className="press inline-flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted"
-            >
-              <MoreHorizontal className="size-4" />
-            </button>
-            {menu && (
-              <div className="absolute right-0 top-10 z-10 w-44 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
-                {[
-                  { label: "Edit class", icon: Pencil },
-                  { label: klass.archived ? "Restore" : "Archive", icon: Archive },
-                  { label: "Delete", icon: Trash2, danger: true },
-                ].map((action) => (
-                  <button
-                    key={action.label}
-                    type="button"
-                    onClick={() => {
-                      setMenu(false);
-                      toast.success(`${action.label} — ${klass.name}`);
-                    }}
-                    className={cn(
-                      "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
-                      action.danger ? "text-destructive" : "text-foreground",
-                    )}
-                  >
-                    <action.icon className="size-3.5" />
-                    {action.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </Card>
+
+        <h3 className="display mt-2 truncate text-[15px] leading-snug text-foreground md:text-lg">
+          {klass.name}
+        </h3>
+        <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+          {klass.board} · {klass.term}
+        </p>
+
+        <div className="mt-3 flex items-center gap-3 text-[11px] font-semibold" style={ink}>
+          <span className="inline-flex items-center gap-1">
+            <Users className="size-3.5" />
+            {klass.studentCount}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <BookOpen className="size-3.5" />
+            {klass.subjectCount}
+          </span>
+        </div>
+      </Link>
+
+      {canManage && (
+        <div className="absolute right-1.5 top-2.5">
+          <button
+            type="button"
+            aria-label="Class actions"
+            onClick={() => setMenu((v) => !v)}
+            className="press inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-background/60"
+          >
+            <MoreHorizontal className="size-4" />
+          </button>
+          {menu && (
+            <div className="absolute right-0 top-9 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
+              {[
+                { label: "Edit class", icon: Pencil },
+                { label: klass.archived ? "Restore" : "Archive", icon: Archive },
+                { label: "Delete", icon: Trash2, danger: true },
+              ].map((action) => (
+                <button
+                  key={action.label}
+                  type="button"
+                  onClick={() => {
+                    setMenu(false);
+                    toast.success(`${action.label} — ${klass.name}`);
+                  }}
+                  className={cn(
+                    "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
+                    action.danger ? "text-destructive" : "text-foreground",
+                  )}
+                >
+                  <action.icon className="size-3.5" />
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -270,24 +314,60 @@ function Classes() {
   );
 
   const subjectCount = subjects.length;
+  const yearClasses = useMemo(
+    () => classes.filter((c) => c.academicYear === year && !c.archived),
+    [year],
+  );
+  const totalStudents = yearClasses.reduce((sum, c) => sum + c.studentCount, 0);
 
   return (
-    <AppShell title="Classes">
-      <div className="space-y-6">
-        <PageHeader
-          kicker="Workspace"
-          title="Classes"
-          subtitle={`${classes.filter((c) => !c.archived).length} active classes · ${subjectCount} subjects across the institution`}
-          actions={
-            isAdmin ? (
-              <Button onClick={() => setDialog(true)}>
-                <Plus className="size-4" /> Create class
-              </Button>
-            ) : (
-              <Pill tone="outline">Read-only for faculty</Pill>
-            )
-          }
-        />
+    <AppShell title="Classes" mobileHeader="none">
+      <div className="space-y-5 md:space-y-6">
+        <div className="md:hidden" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            {year} · Workspace
+          </p>
+          <h1 className="display mt-1 text-[26px] leading-tight text-foreground">Classes</h1>
+        </div>
+
+        <div className="hidden md:block">
+          <PageHeader
+            kicker="Workspace"
+            title="Classes"
+            subtitle={`${classes.filter((c) => !c.archived).length} active classes · ${subjectCount} subjects across the institution`}
+            actions={
+              isAdmin ? (
+                <Button onClick={() => setDialog(true)}>
+                  <Plus className="size-4" /> Create class
+                </Button>
+              ) : (
+                <Pill tone="outline">Read-only for faculty</Pill>
+              )
+            }
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { label: "Classes", value: yearClasses.length, icon: GraduationCap },
+            { label: "Students", value: totalStudents, icon: Users },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl border border-border bg-card p-3.5 shadow-[var(--shadow-card)] md:p-4"
+            >
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <stat.icon className="size-3.5" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
+                  {stat.label}
+                </span>
+              </div>
+              <p className="display mt-1.5 text-[26px] leading-none tabular-nums text-foreground">
+                {stat.value}
+              </p>
+            </div>
+          ))}
+        </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <SegmentedToggle
@@ -315,6 +395,7 @@ function Classes() {
             }))}
           />
         </div>
+
 
         {loading ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -349,9 +430,14 @@ function Classes() {
             />
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {list.map((klass) => (
-              <ClassCard key={klass.id} klass={klass} canManage={isAdmin} />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+            {list.map((klass, i) => (
+              <ClassCard
+                key={klass.id}
+                klass={klass}
+                canManage={isAdmin}
+                tone={CARD_TONES[i % CARD_TONES.length]!}
+              />
             ))}
           </div>
         )}
