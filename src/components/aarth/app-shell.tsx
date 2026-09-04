@@ -412,7 +412,7 @@ function MobileTopBar({
 }
 
 
-function BottomTabs() {
+function BottomTabs({ onCreate }: { onCreate: () => void }) {
   const pathname = usePathname();
   return (
     <nav
@@ -424,17 +424,19 @@ function BottomTabs() {
           const active = pathname === tab.to;
           if (tab.label === "Create") {
             return (
-              <li key={tab.to} className="flex flex-1 justify-center">
-                <Link
-                  to={tab.to}
+              <li key="create" className="flex flex-1 justify-center">
+                <button
+                  type="button"
+                  onClick={onCreate}
                   aria-label="Create"
                   className="press -mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-raised)] ring-4 ring-background transition-transform active:scale-95"
                 >
                   <Plus className="size-6" strokeWidth={2.5} />
-                </Link>
+                </button>
               </li>
             );
           }
+
           return (
             <li key={tab.to} className="flex-1">
               <Link
