@@ -230,43 +230,43 @@ function ToolTile({ tool, onClose }: { tool: Tool; onClose: () => void }) {
 
   const body = (
     <>
-      <div className="flex items-start justify-between gap-2">
-        <span
-          className="flex size-14 shrink-0 items-center justify-center rounded-[18px]"
-          style={{ backgroundColor: `var(--ev-${tool.tone}-bg)` }}
-        >
-          <tool.art tone={tool.tone} />
-        </span>
-        {locked ? (
-          <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground">
-            <Lock className="size-3.5" />
-          </span>
-        ) : (
-          <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-            <ArrowUpRight className="size-4" />
-          </span>
-        )}
-      </div>
+      <span
+        className="flex size-[52px] shrink-0 items-center justify-center rounded-[18px]"
+        style={{ backgroundColor: `var(--ev-${tool.tone}-bg)` }}
+      >
+        <tool.art tone={tool.tone} />
+      </span>
 
-      <div className="mt-3.5">
-        <p className="display text-[15px] font-semibold leading-tight tracking-[-0.015em] text-foreground">
-          {tool.label}
-        </p>
-        <p className="mt-1 text-[12px] font-medium leading-snug text-muted-foreground">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <p className="display text-[16px] font-semibold leading-tight tracking-[-0.015em] text-foreground">
+            {tool.label}
+          </p>
+          {tool.note && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/80">
+              {tool.note}
+            </span>
+          )}
+        </div>
+        <p className="mt-0.5 text-[13px] font-medium leading-snug text-muted-foreground">
           {tool.description}
         </p>
       </div>
 
-      {tool.note && (
-        <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">
-          {tool.note}
-        </p>
+      {locked ? (
+        <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+          <Lock className="size-3.5" />
+        </span>
+      ) : (
+        <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+          <ArrowUpRight className="size-4" />
+        </span>
       )}
     </>
   );
 
   const shell =
-    "group relative flex min-h-[152px] flex-col rounded-[22px] border border-border bg-card p-3.5 text-left shadow-[var(--shadow-card)]";
+    "group flex items-center gap-3.5 rounded-[22px] border border-border bg-card p-3 text-left shadow-[var(--shadow-card)]";
 
   if (locked) {
     return (
@@ -353,7 +353,7 @@ export function CreateSheet({ open, onClose }: { open: boolean; onClose: () => v
                 </p>
                 <p className="text-[11px] font-medium text-muted-foreground/70">{group.hint}</p>
               </div>
-              <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
+              <div className="flex flex-col gap-2.5">
                 {group.tools.map((tool) => (
                   <ToolTile key={tool.label} tool={tool} onClose={onClose} />
                 ))}
