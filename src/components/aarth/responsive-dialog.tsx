@@ -19,7 +19,7 @@ export function ResponsiveDialog({
   open: boolean;
   onClose: () => void;
   title: string;
-  description?: string;
+  description?: string | undefined;
   footer?: ReactNode;
   children: ReactNode;
   size?: "md" | "lg";
