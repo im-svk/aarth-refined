@@ -10,33 +10,430 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcademicToolsRouteImport } from './routes/academic-tools'
+import { Route as AidocsRouteImport } from './routes/aidocs'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as AssignmentsRouteImport } from './routes/assignments'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as ContentRouteImport } from './routes/content'
+import { Route as CurriculumRouteImport } from './routes/curriculum'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as MoreRouteImport } from './routes/more'
+import { Route as NotesRouteImport } from './routes/notes'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PapersRouteImport } from './routes/papers'
+import { Route as PresentationsRouteImport } from './routes/presentations'
+import { Route as QuizzesRouteImport } from './routes/quizzes'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as StudentsRouteImport } from './routes/students'
+import { Route as TeachersRouteImport } from './routes/teachers'
+import { Route as TextbooksRouteImport } from './routes/textbooks'
+import { Route as ClassPlannerIndexRouteImport } from './routes/class-planner.index'
+import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as JoinTokenRouteImport } from './routes/join.$token'
+import { Route as ClassPlannerClassIdIndexRouteImport } from './routes/class-planner.$classId.index'
+import { Route as ClassesClassIdIndexRouteImport } from './routes/classes.$classId.index'
+import { Route as ClassPlannerClassIdPlanSubjectIdRouteImport } from './routes/class-planner.$classId.plan.$subjectId'
+import { Route as ClassesClassIdSubjectsSubjectIdRouteImport } from './routes/classes.$classId.subjects.$subjectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AcademicToolsRoute = AcademicToolsRouteImport.update({
+  id: '/academic-tools',
+  path: '/academic-tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AidocsRoute = AidocsRouteImport.update({
+  id: '/aidocs',
+  path: '/aidocs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssignmentsRoute = AssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CurriculumRoute = CurriculumRouteImport.update({
+  id: '/curriculum',
+  path: '/curriculum',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoreRoute = MoreRouteImport.update({
+  id: '/more',
+  path: '/more',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotesRoute = NotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PapersRoute = PapersRouteImport.update({
+  id: '/papers',
+  path: '/papers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresentationsRoute = PresentationsRouteImport.update({
+  id: '/presentations',
+  path: '/presentations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizzesRoute = QuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentsRoute = StudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeachersRoute = TeachersRouteImport.update({
+  id: '/teachers',
+  path: '/teachers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TextbooksRoute = TextbooksRouteImport.update({
+  id: '/textbooks',
+  path: '/textbooks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassPlannerIndexRoute = ClassPlannerIndexRouteImport.update({
+  id: '/class-planner/',
+  path: '/class-planner/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesIndexRoute = ClassesIndexRouteImport.update({
+  id: '/classes/',
+  path: '/classes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinTokenRoute = JoinTokenRouteImport.update({
+  id: '/join/$token',
+  path: '/join/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassPlannerClassIdIndexRoute =
+  ClassPlannerClassIdIndexRouteImport.update({
+    id: '/class-planner/$classId/',
+    path: '/class-planner/$classId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ClassesClassIdIndexRoute = ClassesClassIdIndexRouteImport.update({
+  id: '/classes/$classId/',
+  path: '/classes/$classId/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassPlannerClassIdPlanSubjectIdRoute =
+  ClassPlannerClassIdPlanSubjectIdRouteImport.update({
+    id: '/class-planner/$classId/plan/$subjectId',
+    path: '/class-planner/$classId/plan/$subjectId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ClassesClassIdSubjectsSubjectIdRoute =
+  ClassesClassIdSubjectsSubjectIdRouteImport.update({
+    id: '/classes/$classId/subjects/$subjectId',
+    path: '/classes/$classId/subjects/$subjectId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/academic-tools': typeof AcademicToolsRoute
+  '/aidocs': typeof AidocsRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/content': typeof ContentRoute
+  '/curriculum': typeof CurriculumRoute
+  '/dashboard': typeof DashboardRoute
+  '/help': typeof HelpRoute
+  '/more': typeof MoreRoute
+  '/notes': typeof NotesRoute
+  '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/papers': typeof PapersRoute
+  '/presentations': typeof PresentationsRoute
+  '/quizzes': typeof QuizzesRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
+  '/teachers': typeof TeachersRoute
+  '/textbooks': typeof TextbooksRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/class-planner/': typeof ClassPlannerIndexRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/class-planner/$classId/': typeof ClassPlannerClassIdIndexRoute
+  '/classes/$classId/': typeof ClassesClassIdIndexRoute
+  '/class-planner/$classId/plan/$subjectId': typeof ClassPlannerClassIdPlanSubjectIdRoute
+  '/classes/$classId/subjects/$subjectId': typeof ClassesClassIdSubjectsSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/academic-tools': typeof AcademicToolsRoute
+  '/aidocs': typeof AidocsRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/content': typeof ContentRoute
+  '/curriculum': typeof CurriculumRoute
+  '/dashboard': typeof DashboardRoute
+  '/help': typeof HelpRoute
+  '/more': typeof MoreRoute
+  '/notes': typeof NotesRoute
+  '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/papers': typeof PapersRoute
+  '/presentations': typeof PresentationsRoute
+  '/quizzes': typeof QuizzesRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
+  '/teachers': typeof TeachersRoute
+  '/textbooks': typeof TextbooksRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/class-planner': typeof ClassPlannerIndexRoute
+  '/classes': typeof ClassesIndexRoute
+  '/class-planner/$classId': typeof ClassPlannerClassIdIndexRoute
+  '/classes/$classId': typeof ClassesClassIdIndexRoute
+  '/class-planner/$classId/plan/$subjectId': typeof ClassPlannerClassIdPlanSubjectIdRoute
+  '/classes/$classId/subjects/$subjectId': typeof ClassesClassIdSubjectsSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/academic-tools': typeof AcademicToolsRoute
+  '/aidocs': typeof AidocsRoute
+  '/analytics': typeof AnalyticsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/calendar': typeof CalendarRoute
+  '/content': typeof ContentRoute
+  '/curriculum': typeof CurriculumRoute
+  '/dashboard': typeof DashboardRoute
+  '/help': typeof HelpRoute
+  '/more': typeof MoreRoute
+  '/notes': typeof NotesRoute
+  '/notifications': typeof NotificationsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/papers': typeof PapersRoute
+  '/presentations': typeof PresentationsRoute
+  '/quizzes': typeof QuizzesRoute
+  '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRoute
+  '/teachers': typeof TeachersRoute
+  '/textbooks': typeof TextbooksRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/class-planner/': typeof ClassPlannerIndexRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/class-planner/$classId/': typeof ClassPlannerClassIdIndexRoute
+  '/classes/$classId/': typeof ClassesClassIdIndexRoute
+  '/class-planner/$classId/plan/$subjectId': typeof ClassPlannerClassIdPlanSubjectIdRoute
+  '/classes/$classId/subjects/$subjectId': typeof ClassesClassIdSubjectsSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/academic-tools'
+    | '/aidocs'
+    | '/analytics'
+    | '/assignments'
+    | '/auth'
+    | '/calendar'
+    | '/content'
+    | '/curriculum'
+    | '/dashboard'
+    | '/help'
+    | '/more'
+    | '/notes'
+    | '/notifications'
+    | '/onboarding'
+    | '/papers'
+    | '/presentations'
+    | '/quizzes'
+    | '/register'
+    | '/reset-password'
+    | '/settings'
+    | '/students'
+    | '/teachers'
+    | '/textbooks'
+    | '/join/$token'
+    | '/class-planner/'
+    | '/classes/'
+    | '/class-planner/$classId/'
+    | '/classes/$classId/'
+    | '/class-planner/$classId/plan/$subjectId'
+    | '/classes/$classId/subjects/$subjectId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/academic-tools'
+    | '/aidocs'
+    | '/analytics'
+    | '/assignments'
+    | '/auth'
+    | '/calendar'
+    | '/content'
+    | '/curriculum'
+    | '/dashboard'
+    | '/help'
+    | '/more'
+    | '/notes'
+    | '/notifications'
+    | '/onboarding'
+    | '/papers'
+    | '/presentations'
+    | '/quizzes'
+    | '/register'
+    | '/reset-password'
+    | '/settings'
+    | '/students'
+    | '/teachers'
+    | '/textbooks'
+    | '/join/$token'
+    | '/class-planner'
+    | '/classes'
+    | '/class-planner/$classId'
+    | '/classes/$classId'
+    | '/class-planner/$classId/plan/$subjectId'
+    | '/classes/$classId/subjects/$subjectId'
+  id:
+    | '__root__'
+    | '/'
+    | '/academic-tools'
+    | '/aidocs'
+    | '/analytics'
+    | '/assignments'
+    | '/auth'
+    | '/calendar'
+    | '/content'
+    | '/curriculum'
+    | '/dashboard'
+    | '/help'
+    | '/more'
+    | '/notes'
+    | '/notifications'
+    | '/onboarding'
+    | '/papers'
+    | '/presentations'
+    | '/quizzes'
+    | '/register'
+    | '/reset-password'
+    | '/settings'
+    | '/students'
+    | '/teachers'
+    | '/textbooks'
+    | '/join/$token'
+    | '/class-planner/'
+    | '/classes/'
+    | '/class-planner/$classId/'
+    | '/classes/$classId/'
+    | '/class-planner/$classId/plan/$subjectId'
+    | '/classes/$classId/subjects/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcademicToolsRoute: typeof AcademicToolsRoute
+  AidocsRoute: typeof AidocsRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  AssignmentsRoute: typeof AssignmentsRoute
+  AuthRoute: typeof AuthRoute
+  CalendarRoute: typeof CalendarRoute
+  ContentRoute: typeof ContentRoute
+  CurriculumRoute: typeof CurriculumRoute
+  DashboardRoute: typeof DashboardRoute
+  HelpRoute: typeof HelpRoute
+  MoreRoute: typeof MoreRoute
+  NotesRoute: typeof NotesRoute
+  NotificationsRoute: typeof NotificationsRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PapersRoute: typeof PapersRoute
+  PresentationsRoute: typeof PresentationsRoute
+  QuizzesRoute: typeof QuizzesRoute
+  RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SettingsRoute: typeof SettingsRoute
+  StudentsRoute: typeof StudentsRoute
+  TeachersRoute: typeof TeachersRoute
+  TextbooksRoute: typeof TextbooksRoute
+  JoinTokenRoute: typeof JoinTokenRoute
+  ClassPlannerIndexRoute: typeof ClassPlannerIndexRoute
+  ClassesIndexRoute: typeof ClassesIndexRoute
+  ClassPlannerClassIdIndexRoute: typeof ClassPlannerClassIdIndexRoute
+  ClassesClassIdIndexRoute: typeof ClassesClassIdIndexRoute
+  ClassPlannerClassIdPlanSubjectIdRoute: typeof ClassPlannerClassIdPlanSubjectIdRoute
+  ClassesClassIdSubjectsSubjectIdRoute: typeof ClassesClassIdSubjectsSubjectIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +445,251 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/academic-tools': {
+      id: '/academic-tools'
+      path: '/academic-tools'
+      fullPath: '/academic-tools'
+      preLoaderRoute: typeof AcademicToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aidocs': {
+      id: '/aidocs'
+      path: '/aidocs'
+      fullPath: '/aidocs'
+      preLoaderRoute: typeof AidocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assignments': {
+      id: '/assignments'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof AssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/curriculum': {
+      id: '/curriculum'
+      path: '/curriculum'
+      fullPath: '/curriculum'
+      preLoaderRoute: typeof CurriculumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/more': {
+      id: '/more'
+      path: '/more'
+      fullPath: '/more'
+      preLoaderRoute: typeof MoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notes': {
+      id: '/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof NotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/papers': {
+      id: '/papers'
+      path: '/papers'
+      fullPath: '/papers'
+      preLoaderRoute: typeof PapersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/presentations': {
+      id: '/presentations'
+      path: '/presentations'
+      fullPath: '/presentations'
+      preLoaderRoute: typeof PresentationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quizzes': {
+      id: '/quizzes'
+      path: '/quizzes'
+      fullPath: '/quizzes'
+      preLoaderRoute: typeof QuizzesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/students': {
+      id: '/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teachers': {
+      id: '/teachers'
+      path: '/teachers'
+      fullPath: '/teachers'
+      preLoaderRoute: typeof TeachersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/textbooks': {
+      id: '/textbooks'
+      path: '/textbooks'
+      fullPath: '/textbooks'
+      preLoaderRoute: typeof TextbooksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/class-planner/': {
+      id: '/class-planner/'
+      path: '/class-planner'
+      fullPath: '/class-planner/'
+      preLoaderRoute: typeof ClassPlannerIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/': {
+      id: '/classes/'
+      path: '/classes'
+      fullPath: '/classes/'
+      preLoaderRoute: typeof ClassesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/$token': {
+      id: '/join/$token'
+      path: '/join/$token'
+      fullPath: '/join/$token'
+      preLoaderRoute: typeof JoinTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/class-planner/$classId/': {
+      id: '/class-planner/$classId/'
+      path: '/class-planner/$classId'
+      fullPath: '/class-planner/$classId/'
+      preLoaderRoute: typeof ClassPlannerClassIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/': {
+      id: '/classes/$classId/'
+      path: '/classes/$classId'
+      fullPath: '/classes/$classId/'
+      preLoaderRoute: typeof ClassesClassIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/class-planner/$classId/plan/$subjectId': {
+      id: '/class-planner/$classId/plan/$subjectId'
+      path: '/class-planner/$classId/plan/$subjectId'
+      fullPath: '/class-planner/$classId/plan/$subjectId'
+      preLoaderRoute: typeof ClassPlannerClassIdPlanSubjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes/$classId/subjects/$subjectId': {
+      id: '/classes/$classId/subjects/$subjectId'
+      path: '/classes/$classId/subjects/$subjectId'
+      fullPath: '/classes/$classId/subjects/$subjectId'
+      preLoaderRoute: typeof ClassesClassIdSubjectsSubjectIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcademicToolsRoute: AcademicToolsRoute,
+  AidocsRoute: AidocsRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  AssignmentsRoute: AssignmentsRoute,
+  AuthRoute: AuthRoute,
+  CalendarRoute: CalendarRoute,
+  ContentRoute: ContentRoute,
+  CurriculumRoute: CurriculumRoute,
+  DashboardRoute: DashboardRoute,
+  HelpRoute: HelpRoute,
+  MoreRoute: MoreRoute,
+  NotesRoute: NotesRoute,
+  NotificationsRoute: NotificationsRoute,
+  OnboardingRoute: OnboardingRoute,
+  PapersRoute: PapersRoute,
+  PresentationsRoute: PresentationsRoute,
+  QuizzesRoute: QuizzesRoute,
+  RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SettingsRoute: SettingsRoute,
+  StudentsRoute: StudentsRoute,
+  TeachersRoute: TeachersRoute,
+  TextbooksRoute: TextbooksRoute,
+  JoinTokenRoute: JoinTokenRoute,
+  ClassPlannerIndexRoute: ClassPlannerIndexRoute,
+  ClassesIndexRoute: ClassesIndexRoute,
+  ClassPlannerClassIdIndexRoute: ClassPlannerClassIdIndexRoute,
+  ClassesClassIdIndexRoute: ClassesClassIdIndexRoute,
+  ClassPlannerClassIdPlanSubjectIdRoute: ClassPlannerClassIdPlanSubjectIdRoute,
+  ClassesClassIdSubjectsSubjectIdRoute: ClassesClassIdSubjectsSubjectIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
