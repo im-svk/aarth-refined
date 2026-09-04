@@ -586,21 +586,21 @@ function TeacherCalendar() {
 
       {/* Add activity dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="gap-0 overflow-hidden rounded-2xl border-border p-0 shadow-2xl sm:max-w-[27rem] max-sm:bottom-0 max-sm:top-auto max-sm:max-w-none max-sm:translate-y-0 max-sm:rounded-b-none max-sm:rounded-t-[1.75rem] [&>button:last-child]:hidden">
-          <div className="mx-auto mt-2.5 h-1 w-9 rounded-full bg-border sm:hidden" />
+        <DialogContent className="gap-0 overflow-hidden rounded-2xl border border-primary/10 bg-tint p-0 shadow-2xl sm:max-w-[27rem] max-sm:bottom-0 max-sm:top-auto max-sm:max-w-none max-sm:translate-y-0 max-sm:rounded-b-none max-sm:rounded-t-[1.75rem] [&>button:last-child]:hidden">
+          <div className="mx-auto mt-2.5 h-1 w-9 rounded-full bg-primary/15 sm:hidden" />
 
           <DialogHeader className="px-5 pb-4 pt-4 text-center sm:text-center">
             <DialogTitle className="display text-[17px] leading-tight text-foreground">
               New activity
             </DialogTitle>
-            <DialogDescription className="text-[12.5px]">
+            <DialogDescription className="text-[12.5px] text-muted-foreground">
               Saved to {form.date ? formatIsoLabel(form.date) : "the selected day"}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="max-h-[65vh] space-y-5 overflow-y-auto border-t border-border bg-muted/30 px-5 py-5">
+          <div className="max-h-[65vh] space-y-5 overflow-y-auto border-t border-primary/10 px-5 py-5">
             {/* Type segmented control */}
-            <div className="grid grid-cols-4 gap-1 rounded-xl bg-muted p-1">
+            <div className="grid grid-cols-4 gap-1 rounded-xl bg-primary/8 p-1">
               {ACTIVITY_TYPES.map((type) => (
                 <button
                   key={type}
@@ -608,8 +608,8 @@ function TeacherCalendar() {
                   onClick={() => setForm((prev) => ({ ...prev, type }))}
                   className={`press flex flex-col items-center gap-1 rounded-lg py-2 text-[11px] font-semibold transition-colors ${
                     form.type === type
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-primary/70 hover:bg-primary/5"
                   }`}
                 >
                   {typeIcon(type)}
@@ -621,11 +621,11 @@ function TeacherCalendar() {
             </div>
 
             {/* Grouped fields */}
-            <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <div className="overflow-hidden rounded-xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
               <div className="px-4 py-3">
                 <label
                   htmlFor="activity-title"
-                  className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                  className="mb-1 block text-[11px] font-semibold text-primary/70"
                 >
                   Title
                 </label>
@@ -642,7 +642,7 @@ function TeacherCalendar() {
                 <div className="border-r border-border px-4 py-3">
                   <label
                     htmlFor="activity-date"
-                    className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                    className="mb-1 block text-[11px] font-semibold text-primary/70"
                   >
                     Date
                   </label>
@@ -657,7 +657,7 @@ function TeacherCalendar() {
                 <div className="px-4 py-3">
                   <label
                     htmlFor="activity-time"
-                    className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                    className="mb-1 block text-[11px] font-semibold text-primary/70"
                   >
                     Time · optional
                   </label>
@@ -674,7 +674,7 @@ function TeacherCalendar() {
               <div className="border-t border-border px-4 py-3">
                 <label
                   htmlFor="activity-note"
-                  className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                  className="mb-1 block text-[11px] font-semibold text-primary/70"
                 >
                   Note · optional
                 </label>
@@ -689,10 +689,10 @@ function TeacherCalendar() {
             </div>
           </div>
 
-          <DialogFooter className="gap-2 border-t border-border px-5 py-4 max-sm:pb-6 sm:justify-end sm:space-x-0">
+          <DialogFooter className="gap-2 border-t border-primary/10 bg-tint px-5 py-4 max-sm:pb-6 sm:justify-end sm:space-x-0">
             <Button
               variant="outline"
-              className="max-sm:w-full"
+              className="border-primary/10 bg-primary/5 text-foreground max-sm:w-full hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15"
               onClick={() => setDialogOpen(false)}
             >
               Cancel
