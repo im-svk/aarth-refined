@@ -75,7 +75,7 @@ function ClassRows() {
             title={klass.name}
             subtitle={`${klass.subjectCount} subjects · ${klass.studentCount} students · ${klass.term}`}
             trailing={<Pill tone="outline">{klass.board}</Pill>}
-            onClick={() => {}}
+            interactive
           />
         </Link>
       ))}
@@ -207,7 +207,7 @@ function TeacherHome() {
                       icon={<FileText className="size-4" />}
                       title={doc.title}
                       subtitle={`${doc.subject} · ${relativeTime(doc.updatedAt)}`}
-                      onClick={() => {}}
+                      interactive
                     />
                   </Link>
                 ))}
@@ -284,16 +284,16 @@ function AdminHome() {
           <Card className="mt-3">
             <div className="divide-y divide-border">
               <Link to="/teachers">
-                <ListRow icon={<UserSquare2 className="size-4" />} title="Faculty" subtitle="Add teachers and assign classes" onClick={() => {}} />
+                <ListRow icon={<UserSquare2 className="size-4" />} title="Faculty" subtitle="Add teachers and assign classes" interactive />
               </Link>
               <Link to="/students">
-                <ListRow icon={<Users className="size-4" />} title="Students" subtitle="Invite students or share a class link" onClick={() => {}} />
+                <ListRow icon={<Users className="size-4" />} title="Students" subtitle="Invite students or share a class link" interactive />
               </Link>
               <Link to="/content">
-                <ListRow icon={<Library className="size-4" />} title="Shared library" subtitle="Upload institution teaching files" onClick={() => {}} />
+                <ListRow icon={<Library className="size-4" />} title="Shared library" subtitle="Upload institution teaching files" interactive />
               </Link>
               <Link to="/settings">
-                <ListRow icon={<Clock className="size-4" />} title="Branding & theme" subtitle="Logo, campus details, appearance" onClick={() => {}} />
+                <ListRow icon={<Clock className="size-4" />} title="Branding & theme" subtitle="Logo, campus details, appearance" interactive />
               </Link>
             </div>
           </Card>

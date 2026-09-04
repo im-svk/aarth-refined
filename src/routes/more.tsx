@@ -80,7 +80,7 @@ function Group({ label, items }: { label: string; items: Item[] }) {
                 icon={<item.icon className="size-4" />}
                 title={item.label}
                 trailing={item.badge ? <Pill tone="outline">{item.badge}</Pill> : undefined}
-                onClick={() => {}}
+                interactive
               />
             </Link>
           ))}

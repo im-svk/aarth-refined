@@ -213,7 +213,7 @@ function CreateStudio() {
                     icon={<item.icon className="size-4" />}
                     title={item.title}
                     subtitle={item.meta}
-                    onClick={() => {}}
+                    interactive
                   />
                 </Link>
               ))}
