@@ -320,13 +320,91 @@ function Classes() {
 
   return (
     <AppShell title="Classes" mobileHeader="none">
-      <div className="space-y-5 md:space-y-6">
+      <div className="space-y-4 md:space-y-6">
         <div className="md:hidden" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            {year} · Workspace
-          </p>
-          <h1 className="display mt-1 text-[26px] leading-tight text-foreground">Classes</h1>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Workspace
+              </p>
+              <h1 className="display mt-1 text-[26px] leading-tight text-foreground">Classes</h1>
+            </div>
+            <div className="flex shrink-0 items-center gap-2 pt-1">
+              <button
+                type="button"
+                aria-label={searchOpen ? "Close search" : "Search classes"}
+                onClick={() => {
+                  setSearchOpen((v) => !v);
+                  if (searchOpen) setQuery("");
+                }}
+                className={cn(
+                  "press inline-flex size-10 items-center justify-center rounded-full border transition-colors",
+                  searchOpen
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
+                )}
+              >
+                {searchOpen ? <X className="size-4" /> : <Search className="size-4" />}
+              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-label="Filter by academic year"
+                  onClick={() => setFilterOpen((v) => !v)}
+                  className={cn(
+                    "press inline-flex h-10 items-center gap-1.5 rounded-full border px-3 transition-colors",
+                    filterOpen
+                      ? "border-primary bg-primary text-primary-foreground"
+                      : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
+                  )}
+                >
+                  <SlidersHorizontal className="size-4" />
+                  <span className="text-[11px] font-semibold tabular-nums">{year}</span>
+                </button>
+                {filterOpen && (
+                  <div className="absolute right-0 top-12 z-30 w-48 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 shadow-[var(--shadow-raised)]">
+                    <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      Academic year
+                    </p>
+                    {academicYears.map((y) => (
+                      <button
+                        key={y}
+                        type="button"
+                        onClick={() => {
+                          setYear(y);
+                          setFilterOpen(false);
+                        }}
+                        className={cn(
+                          "flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[13px] font-semibold",
+                          y === year ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
+                        )}
+                      >
+                        <span className="tabular-nums">{y}</span>
+                        {y === currentAcademicYear && (
+                          <span className="text-[10px] font-medium text-muted-foreground">
+                            current
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {searchOpen && (
+            <div className="mt-3">
+              <SearchField
+                value={query}
+                onChange={setQuery}
+                placeholder="Search classes"
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
+
 
         <div className="hidden md:block">
           <PageHeader
