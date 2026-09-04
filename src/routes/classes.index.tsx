@@ -70,7 +70,7 @@ function ClassCard({
     <div className="press relative flex flex-col overflow-hidden rounded-[22px] border border-border bg-card p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)] md:p-4">
       <span
         className="absolute inset-x-0 top-0 h-1"
-        style={{ backgroundColor: `var(--ev-${tone})` }}
+        style={{ backgroundColor: `color-mix(in oklab, var(--ev-${tone}) 42%, var(--card))` }}
         aria-hidden
       />
 
