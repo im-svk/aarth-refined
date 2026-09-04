@@ -127,10 +127,15 @@ function TeacherHome() {
                   </p>
                 </div>
                 {index === 0 && (
-                  <Link to="/classes/$classId" params={{ classId: featured.id }}>
+                  <Link
+                    to="/classes/$classId"
+                    params={{ classId: featured.id }}
+                    className="hidden shrink-0 sm:block"
+                  >
                     <Button size="sm">Open class</Button>
                   </Link>
                 )}
+
               </li>
             ))}
           </ol>
