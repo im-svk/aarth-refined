@@ -71,6 +71,17 @@ export function LoginScreen() {
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
+  function oauth() {
+    setBusy(true);
+    setTimeout(() => {
+      setBusy(false);
+      toast.success("Signed in with Google", {
+        description: "Welcome back to Aarth Educator.",
+      });
+      navigate({ to: "/classes" });
+    }, 900);
+  }
+
   function submit(event: React.FormEvent) {
     event.preventDefault();
     const next: typeof errors = {};
