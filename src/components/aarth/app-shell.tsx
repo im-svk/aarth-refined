@@ -59,7 +59,7 @@ const NAV: NavGroup[] = [
   {
     label: "Teach",
     items: [
-      { label: "Create Studio", to: "/academic-tools", icon: Sparkles, roles: ["teacher"] },
+      { label: "Study Material", to: "/aidocs", icon: FileText, roles: ["teacher"] },
       { label: "Study Material", to: "/aidocs", icon: FileText, roles: ["teacher"] },
       { label: "Quizzes", to: "/quizzes", icon: ClipboardList, roles: ["teacher"] },
       { label: "Question Papers", to: "/papers", icon: NotebookPen, roles: ["teacher"] },
