@@ -78,7 +78,7 @@ export function DayTimeline({
 
               <div className="min-w-0 flex-1 py-1">
                 <div className="flex min-w-0 items-center gap-2">
-                  <p className="truncate text-[15px] font-semibold leading-tight text-foreground">
+                  <p className="min-w-0 flex-1 text-[15px] font-semibold leading-tight text-foreground">
                     {item.title}
                   </p>
                   {isNow && (
