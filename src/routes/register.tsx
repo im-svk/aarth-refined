@@ -101,6 +101,17 @@ function Register() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  function oauth() {
+    setBusy(true);
+    setTimeout(() => {
+      setBusy(false);
+      toast.success("Google account connected", {
+        description: "Welcome to Aarth Educator.",
+      });
+      navigate({ to: "/onboarding" });
+    }, 900);
+  }
+
   function submit(event: React.FormEvent) {
     event.preventDefault();
     if (password.length < 12) return setError("Admin passwords must be at least 12 characters");
