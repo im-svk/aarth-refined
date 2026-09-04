@@ -45,7 +45,11 @@ export function DayTimeline({
   className?: string;
 }) {
   return (
-    <ul className={cn("flex flex-col", className)}>
+    <ul className={cn("relative flex flex-col", className)}>
+      <span
+        className="absolute bottom-3 left-[2.25rem] top-3 w-px bg-primary/20"
+        aria-hidden
+      />
       {items.map((item) => {
         const tone = hue(item.id);
         const start = toMinutes(item.time);
@@ -54,20 +58,24 @@ export function DayTimeline({
         const isPast = nowMinutes !== undefined && nowMinutes >= start + item.minutes;
 
         return (
-          <li key={item.id} className="group relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-2 pb-2 last:pb-0">
-            <div className="numeric relative flex shrink-0 flex-col items-end pt-2 text-right">
-              <span className="text-[12px] font-semibold leading-none text-foreground">
+          <li key={item.id} className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-2 pb-2 last:pb-0">
+            <div className="numeric relative z-10 flex shrink-0 flex-col items-end pt-2 text-right">
+              <span
+                className={cn(
+                  "text-[12px] font-semibold leading-none",
+                  isNow ? "text-primary" : "text-muted-foreground",
+                )}
+              >
                 {item.time}
               </span>
               <span className="mt-1 text-[9px] leading-none text-muted-foreground">
                 {endLabel(item.time, item.minutes)}
               </span>
               <span
-                className="absolute -right-[0.25rem] top-[0.7rem] size-1 rounded-full bg-border group-last:hidden"
-                aria-hidden
-              />
-              <span
-                className="absolute -bottom-1 -right-[0.25rem] top-[0.95rem] w-px bg-border group-last:hidden"
+                className={cn(
+                  "absolute -right-[0.3125rem] top-[0.55rem] size-2 rounded-full border-2 border-card",
+                  isNow ? "bg-primary ring-2 ring-primary/15" : "bg-muted-foreground/30",
+                )}
                 aria-hidden
               />
             </div>
@@ -75,9 +83,11 @@ export function DayTimeline({
               to="/classes/$classId"
               params={{ classId: item.classId }}
               className={cn(
-                "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-lg px-3 py-2 transition-[filter] hover:brightness-[0.98]",
+                "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-md px-3 py-2 transition-[filter,box-shadow] hover:brightness-[0.98]",
                 tone.surface,
-                isPast && "opacity-55",
+                !isNow && "opacity-65",
+                isPast && "opacity-45",
+                isNow && "ring-1 ring-primary/30 shadow-sm",
               )}
             >
               <span className={cn("absolute inset-y-2 left-0 w-[2px] rounded-l-full", tone.bar)} aria-hidden />
