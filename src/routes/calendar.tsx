@@ -32,7 +32,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { calendarEvents, className, todaySchedule } from "@/data/mock";
 
 export const Route = createFileRoute("/calendar")({
@@ -111,6 +110,12 @@ const ANNOUNCEMENTS = [
 const pad = (value: number) => String(value).padStart(2, "0");
 const isoDate = (year: number, month: number, day: number) =>
   `${year}-${pad(month + 1)}-${pad(day)}`;
+
+const formatIsoLabel = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+};
 
 const typeIcon = (type: ActivityType) => {
   if (type === "Test") return <GraduationCap className="size-4" />;
@@ -581,96 +586,128 @@ function TeacherCalendar() {
 
       {/* Add activity dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="display text-lg">Add activity</DialogTitle>
-            <DialogDescription>
-              Save a to-do, reminder, test or announcement to a specific day.
+        <DialogContent className="gap-0 overflow-hidden rounded-2xl border-border p-0 shadow-2xl sm:max-w-[27rem] max-sm:bottom-0 max-sm:top-auto max-sm:max-w-none max-sm:translate-y-0 max-sm:rounded-b-none max-sm:rounded-t-[1.75rem] [&>button:last-child]:hidden">
+          <div className="mx-auto mt-2.5 h-1 w-9 rounded-full bg-border sm:hidden" />
+
+          <DialogHeader className="px-5 pb-4 pt-4 text-center sm:text-center">
+            <DialogTitle className="display text-[17px] leading-tight text-foreground">
+              New activity
+            </DialogTitle>
+            <DialogDescription className="text-[12.5px]">
+              Saved to {form.date ? formatIsoLabel(form.date) : "the selected day"}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div>
-              <p className="eyebrow mb-2 text-muted-foreground">Type</p>
-              <div className="flex flex-wrap gap-2">
-                {ACTIVITY_TYPES.map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setForm((prev) => ({ ...prev, type }))}
-                    className={`press rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
-                      form.type === type
-                        ? "border-primary/40 bg-tint text-tint-foreground"
-                        : "border-border text-muted-foreground"
-                    }`}
+          <div className="max-h-[65vh] space-y-5 overflow-y-auto border-t border-border bg-muted/30 px-5 py-5">
+            {/* Type segmented control */}
+            <div className="grid grid-cols-4 gap-1 rounded-xl bg-muted p-1">
+              {ACTIVITY_TYPES.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, type }))}
+                  className={`press flex flex-col items-center gap-1 rounded-lg py-2 text-[11px] font-semibold transition-colors ${
+                    form.type === type
+                      ? "bg-card text-foreground shadow-sm"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {typeIcon(type)}
+                  <span className="w-full truncate px-0.5 text-[10px] leading-none">
+                    {type === "Announcement" ? "Notice" : type}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Grouped fields */}
+            <div className="overflow-hidden rounded-xl border border-border bg-card">
+              <div className="px-4 py-3">
+                <label
+                  htmlFor="activity-title"
+                  className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                >
+                  Title
+                </label>
+                <input
+                  id="activity-title"
+                  placeholder="e.g. Grade Class 10 physics test"
+                  value={form.title}
+                  onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
+                  className="w-full border-0 bg-transparent p-0 text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 border-t border-border">
+                <div className="border-r border-border px-4 py-3">
+                  <label
+                    htmlFor="activity-date"
+                    className="mb-1 block text-[11px] font-semibold text-muted-foreground"
                   >
-                    {type}
-                  </button>
-                ))}
+                    Date
+                  </label>
+                  <input
+                    id="activity-date"
+                    type="date"
+                    value={form.date}
+                    onChange={(event) => setForm((prev) => ({ ...prev, date: event.target.value }))}
+                    className="numeric w-full border-0 bg-transparent p-0 text-[14px] font-medium text-foreground outline-none"
+                  />
+                </div>
+                <div className="px-4 py-3">
+                  <label
+                    htmlFor="activity-time"
+                    className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                  >
+                    Time · optional
+                  </label>
+                  <input
+                    id="activity-time"
+                    type="time"
+                    value={form.time}
+                    onChange={(event) => setForm((prev) => ({ ...prev, time: event.target.value }))}
+                    className="numeric w-full border-0 bg-transparent p-0 text-[14px] font-medium text-foreground outline-none"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label htmlFor="activity-title" className="eyebrow mb-2 block text-muted-foreground">
-                Title
-              </label>
-              <Input
-                id="activity-title"
-                placeholder="e.g. Grade Class 10 physics test"
-                value={form.title}
-                onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label htmlFor="activity-date" className="eyebrow mb-2 block text-muted-foreground">
-                  Date
+              <div className="border-t border-border px-4 py-3">
+                <label
+                  htmlFor="activity-note"
+                  className="mb-1 block text-[11px] font-semibold text-muted-foreground"
+                >
+                  Note · optional
                 </label>
-                <Input
-                  id="activity-date"
-                  type="date"
-                  value={form.date}
-                  onChange={(event) => setForm((prev) => ({ ...prev, date: event.target.value }))}
+                <input
+                  id="activity-note"
+                  placeholder="Add a short detail"
+                  value={form.note}
+                  onChange={(event) => setForm((prev) => ({ ...prev, note: event.target.value }))}
+                  className="w-full border-0 bg-transparent p-0 text-[14px] text-foreground outline-none placeholder:text-muted-foreground/70"
                 />
               </div>
-              <div>
-                <label htmlFor="activity-time" className="eyebrow mb-2 block text-muted-foreground">
-                  Time (optional)
-                </label>
-                <Input
-                  id="activity-time"
-                  type="time"
-                  value={form.time}
-                  onChange={(event) => setForm((prev) => ({ ...prev, time: event.target.value }))}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="activity-note" className="eyebrow mb-2 block text-muted-foreground">
-                Note (optional)
-              </label>
-              <Input
-                id="activity-note"
-                placeholder="Add a short detail"
-                value={form.note}
-                onChange={(event) => setForm((prev) => ({ ...prev, note: event.target.value }))}
-              />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setDialogOpen(false)}>
+          <DialogFooter className="gap-2 border-t border-border px-5 py-4 max-sm:pb-6 sm:justify-end sm:space-x-0">
+            <Button
+              variant="outline"
+              className="max-sm:w-full"
+              onClick={() => setDialogOpen(false)}
+            >
               Cancel
             </Button>
-            <Button onClick={saveActivity} disabled={!form.title.trim() || !form.date}>
+            <Button
+              className="max-sm:w-full"
+              onClick={saveActivity}
+              disabled={!form.title.trim() || !form.date}
+            >
               Save activity
             </Button>
           </DialogFooter>
         </DialogContent>
-
       </Dialog>
+
     </AppShell>
   );
 }
