@@ -45,11 +45,7 @@ export function DayTimeline({
   className?: string;
 }) {
   return (
-    <ul className={cn("relative flex flex-col", className)}>
-      <span
-        className="absolute bottom-3 left-[2.25rem] top-3 w-px bg-primary/20"
-        aria-hidden
-      />
+    <ul className={cn("flex flex-col", className)}>
       {items.map((item) => {
         const tone = hue(item.id);
         const start = toMinutes(item.time);
@@ -58,11 +54,14 @@ export function DayTimeline({
         const isPast = nowMinutes !== undefined && nowMinutes >= start + item.minutes;
 
         return (
-          <li key={item.id} className="relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-2 pb-2 last:pb-0">
-            <div className="numeric relative z-10 flex shrink-0 flex-col items-end pt-2 text-right">
+          <li
+            key={item.id}
+            className="group grid grid-cols-[2.75rem_0.875rem_minmax(0,1fr)] gap-x-1.5 pb-2 last:pb-0"
+          >
+            <div className="numeric flex min-w-0 flex-col items-end pt-2.5 text-right">
               <span
                 className={cn(
-                  "text-[12px] font-semibold leading-none",
+                  "whitespace-nowrap text-[11px] font-semibold leading-none",
                   isNow ? "text-primary" : "text-muted-foreground",
                 )}
               >
@@ -71,28 +70,28 @@ export function DayTimeline({
               <span className="mt-1 text-[9px] leading-none text-muted-foreground">
                 {endLabel(item.time, item.minutes)}
               </span>
+            </div>
+            <div className="relative flex justify-center" aria-hidden>
+              <span className="absolute bottom-[-0.5rem] top-0 w-px bg-border group-first:top-3.5 group-last:bottom-auto group-last:h-3.5" />
               <span
                 className={cn(
-                  "absolute -right-[0.3125rem] top-[0.55rem] size-2 rounded-full border-2 border-card",
-                  isNow ? "bg-primary ring-2 ring-primary/15" : "bg-muted-foreground/30",
+                  "relative z-10 mt-3 size-2 rounded-full border-2 border-card",
+                  isNow ? "bg-primary ring-[3px] ring-primary/15" : "bg-muted-foreground/35",
                 )}
-                aria-hidden
               />
             </div>
             <Link
               to="/classes/$classId"
               params={{ classId: item.classId }}
               className={cn(
-                "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-md px-3 py-2 transition-[filter,box-shadow] hover:brightness-[0.98]",
+                "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-[5px] border border-border/60 px-3 py-2 transition-[filter,box-shadow,border-color] hover:brightness-[0.98]",
                 tone.surface,
-                !isNow && "opacity-65",
-                isPast && "opacity-45",
-                isNow && "ring-1 ring-primary/30 shadow-sm",
+                !isNow && "opacity-75",
+                isPast && "opacity-55",
+                isNow && "border-primary/30 shadow-sm",
               )}
             >
-              <span className={cn("absolute inset-y-2 left-0 w-[2px] rounded-l-full", tone.bar)} aria-hidden />
-
-              <div className="min-w-0 flex-1 pl-1">
+              <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-start gap-2">
                   <p className={cn("min-w-0 flex-1 text-[13px] font-semibold leading-tight", tone.text)}>
                     {item.title}
