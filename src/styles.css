@@ -106,16 +106,17 @@
   --ring: oklch(0.5324 0.0879 250);
   --tint: oklch(0.9354 0.0161 250);
   --tint-foreground: oklch(0.3382 0.0692 255);
-  --ev-1: oklch(0.4482 0.1042 262);
-  --ev-2: oklch(0.4682 0.0742 196);
-  --ev-3: oklch(0.4982 0.0842 152);
-  --ev-4: oklch(0.5382 0.0942 62);
-  --ev-5: oklch(0.4782 0.0942 12);
-  --ev-1-bg: oklch(0.9482 0.0182 262);
-  --ev-2-bg: oklch(0.9482 0.0182 196);
-  --ev-3-bg: oklch(0.9482 0.0182 152);
-  --ev-4-bg: oklch(0.9582 0.0212 76);
-  --ev-5-bg: oklch(0.9532 0.0172 16);
+  /* Google Calendar-inspired pale event tones: lavender, sage, cyan, banana, flamingo. */
+  --ev-1: oklch(0.43 0.115 277);
+  --ev-2: oklch(0.42 0.085 151);
+  --ev-3: oklch(0.42 0.09 224);
+  --ev-4: oklch(0.48 0.1 80);
+  --ev-5: oklch(0.47 0.115 28);
+  --ev-1-bg: oklch(0.93 0.035 277);
+  --ev-2-bg: oklch(0.93 0.045 151);
+  --ev-3-bg: oklch(0.93 0.04 224);
+  --ev-4-bg: oklch(0.95 0.055 88);
+  --ev-5-bg: oklch(0.94 0.04 28);
   --chart-1: oklch(0.3382 0.0692 255);
   --chart-2: oklch(0.5324 0.0879 250);
   --chart-3: oklch(0.6889 0.0631 248);
