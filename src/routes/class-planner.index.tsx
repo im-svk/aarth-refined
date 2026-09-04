@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/aarth/app-shell";
 import { PageHeader, LoadingPanel } from "@/components/aarth/primitives";
 
-export const Route = createFileRoute("/class-planner")({
+export const Route = createFileRoute("/class-planner/")({
   head: () => ({
     meta: [
       { title: "Class Planner — Aarth Educator" },

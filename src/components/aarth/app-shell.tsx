@@ -285,7 +285,7 @@ function TopBar({ title }: { title: string }) {
 
 /* ---------------- Phone chrome ---------------- */
 
-function MobileTopBar({ title, back }: { title: string; back?: boolean }) {
+function MobileTopBar({ title, back }: { title: string; back?: boolean | undefined }) {
   const router = useRouter();
   const { user } = useApp();
   return (
@@ -367,9 +367,9 @@ export function AppShell({
   wide,
 }: {
   title: string;
-  back?: boolean;
+  back?: boolean | undefined;
   children: ReactNode;
-  wide?: boolean;
+  wide?: boolean | undefined;
 }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
