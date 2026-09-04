@@ -7,8 +7,11 @@ import {
   MoreHorizontal,
   Pencil,
   Plus,
+  Search,
+  SlidersHorizontal,
   Trash2,
   Users,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
