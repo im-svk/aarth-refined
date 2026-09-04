@@ -475,9 +475,11 @@ export function AppShell({
   wide?: boolean | undefined;
   mobileHeader?: "default" | "brand" | "none";
 }) {
+  const [createOpen, setCreateOpen] = useState(false);
+  const openCreate = () => setCreateOpen(true);
   return (
     <div className="flex min-h-screen w-full bg-background">
-      <Sidebar />
+      <Sidebar onCreate={openCreate} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar title={title} />
         <MobileTopBar title={title} back={back} variant={mobileHeader} />
@@ -490,11 +492,13 @@ export function AppShell({
         >
           {children}
         </main>
-        <BottomTabs />
+        <BottomTabs onCreate={openCreate} />
       </div>
+      <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
     </div>
   );
 }
+
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
