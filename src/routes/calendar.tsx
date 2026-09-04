@@ -692,7 +692,7 @@ function TeacherCalendar() {
           <DialogFooter className="gap-2 border-t border-primary/10 bg-tint px-5 py-4 max-sm:pb-6 sm:justify-end sm:space-x-0">
             <Button
               variant="outline"
-              className="border-primary/10 bg-card/80 text-foreground max-sm:w-full"
+              className="border-primary/10 bg-primary/5 text-foreground max-sm:w-full hover:bg-primary/10"
               onClick={() => setDialogOpen(false)}
             >
               Cancel
