@@ -182,7 +182,7 @@ function Presentations() {
               <Card key={deck.id} className="overflow-hidden">
                 <div className="flex aspect-[16/9] items-end border-b border-border bg-muted/50 p-4">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                    <p className="eyebrow text-muted-foreground">
                       {deck.subject}
                     </p>
                     <p className="display mt-1 text-lg leading-tight text-foreground">

@@ -172,7 +172,7 @@ function Sidebar() {
         {groups.map((group) => (
           <div key={group.label} className="mb-4">
             {!collapsed && (
-              <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/40">
+              <p className="px-2 pb-1.5 eyebrow text-sidebar-foreground/40">
                 {group.label}
               </p>
             )}

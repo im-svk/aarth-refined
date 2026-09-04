@@ -26,17 +26,16 @@ export function PageHeader({
       )}
     >
       <div className="min-w-0">
-        {kicker && (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {kicker}
-          </p>
-        )}
-        <h1 className="display mt-1.5 text-3xl text-foreground sm:text-[2.6rem]">{title}</h1>
+        {kicker && <p className="eyebrow text-muted-foreground">{kicker}</p>}
+        <h1 className="display-lg mt-2 text-[1.75rem] text-foreground sm:text-[2.35rem]">
+          {title}
+        </h1>
         {subtitle && (
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-2.5 max-w-2xl text-[0.9375rem] leading-relaxed text-muted-foreground">
             {subtitle}
           </p>
         )}
+
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
@@ -57,7 +56,10 @@ export function SectionHeader({
   return (
     <div className={cn("flex items-end justify-between gap-4", className)}>
       <div>
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">{title}</h2>
+        <h2 className="text-[0.9375rem] font-semibold tracking-[-0.014em] text-foreground">
+          {title}
+        </h2>
+
         {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
       </div>
       {action}
@@ -154,10 +156,13 @@ export function StatTile({
   return (
     <Card className="p-4">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+        <p className="text-[0.8125rem] font-medium tracking-[-0.006em] text-muted-foreground">
+          {label}
+        </p>
         {icon && <span className="text-muted-foreground">{icon}</span>}
       </div>
-      <p className="display mt-3 text-3xl text-foreground">{value}</p>
+      <p className="display numeric mt-3 text-[2rem] text-foreground">{value}</p>
+
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </Card>
   );
