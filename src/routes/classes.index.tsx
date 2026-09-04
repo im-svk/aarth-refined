@@ -68,91 +68,95 @@ function ClassCard({
   tone: number;
 }) {
   const [menu, setMenu] = useState(false);
+  const accent = `color-mix(in oklab, var(--ev-${tone}) 55%, var(--card))`;
 
   return (
-    <div className="press relative flex flex-col overflow-hidden rounded-[22px] border border-border bg-card p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)] md:p-4">
+    <div className="press flex overflow-hidden rounded-[22px] border border-border bg-card shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]">
       <span
-        className="absolute inset-x-0 top-0 h-1"
-        style={{ backgroundColor: `color-mix(in oklab, var(--ev-${tone}) 42%, var(--card))` }}
+        className="w-[3px] shrink-0 rounded-l-[22px]"
+        style={{ backgroundColor: accent }}
         aria-hidden
       />
 
-      <div className="mb-3 flex items-center justify-between pt-1">
-        <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
-          Grade {klass.grade}
-        </span>
-        {canManage && (
-          <div className="relative">
-            <button
-              type="button"
-              aria-label="Class actions"
-              onClick={() => setMenu((v) => !v)}
-              className="press -mr-1 inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
-            >
-              <MoreHorizontal className="size-4" />
-            </button>
-            {menu && (
-              <div className="absolute right-0 top-8 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
-                {[
-                  { label: "Edit class", icon: Pencil },
-                  { label: klass.archived ? "Restore" : "Archive", icon: Archive },
-                  { label: "Delete", icon: Trash2, danger: true },
-                ].map((action) => (
-                  <button
-                    key={action.label}
-                    type="button"
-                    onClick={() => {
-                      setMenu(false);
-                      toast.success(`${action.label} — ${klass.name}`);
-                    }}
-                    className={cn(
-                      "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
-                      action.danger ? "text-destructive" : "text-foreground",
-                    )}
-                  >
-                    <action.icon className="size-3.5" />
-                    {action.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      <Link
-        to="/classes/$classId"
-        params={{ classId: klass.id }}
-        className="flex flex-1 flex-col"
-        aria-label={klass.name}
-      >
-        <h3 className="display text-[17px] font-semibold leading-tight tracking-tight text-foreground">
-          {klass.name}
-        </h3>
-
-        <div className="mt-1 flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground">
-          <span className="truncate">{klass.board}</span>
-          <span className="size-1 shrink-0 rounded-full bg-border" />
-          <span className="shrink-0">{klass.term}</span>
-        </div>
-        {klass.stream && (
-          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{klass.stream}</p>
-        )}
-
-        <div className="mt-4 flex flex-col gap-2">
-          {[
-            { icon: Users, text: `${klass.studentCount} students` },
-            { icon: BookOpen, text: `${klass.subjectCount} subjects` },
-          ].map((row) => (
-            <div key={row.text} className="flex items-center gap-2">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted">
-                <row.icon className="size-3 text-muted-foreground" />
-              </span>
-              <span className="text-[11px] font-semibold text-foreground">{row.text}</span>
+      <div className="flex flex-1 flex-col p-3.5 md:p-4">
+        <div className="mb-2 flex items-start justify-between gap-2">
+          <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+            Grade {klass.grade}
+          </span>
+          {canManage && (
+            <div className="relative">
+              <button
+                type="button"
+                aria-label="Class actions"
+                onClick={() => setMenu((v) => !v)}
+                className="press -mr-1 inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+              >
+                <MoreHorizontal className="size-4" />
+              </button>
+              {menu && (
+                <div className="absolute right-0 top-8 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
+                  {[
+                    { label: "Edit class", icon: Pencil },
+                    { label: klass.archived ? "Restore" : "Archive", icon: Archive },
+                    { label: "Delete", icon: Trash2, danger: true },
+                  ].map((action) => (
+                    <button
+                      key={action.label}
+                      type="button"
+                      onClick={() => {
+                        setMenu(false);
+                        toast.success(`${action.label} — ${klass.name}`);
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
+                        action.danger ? "text-destructive" : "text-foreground",
+                      )}
+                    >
+                      <action.icon className="size-3.5" />
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
+          )}
         </div>
-      </Link>
+
+        <Link
+          to="/classes/$classId"
+          params={{ classId: klass.id }}
+          className="flex flex-1 flex-col"
+          aria-label={klass.name}
+        >
+          <h3 className="display text-[16px] font-semibold leading-tight tracking-[-0.015em] text-foreground md:text-[17px]">
+            {klass.name}
+          </h3>
+
+          <div className="mt-1 flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground">
+            <span className="truncate">{klass.board}</span>
+            <span className="size-1 shrink-0 rounded-full bg-border" />
+            <span className="shrink-0">{klass.term}</span>
+          </div>
+          {klass.stream && (
+            <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{klass.stream}</p>
+          )}
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[
+              { icon: Users, label: `${klass.studentCount} students` },
+              { icon: BookOpen, label: `${klass.subjectCount} subjects` },
+            ].map((stat) => (
+              <span
+                key={stat.label}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground"
+              >
+                <stat.icon className="size-3.5 text-muted-foreground" />
+                {stat.label}
+              </span>
+            ))}
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
