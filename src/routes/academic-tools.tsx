@@ -37,7 +37,7 @@ export const Route = createFileRoute("/academic-tools")({
       },
     ],
   }),
-  component: CreateStudio;
+  component: CreateStudio,
 });
 
 const active = classes.filter((c) => !c.archived);
