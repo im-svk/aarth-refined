@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   BookOpen,
+  CalendarDays,
   ClipboardList,
   Clock,
   FileText,
@@ -13,6 +14,8 @@ import {
   UserSquare2,
 } from "lucide-react";
 import { AppShell } from "@/components/aarth/app-shell";
+import { DayTimeline } from "@/components/aarth/day-timeline";
+
 import {
   Button,
   Card,
