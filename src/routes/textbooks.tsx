@@ -160,12 +160,12 @@ function Textbooks() {
       >
         <SectionHeader title="Chapters" hint={`${chapters.length} listed`} />
         <div className="mt-3 divide-y divide-border rounded-xl border border-border">
-          {chapters.map((chapter, index) => (
+          {chapters.map((chapter) => (
             <ListRow
               key={chapter.id}
-              icon={<span className="text-xs font-bold">{index + 1}</span>}
+              icon={<span className="text-xs font-bold">{chapter.index}</span>}
               title={chapter.name}
-              subtitle={chapter.summary}
+              subtitle={`${chapter.weeks} weeks · planned ${chapter.plannedStart}`}
               onClick={() => toast.success(`${chapter.name} selected`)}
             />
           ))}
