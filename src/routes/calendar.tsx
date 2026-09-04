@@ -668,8 +668,8 @@ function TeacherCalendar() {
               Save activity
             </Button>
           </DialogFooter>
-        </DialogFooter>
         </DialogContent>
+
       </Dialog>
     </AppShell>
   );
