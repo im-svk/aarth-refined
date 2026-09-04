@@ -94,7 +94,8 @@ export function ListRow({
   title,
   subtitle,
   trailing,
-  showChevron = true,
+  showChevron,
+  interactive,
   className,
   onClick,
 }: {
@@ -103,17 +104,21 @@ export function ListRow({
   subtitle?: ReactNode;
   trailing?: ReactNode;
   showChevron?: boolean;
+  /** Use when the row is already wrapped in a <Link> — avoids nested buttons. */
+  interactive?: boolean;
   className?: string;
   onClick?: () => void;
 }) {
   const Comp = onClick ? "button" : "div";
+  const tappable = Boolean(onClick) || interactive;
+  const chevron = showChevron ?? tappable;
   return (
     <Comp
       type={onClick ? "button" : undefined}
       onClick={onClick}
       className={cn(
         "flex w-full min-h-[3.5rem] items-center gap-3 px-4 py-3 text-left transition-colors",
-        onClick && "press hover:bg-muted/60",
+        tappable && "press hover:bg-muted/60",
         className,
       )}
     >
@@ -129,12 +134,11 @@ export function ListRow({
         )}
       </span>
       {trailing}
-      {showChevron && onClick && (
-        <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-      )}
+      {chevron && <ChevronRight className="size-4 shrink-0 text-muted-foreground" />}
     </Comp>
   );
 }
+
 
 export function StatTile({
   label,
