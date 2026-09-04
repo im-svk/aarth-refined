@@ -613,7 +613,9 @@ function TeacherCalendar() {
                   }`}
                 >
                   {typeIcon(type)}
-                  <span className="truncate">{type}</span>
+                  <span className="w-full truncate px-0.5 text-[10px] leading-none">
+                    {type === "Announcement" ? "Notice" : type}
+                  </span>
                 </button>
               ))}
             </div>
