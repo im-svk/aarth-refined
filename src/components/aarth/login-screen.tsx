@@ -92,7 +92,27 @@ export function LoginScreen() {
               </p>
             </div>
 
-            <form onSubmit={submit} className="mt-7">
+            <div className="mt-7 space-y-2.5">
+              <button
+                type="button"
+                onClick={oauth}
+                disabled={busy}
+                className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-border bg-card text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-accent disabled:opacity-60"
+              >
+                <GoogleMark className="size-[18px]" />
+                Continue with Google
+              </button>
+            </div>
+
+            <div className="my-5 flex items-center gap-3">
+              <span className="h-px flex-1 bg-border" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+                or
+              </span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+
+            <form onSubmit={submit}>
               <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
                 <GroupField label="Email" {...(errors.email ? { error: errors.email } : {})}>
                   <input
