@@ -430,9 +430,14 @@ function Classes() {
             />
           </Card>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {list.map((klass) => (
-              <ClassCard key={klass.id} klass={klass} canManage={isAdmin} />
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+            {list.map((klass, i) => (
+              <ClassCard
+                key={klass.id}
+                klass={klass}
+                canManage={isAdmin}
+                tone={CARD_TONES[i % CARD_TONES.length]!}
+              />
             ))}
           </div>
         )}
