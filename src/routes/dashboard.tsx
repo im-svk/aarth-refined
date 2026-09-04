@@ -98,7 +98,7 @@ function TeacherHome() {
       />
 
       {/* Bento grid */}
-      <div className="grid gap-4 lg:grid-cols-12">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-12">
         {/* Today's schedule — anchor tile */}
         <Card className="p-5 lg:col-span-8 lg:row-span-2">
           <div className="flex items-start justify-between gap-3">
@@ -127,10 +127,15 @@ function TeacherHome() {
                   </p>
                 </div>
                 {index === 0 && (
-                  <Link to="/classes/$classId" params={{ classId: featured.id }}>
+                  <Link
+                    to="/classes/$classId"
+                    params={{ classId: featured.id }}
+                    className="hidden shrink-0 sm:block"
+                  >
                     <Button size="sm">Open class</Button>
                   </Link>
                 )}
+
               </li>
             ))}
           </ol>

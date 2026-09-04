@@ -208,7 +208,7 @@ function Papers() {
           }
         />
 
-        <DesktopOnlyNotice what="The paper builder" />
+        <DesktopOnlyNotice what="paper builder" />
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <SegmentedToggle

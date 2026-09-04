@@ -154,7 +154,7 @@ function Presentations() {
           }
         />
 
-        <DesktopOnlyNotice what="The slide editor" />
+        <DesktopOnlyNotice what="slide editor" />
 
         <SearchField
           value={query}
