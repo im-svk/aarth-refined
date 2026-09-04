@@ -621,7 +621,7 @@ function TeacherCalendar() {
             </div>
 
             {/* Grouped fields */}
-            <div className="overflow-hidden rounded-xl border border-primary/10 bg-primary/5 shadow-sm">
+            <div className="overflow-hidden rounded-xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
               <div className="px-4 py-3">
                 <label
                   htmlFor="activity-title"
