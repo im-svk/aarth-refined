@@ -127,27 +127,7 @@ export function LoginScreen() {
               </p>
             </div>
 
-            <div className="mt-7 space-y-2.5">
-              <button
-                type="button"
-                onClick={oauth}
-                disabled={busy}
-                className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-primary/10 bg-primary/5 text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-primary/10 disabled:opacity-60 dark:bg-primary/10 dark:hover:bg-primary/15"
-              >
-                <GoogleMark className="size-[18px]" />
-                Continue with Google
-              </button>
-            </div>
-
-            <div className="my-5 flex items-center gap-3">
-              <span className="h-px flex-1 bg-border" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-                or
-              </span>
-              <span className="h-px flex-1 bg-border" />
-            </div>
-
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="mt-7">
               <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
                 <GroupField label="Email" {...(errors.email ? { error: errors.email } : {})}>
                   <input
@@ -204,6 +184,24 @@ export function LoginScreen() {
                 {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Sign in"}
               </Button>
             </form>
+
+            <div className="my-5 flex items-center gap-3">
+              <span className="h-px flex-1 bg-border" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+                or
+              </span>
+              <span className="h-px flex-1 bg-border" />
+            </div>
+
+            <button
+              type="button"
+              onClick={oauth}
+              disabled={busy}
+              className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-primary/10 bg-primary/5 text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-primary/10 disabled:opacity-60 dark:bg-primary/10 dark:hover:bg-primary/15"
+            >
+              <GoogleMark className="size-[18px]" />
+              Continue with Google
+            </button>
 
             <p className="mt-7 text-center text-[13px] text-muted-foreground">
               New institution?{" "}
