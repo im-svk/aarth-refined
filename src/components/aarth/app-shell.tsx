@@ -479,9 +479,9 @@ export function AppShell({
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <div className="flex flex-1 items-center justify-center px-4 py-10">
+      <div className="flex flex-1 items-center justify-center px-5 py-10 sm:px-4">
         <div className="w-full max-w-md">
-          <div className="mb-8 flex items-center gap-3">
+          <div className="mb-8 hidden items-center gap-3 sm:flex">
             <span className="flex size-11 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
               {INSTITUTION.logoInitials}
             </span>
@@ -493,7 +493,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
           {children}
         </div>
       </div>
-      <footer className="border-t border-border px-4 py-5">
+      <footer className="px-5 py-6 sm:border-t sm:border-border sm:px-4 sm:py-5">
         <div className="mx-auto flex max-w-md flex-wrap items-center justify-between gap-3 text-[11px] text-muted-foreground">
           <span>© 2026 Aarth</span>
           <div className="flex gap-4">
