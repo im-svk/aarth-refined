@@ -217,6 +217,11 @@
   font-weight: 600;
   letter-spacing: -0.034em;
   line-height: 1.04;
+  & em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--color-muted-foreground);
+  }
 }
 
 /* Small all-caps eyebrow: lighter, less shouty than before. */
