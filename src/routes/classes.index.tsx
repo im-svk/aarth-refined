@@ -65,93 +65,91 @@ function ClassCard({
   tone: number;
 }) {
   const [menu, setMenu] = useState(false);
-  const style = {
-    backgroundColor: `var(--ev-${tone}-bg)`,
-    borderColor: `color-mix(in oklab, var(--ev-${tone}) 22%, transparent)`,
-  } as React.CSSProperties;
-  const ink = { color: `var(--ev-${tone})` } as React.CSSProperties;
 
   return (
-    <div
-      className="press relative overflow-hidden rounded-2xl border p-3.5 transition-shadow hover:shadow-[var(--shadow-card)] md:p-4"
-      style={style}
-    >
+    <div className="press relative flex flex-col overflow-hidden rounded-[22px] border border-border bg-card p-3.5 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)] md:p-4">
+      <span
+        className="absolute inset-x-0 top-0 h-1"
+        style={{ backgroundColor: `var(--ev-${tone})` }}
+        aria-hidden
+      />
+
+      <div className="mb-3 flex items-center justify-between pt-1">
+        <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+          Grade {klass.grade}
+        </span>
+        {canManage && (
+          <div className="relative">
+            <button
+              type="button"
+              aria-label="Class actions"
+              onClick={() => setMenu((v) => !v)}
+              className="press -mr-1 inline-flex size-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+            >
+              <MoreHorizontal className="size-4" />
+            </button>
+            {menu && (
+              <div className="absolute right-0 top-8 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
+                {[
+                  { label: "Edit class", icon: Pencil },
+                  { label: klass.archived ? "Restore" : "Archive", icon: Archive },
+                  { label: "Delete", icon: Trash2, danger: true },
+                ].map((action) => (
+                  <button
+                    key={action.label}
+                    type="button"
+                    onClick={() => {
+                      setMenu(false);
+                      toast.success(`${action.label} — ${klass.name}`);
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
+                      action.danger ? "text-destructive" : "text-foreground",
+                    )}
+                  >
+                    <action.icon className="size-3.5" />
+                    {action.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <Link
         to="/classes/$classId"
         params={{ classId: klass.id }}
-        className="block"
+        className="flex flex-1 flex-col"
         aria-label={klass.name}
       >
-        <div className="flex items-center gap-2">
-          <span
-            className="inline-flex items-center rounded-full bg-background/70 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em]"
-            style={ink}
-          >
-            Grade {klass.grade}
-          </span>
-          {klass.stream && (
-            <span className="truncate text-[10px] font-semibold text-muted-foreground">
-              {klass.stream}
-            </span>
-          )}
-        </div>
-
-        <h3 className="display mt-2 truncate text-[15px] leading-snug text-foreground md:text-lg">
+        <h3 className="display text-[17px] font-semibold leading-tight tracking-tight text-foreground">
           {klass.name}
         </h3>
-        <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-          {klass.board} · {klass.term}
-        </p>
 
-        <div className="mt-3 flex items-center gap-3 text-[11px] font-semibold" style={ink}>
-          <span className="inline-flex items-center gap-1">
-            <Users className="size-3.5" />
-            {klass.studentCount}
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <BookOpen className="size-3.5" />
-            {klass.subjectCount}
-          </span>
+        <div className="mt-1 flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground">
+          <span className="truncate">{klass.board}</span>
+          <span className="size-1 shrink-0 rounded-full bg-border" />
+          <span className="shrink-0">{klass.term}</span>
+        </div>
+        {klass.stream && (
+          <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">{klass.stream}</p>
+        )}
+
+        <div className="mt-4 flex flex-col gap-2">
+          {[
+            { icon: Users, text: `${klass.studentCount} students` },
+            { icon: BookOpen, text: `${klass.subjectCount} subjects` },
+          ].map((row) => (
+            <div key={row.text} className="flex items-center gap-2">
+              <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-border bg-muted">
+                <row.icon className="size-3 text-muted-foreground" />
+              </span>
+              <span className="text-[11px] font-semibold text-foreground">{row.text}</span>
+            </div>
+          ))}
         </div>
       </Link>
-
-      {canManage && (
-        <div className="absolute right-1.5 top-2.5">
-          <button
-            type="button"
-            aria-label="Class actions"
-            onClick={() => setMenu((v) => !v)}
-            className="press inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-background/60"
-          >
-            <MoreHorizontal className="size-4" />
-          </button>
-          {menu && (
-            <div className="absolute right-0 top-9 z-20 w-40 overflow-hidden rounded-xl border border-border bg-popover shadow-[var(--shadow-raised)]">
-              {[
-                { label: "Edit class", icon: Pencil },
-                { label: klass.archived ? "Restore" : "Archive", icon: Archive },
-                { label: "Delete", icon: Trash2, danger: true },
-              ].map((action) => (
-                <button
-                  key={action.label}
-                  type="button"
-                  onClick={() => {
-                    setMenu(false);
-                    toast.success(`${action.label} — ${klass.name}`);
-                  }}
-                  className={cn(
-                    "flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold hover:bg-muted",
-                    action.danger ? "text-destructive" : "text-foreground",
-                  )}
-                >
-                  <action.icon className="size-3.5" />
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
