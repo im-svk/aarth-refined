@@ -115,12 +115,11 @@ function TeacherHome() {
                     : "flex items-center gap-4 rounded-xl border border-border p-3.5"
                 }
               >
-                <div className="w-11 shrink-0 text-center">
-                  <p className="display text-base text-foreground">{item.time.slice(0, 2)}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                    {item.time.slice(3)}
-                  </p>
+                <div className="w-14 shrink-0">
+                  <p className="display text-base text-foreground">{item.time}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">IST</p>
                 </div>
+
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-foreground">{item.title}</p>
                   <p className="truncate text-xs text-muted-foreground">
