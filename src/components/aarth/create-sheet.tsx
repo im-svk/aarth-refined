@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import {
+  ArrowUpRight,
   ClipboardList,
   Compass,
   FileText,
@@ -15,8 +16,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-context";
-import { aiDocuments, presentations, quizzes, relativeTime } from "@/data/mock";
-import { EmptyState } from "./primitives";
 
 type ToolRoute =
   | "/aidocs"
@@ -47,13 +46,13 @@ const GROUPS: Group[] = [
     tools: [
       {
         label: "Quiz",
-        description: "AI questions + share code",
+        description: "Questions with a share code",
         to: "/quizzes",
         icon: ClipboardList,
       },
       {
         label: "Question paper",
-        description: "Blueprint paper with marks matrix",
+        description: "Blueprint with marks matrix",
         to: "/papers",
         icon: NotebookPen,
         note: "Desktop",
@@ -74,14 +73,14 @@ const GROUPS: Group[] = [
       },
       {
         label: "Assignment",
-        description: "Homework, project or lab report",
+        description: "Homework or lab report",
         to: "/assignments",
         icon: LayoutGrid,
         gated: true,
       },
       {
         label: "Note",
-        description: "Upload your own teaching files",
+        description: "Upload your own files",
         to: "/notes",
         icon: StickyNote,
       },
@@ -94,13 +93,13 @@ const GROUPS: Group[] = [
     tools: [
       {
         label: "Curriculum plan",
-        description: "Map chapters across the year",
+        description: "Chapters across the year",
         to: "/curriculum",
         icon: Compass,
       },
       {
         label: "Class planner",
-        description: "Weekly plan, class by class",
+        description: "Weekly, class by class",
         to: "/class-planner",
         icon: ListChecks,
         gated: true,
@@ -109,7 +108,7 @@ const GROUPS: Group[] = [
   },
 ];
 
-function ToolRow({
+function ToolTile({
   tool,
   tone,
   onClose,
@@ -121,53 +120,62 @@ function ToolRow({
   const { planEnabled } = useApp();
   const locked = Boolean(tool.gated) && !planEnabled;
 
-  return (
-    <div className="flex items-center gap-3 px-4 py-3">
-      <span
-        className="flex size-10 shrink-0 items-center justify-center rounded-[13px]"
-        style={{
-          backgroundColor: `var(--ev-${tone}-bg)`,
-          color: `color-mix(in oklab, var(--ev-${tone}) 76%, var(--foreground))`,
-        }}
-        aria-hidden
-      >
-        <tool.icon className="size-[18px]" />
-      </span>
-
-      <div className="min-w-0 flex-1">
-        <p className="display truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
-          {tool.label}
-        </p>
-        <p className="mt-0.5 truncate text-[12.5px] font-medium text-muted-foreground">
-          {tool.note ? `${tool.note} · ${tool.description}` : tool.description}
-        </p>
-
+  const body = (
+    <>
+      <div className="flex items-start justify-between gap-2">
+        <span
+          className="flex size-11 shrink-0 items-center justify-center rounded-[15px]"
+          style={{
+            backgroundColor: `var(--ev-${tone}-bg)`,
+            color: `color-mix(in oklab, var(--ev-${tone}) 76%, var(--foreground))`,
+          }}
+          aria-hidden
+        >
+          <tool.icon className="size-5" />
+        </span>
+        {locked ? (
+          <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <Lock className="size-3.5" />
+          </span>
+        ) : (
+          <span className="inline-flex size-7 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            <ArrowUpRight className="size-4" />
+          </span>
+        )}
       </div>
 
-      {locked ? (
-        <span className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border border-border px-3 text-[11px] font-semibold text-muted-foreground">
-          <Lock className="size-3" />
-          Plan
-        </span>
-      ) : (
-        <div className="flex shrink-0 items-center gap-1.5">
-          <Link
-            to={tool.to}
-            onClick={onClose}
-            className="press inline-flex h-8 items-center rounded-full px-2.5 text-[12px] font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            View
-          </Link>
-          <Link
-            to={tool.to}
-            onClick={onClose}
-            className="press inline-flex h-8 items-center rounded-full bg-primary px-3.5 text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
-          >
-            Create
-          </Link>
-        </div>
+      <div className="mt-3.5">
+        <p className="display text-[15px] font-semibold leading-tight tracking-[-0.015em] text-foreground">
+          {tool.label}
+        </p>
+        <p className="mt-1 text-[12px] font-medium leading-snug text-muted-foreground">
+          {tool.description}
+        </p>
+      </div>
+
+      {tool.note && (
+        <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">
+          {tool.note}
+        </p>
       )}
-    </div>
+    </>
+  );
+
+  const shell =
+    "group relative flex min-h-[132px] flex-col rounded-[20px] border border-border bg-card p-3.5 text-left shadow-[var(--shadow-card)]";
+
+  if (locked) {
+    return (
+      <div className={cn(shell, "opacity-70")} aria-disabled>
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <Link to={tool.to} onClick={onClose} className={cn(shell, "press")}>
+      {body}
+    </Link>
   );
 }
 
@@ -188,33 +196,9 @@ export function CreateSheet({ open, onClose }: { open: boolean; onClose: () => v
 
   if (!open) return null;
 
-  const recents = [
-    ...aiDocuments.slice(0, 2).map((d) => ({
-      id: d.id,
-      title: d.title,
-      meta: `Study material · ${relativeTime(d.updatedAt)}`,
-      to: "/aidocs" as const,
-      icon: FileText,
-    })),
-    ...quizzes.slice(0, 1).map((q) => ({
-      id: q.id,
-      title: q.title,
-      meta: `Quiz · ${q.questions} questions`,
-      to: "/quizzes" as const,
-      icon: ClipboardList,
-    })),
-    ...presentations.slice(0, 1).map((p) => ({
-      id: p.id,
-      title: p.title,
-      meta: `Presentation · ${p.slides} slides`,
-      to: "/presentations" as const,
-      icon: Presentation,
-    })),
-  ];
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 backdrop-blur-sm md:items-center md:p-6"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/45 backdrop-blur-[3px] md:items-center md:p-6"
       onClick={onClose}
       role="presentation"
     >
@@ -224,27 +208,27 @@ export function CreateSheet({ open, onClose }: { open: boolean; onClose: () => v
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
         className={cn(
-          "flex h-[94vh] w-full flex-col overflow-hidden rounded-t-[26px] border border-border bg-background shadow-[var(--shadow-raised)]",
-          "md:h-auto md:max-h-[86vh] md:max-w-2xl md:rounded-[24px]",
+          "flex h-[92vh] w-full flex-col overflow-hidden rounded-t-[28px] border border-border bg-background shadow-[var(--shadow-raised)]",
+          "md:h-auto md:max-h-[86vh] md:max-w-3xl md:rounded-[26px]",
         )}
-        style={{ animation: "sheet-up 220ms cubic-bezier(0.32,0.72,0,1)" }}
+        style={{ animation: "sheet-up 260ms cubic-bezier(0.32,0.72,0,1)" }}
       >
-        <div className="shrink-0 border-b border-border bg-card px-4 pb-3.5 pt-2.5">
-          <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-border md:hidden" />
+        <div className="shrink-0 bg-card px-5 pb-4 pt-2.5">
+          <div className="mx-auto mb-3.5 h-1.5 w-10 rounded-full bg-border md:hidden" />
           <div className="flex items-start gap-3">
             <div className="min-w-0 flex-1">
-              <h2 className="display text-[22px] font-semibold tracking-[-0.02em] text-foreground">
+              <h2 className="display text-[24px] font-semibold leading-tight tracking-[-0.025em] text-foreground">
                 Create
               </h2>
-              <p className="mt-0.5 text-[12.5px] font-medium text-muted-foreground">
-                Pick what you want to make — Aarth drafts it for your class and board.
+              <p className="mt-1 text-[12.5px] font-medium text-muted-foreground">
+                Aarth drafts it for your class, board and chapter.
               </p>
             </div>
             <button
               type="button"
               aria-label="Close"
               onClick={onClose}
-              className="press -mr-1 -mt-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="press -mr-1 -mt-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground"
             >
               <X className="size-4" />
             </button>
@@ -252,91 +236,57 @@ export function CreateSheet({ open, onClose }: { open: boolean; onClose: () => v
         </div>
 
         <div
-          className="flex-1 overflow-y-auto px-4 py-4"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)" }}
+          className="flex-1 overflow-y-auto px-5 pb-6 pt-1"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1.75rem)" }}
         >
           <Link
             to="/aidocs"
             onClick={onClose}
-            className="press flex items-center gap-3.5 rounded-[20px] border border-border bg-card p-4 shadow-[var(--shadow-card)]"
+            className="press group relative flex flex-col overflow-hidden rounded-[24px] border border-primary/20 bg-tint p-5"
           >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-[16px] bg-tint text-tint-foreground">
-              <Sparkles className="size-6" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="display block text-[17px] font-semibold tracking-[-0.015em] text-foreground">
-                AI study material
+            <div className="flex items-start justify-between gap-3">
+              <span className="flex size-12 items-center justify-center rounded-[17px] bg-primary text-primary-foreground">
+                <Sparkles className="size-6" />
               </span>
-              <span className="mt-0.5 block text-[12.5px] font-medium leading-relaxed text-muted-foreground">
-                Notes, chapter summaries and lesson plans in an editable A4 document.
+              <span className="inline-flex items-center rounded-full bg-card/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-tint-foreground">
+                Most used
               </span>
-            </span>
-            <span className="press inline-flex h-9 shrink-0 items-center rounded-full bg-primary px-4 text-[12px] font-semibold text-primary-foreground">
-              Create
-            </span>
+            </div>
+            <div className="mt-4 flex items-end justify-between gap-3">
+              <span className="min-w-0">
+                <span className="display block text-[19px] font-semibold leading-tight tracking-[-0.02em] text-tint-foreground">
+                  AI study material
+                </span>
+                <span className="mt-1 block text-[12.5px] font-medium leading-snug text-tint-foreground/75">
+                  Notes, chapter summaries and lesson plans in an editable A4 document.
+                </span>
+              </span>
+              <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <ArrowUpRight className="size-4" />
+              </span>
+            </div>
           </Link>
 
           {GROUPS.map((group) => (
-            <section key={group.label} className="mt-6">
-              <div className="mb-2 flex items-baseline justify-between gap-2 px-1">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+            <section key={group.label} className="mt-7">
+              <div className="mb-2.5 flex items-baseline justify-between gap-2 px-0.5">
+                <p className="display text-[13px] font-semibold tracking-[-0.01em] text-foreground">
                   {group.label}
                 </p>
                 <p className="text-[11px] font-medium text-muted-foreground/70">{group.hint}</p>
               </div>
-              <div className="overflow-hidden rounded-[20px] border border-border bg-card shadow-[var(--shadow-card)]">
-                <div className="divide-y divide-border">
-                  {group.tools.map((tool) => (
-                    <ToolRow
-                      key={tool.label}
-                      tool={tool}
-                      tone={group.tone}
-                      onClose={onClose}
-                    />
-                  ))}
-                </div>
+              <div className="grid grid-cols-2 gap-2.5 md:grid-cols-3">
+                {group.tools.map((tool) => (
+                  <ToolTile
+                    key={tool.label}
+                    tool={tool}
+                    tone={group.tone}
+                    onClose={onClose}
+                  />
+                ))}
               </div>
             </section>
           ))}
-
-          <section className="mt-6">
-            <p className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-              Recent
-            </p>
-            <div className="overflow-hidden rounded-[20px] border border-border bg-card shadow-[var(--shadow-card)]">
-              {recents.length === 0 ? (
-                <EmptyState
-                  icon={<Sparkles className="size-5" />}
-                  title="Nothing yet"
-                  description="Whatever you create will show up here for quick access."
-                  className="py-10"
-                />
-              ) : (
-                <div className="divide-y divide-border">
-                  {recents.map((item) => (
-                    <Link
-                      key={item.id}
-                      to={item.to}
-                      onClick={onClose}
-                      className="press flex items-center gap-3 px-4 py-3"
-                    >
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-[12px] bg-muted text-muted-foreground">
-                        <item.icon className="size-4" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[14px] font-semibold text-foreground">
-                          {item.title}
-                        </span>
-                        <span className="mt-0.5 block truncate text-[12px] font-medium text-muted-foreground">
-                          {item.meta}
-                        </span>
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
         </div>
       </div>
     </div>
