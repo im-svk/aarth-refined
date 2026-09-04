@@ -525,7 +525,7 @@ function Classes() {
             />
           </Card>
         ) : (
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-4 xl:grid-cols-3">
             {list.map((klass, i) => (
               <ClassCard
                 key={klass.id}
