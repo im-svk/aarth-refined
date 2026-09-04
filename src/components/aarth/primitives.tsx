@@ -26,17 +26,16 @@ export function PageHeader({
       )}
     >
       <div className="min-w-0">
-        {kicker && (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            {kicker}
-          </p>
-        )}
-        <h1 className="display mt-1.5 text-3xl text-foreground sm:text-[2.6rem]">{title}</h1>
+        {kicker && <p className="eyebrow text-muted-foreground">{kicker}</p>}
+        <h1 className="display-lg mt-2 text-[1.75rem] text-foreground sm:text-[2.35rem]">
+          {title}
+        </h1>
         {subtitle && (
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-2.5 max-w-2xl text-[0.9375rem] leading-relaxed text-muted-foreground">
             {subtitle}
           </p>
         )}
+
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
