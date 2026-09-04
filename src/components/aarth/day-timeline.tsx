@@ -47,7 +47,7 @@ export function DayTimeline({
   return (
     <ul className={cn("flex flex-col", className)}>
       {items.map((item) => {
-        const tone = hue(item.classId);
+        const tone = hue(item.id);
         const start = toMinutes(item.time);
         const isNow =
           nowMinutes !== undefined && nowMinutes >= start && nowMinutes < start + item.minutes;
