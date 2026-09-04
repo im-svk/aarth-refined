@@ -153,8 +153,8 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
         </button>
       </div>
 
-      {isAdmin && (
-        <div className="px-3 py-3">
+      <div className="px-3 py-3">
+        {isAdmin ? (
           <Link
             to="/classes"
             className={cn(
@@ -165,8 +165,22 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
             <Plus className="size-4" />
             {!collapsed && "Create New Class"}
           </Link>
-        </div>
-      )}
+        ) : (
+          <button
+            type="button"
+            onClick={onCreate}
+            aria-label="Create"
+            className={cn(
+              "press flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
+              collapsed && "px-0",
+            )}
+          >
+            <Sparkles className="size-4" />
+            {!collapsed && "Create"}
+          </button>
+        )}
+      </div>
+
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
         {groups.map((group) => (
