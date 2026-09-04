@@ -413,7 +413,7 @@ function BottomTabs() {
                 <Link
                   to={tab.to}
                   aria-label="Create"
-                  className="press -mt-5 flex size-14 items-center justify-center rounded-2xl border border-primary/10 bg-primary/5 text-foreground shadow-[var(--shadow-raised)] ring-4 ring-background transition-colors hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/15"
+                  className="press -mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-raised)] ring-4 ring-background transition-transform active:scale-95"
                 >
                   <Plus className="size-6" strokeWidth={2.5} />
                 </Link>
