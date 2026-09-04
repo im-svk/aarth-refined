@@ -18,7 +18,7 @@ import {
   Library,
   ListChecks,
   LogOut,
-  Menu,
+  
   Moon,
   NotebookPen,
   Plus,
