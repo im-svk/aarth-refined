@@ -29,7 +29,7 @@ function JoinClass() {
   return (
     <AuthLayout>
       <div className="mb-6">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="eyebrow text-muted-foreground">
           Class invitation
         </p>
         <h1 className="display mt-2 text-3xl text-foreground">Join this class</h1>

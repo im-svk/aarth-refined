@@ -143,7 +143,7 @@ function TeacherHome() {
 
         {/* Next up — dark navy tile */}
         <div className="rounded-3xl bg-sidebar p-6 text-sidebar-foreground lg:col-span-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
+          <p className="eyebrow text-sidebar-foreground/50">
             Next up · 09:15 IST
           </p>
           <h2 className="display mt-2 text-2xl text-sidebar-foreground">{featured.name}</h2>

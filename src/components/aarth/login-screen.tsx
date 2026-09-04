@@ -69,7 +69,7 @@ export function LoginScreen() {
       <Card className="p-7">
         {mode === "login" && (
           <>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="eyebrow text-muted-foreground">
               Educator sign in
             </p>
             <h1 className="display mt-2 text-[2.1rem] text-foreground">

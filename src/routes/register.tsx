@@ -118,7 +118,7 @@ function Register() {
   return (
     <AuthLayout>
       <Card className="p-7">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="eyebrow text-muted-foreground">
           Institution setup
         </p>
         <h1 className="display mt-2 text-[2rem] text-foreground">

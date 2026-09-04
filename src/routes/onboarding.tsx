@@ -79,7 +79,7 @@ function Onboarding() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 pb-32 pt-8 md:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        <p className="eyebrow text-muted-foreground">
           Welcome, Rajesh
         </p>
         <h1 className="display mt-2 text-4xl text-foreground">

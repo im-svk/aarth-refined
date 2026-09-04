@@ -69,7 +69,7 @@ const ACCOUNT: Item[] = [
 function Group({ label, items }: { label: string; items: Item[] }) {
   return (
     <section>
-      <p className="px-1 pb-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="px-1 pb-2 eyebrow text-muted-foreground">
         {label}
       </p>
       <Card>

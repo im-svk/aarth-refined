@@ -97,7 +97,7 @@ function TeacherCalendar() {
               {WEEKDAYS.map((day) => (
                 <span
                   key={day}
-                  className="pb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground"
+                  className="pb-2 eyebrow text-muted-foreground"
                 >
                   {day.slice(0, 1)}
                 </span>
