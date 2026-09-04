@@ -1,26 +1,38 @@
 import { Link } from "@tanstack/react-router";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { className as classLabel, type ScheduleItem } from "@/data/mock";
 
 /**
- * Google-Calendar style single-day timeline.
- * Hour gutter on the left, hairline hour rules, events absolutely
- * positioned by start time and duration. Tokens only — no category colours.
+ * Google-Calendar "schedule view": a simple stacked agenda, one period below
+ * the other. Each period carries a soft colour band derived from its class so
+ * the day is scannable at a glance. Colours come from the --ev-* tokens.
  */
 
-const HOUR_HEIGHT = 68; // px per hour
-const START_HOUR = 8;
-const END_HOUR = 17;
+const PALETTE = [
+  { bar: "bg-ev-1", surface: "bg-ev-1-bg", text: "text-ev-1" },
+  { bar: "bg-ev-2", surface: "bg-ev-2-bg", text: "text-ev-2" },
+  { bar: "bg-ev-3", surface: "bg-ev-3-bg", text: "text-ev-3" },
+  { bar: "bg-ev-4", surface: "bg-ev-4-bg", text: "text-ev-4" },
+  { bar: "bg-ev-5", surface: "bg-ev-5-bg", text: "text-ev-5" },
+] as const;
+
+function hue(classId: string) {
+  let sum = 0;
+  for (const ch of classId) sum += ch.charCodeAt(0);
+  return PALETTE[sum % PALETTE.length]!;
+}
 
 function toMinutes(time: string) {
   const [h, m] = time.split(":").map(Number);
   return (h ?? 0) * 60 + (m ?? 0);
 }
 
-function label(hour: number) {
-  const suffix = hour >= 12 ? "PM" : "AM";
-  const h = hour % 12 === 0 ? 12 : hour % 12;
-  return `${h} ${suffix}`;
+function endLabel(time: string, minutes: number) {
+  const total = toMinutes(time) + minutes;
+  const h = Math.floor(total / 60) % 24;
+  const m = total % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
 export function DayTimeline({
@@ -29,85 +41,68 @@ export function DayTimeline({
   className,
 }: {
   items: ScheduleItem[];
-  /** Minutes since midnight for the "now" line; omit to hide it. */
+  /** Minutes since midnight, used to mark the period in progress. */
   nowMinutes?: number | undefined;
   className?: string;
 }) {
-  const hours = Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, i) => START_HOUR + i);
-  const height = (END_HOUR - START_HOUR) * HOUR_HEIGHT;
-  const top = (mins: number) => ((mins - START_HOUR * 60) / 60) * HOUR_HEIGHT;
-
   return (
-    <div className={cn("relative", className)} style={{ height }}>
-      {/* Hour rules + gutter */}
-      {hours.map((hour) => (
-        <div
-          key={hour}
-          className="absolute inset-x-0 flex items-start gap-3"
-          style={{ top: top(hour * 60) }}
-        >
-          <span className="numeric w-12 shrink-0 -translate-y-1.5 text-right text-[11px] font-medium text-muted-foreground/70">
-            {label(hour)}
-          </span>
-          <span className="mt-0 h-px flex-1 bg-border" />
-        </div>
-      ))}
+    <ul className={cn("flex flex-col gap-2", className)}>
+      {items.map((item) => {
+        const tone = hue(item.classId);
+        const start = toMinutes(item.time);
+        const isNow =
+          nowMinutes !== undefined && nowMinutes >= start && nowMinutes < start + item.minutes;
+        const isPast = nowMinutes !== undefined && nowMinutes >= start + item.minutes;
 
-      {/* Events */}
-      <div className="absolute inset-y-0 left-[60px] right-0">
-        {items.map((item) => {
-          const start = toMinutes(item.time);
-          const blockHeight = Math.max(44, (item.minutes / 60) * HOUR_HEIGHT - 4);
-          const isNow =
-            nowMinutes !== undefined &&
-            nowMinutes >= start &&
-            nowMinutes < start + item.minutes;
-          return (
+        return (
+          <li key={item.id}>
             <Link
-              key={item.id}
               to="/classes/$classId"
               params={{ classId: item.classId }}
-              className="press absolute inset-x-0 block"
-              style={{ top: top(start), height: blockHeight }}
+              className={cn(
+                "press flex items-stretch gap-3 rounded-2xl border border-border p-2 transition-colors hover:bg-muted/60",
+                isNow ? tone.surface : "bg-card",
+                isPast && "opacity-60",
+              )}
             >
-              <div
-                className={cn(
-                  "flex h-full flex-col justify-center overflow-hidden rounded-lg border-l-[3px] px-3 py-1.5",
-                  isNow
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-primary/60 bg-tint text-tint-foreground",
-                )}
-              >
-                <p className="truncate text-[13px] font-semibold leading-tight">{item.title}</p>
-                <p
-                  className={cn(
-                    "truncate text-[11px] leading-tight",
-                    isNow ? "text-primary-foreground/75" : "text-tint-foreground/70",
+              <div className="numeric flex w-14 shrink-0 flex-col justify-center py-1 pl-1 text-right">
+                <span className="text-[13px] font-semibold leading-tight text-foreground">
+                  {item.time}
+                </span>
+                <span className="text-[11px] leading-tight text-muted-foreground">
+                  {endLabel(item.time, item.minutes)}
+                </span>
+              </div>
+
+              <span className={cn("w-1 shrink-0 rounded-full", tone.bar)} aria-hidden />
+
+              <div className="min-w-0 flex-1 py-1">
+                <div className="flex min-w-0 items-center gap-2">
+                  <p className="min-w-0 flex-1 text-[15px] font-semibold leading-tight text-foreground">
+                    {item.title}
+                  </p>
+                  {isNow && (
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide",
+                        tone.surface,
+                        tone.text,
+                      )}
+                    >
+                      Now
+                    </span>
                   )}
-                >
-                  {item.time} · {classLabel(item.classId)} · {item.room}
+                </div>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {classLabel(item.classId)} · {item.room} · {item.minutes} min
                 </p>
               </div>
-            </Link>
-          );
-        })}
-      </div>
 
-      {/* Now indicator */}
-      {nowMinutes !== undefined &&
-        nowMinutes >= START_HOUR * 60 &&
-        nowMinutes <= END_HOUR * 60 && (
-          <div
-            className="pointer-events-none absolute inset-x-0 flex items-center gap-1.5"
-            style={{ top: top(nowMinutes) }}
-          >
-            <span className="numeric w-12 shrink-0 text-right text-[10px] font-bold text-destructive">
-              now
-            </span>
-            <span className="size-1.5 shrink-0 rounded-full bg-destructive" />
-            <span className="h-px flex-1 bg-destructive/70" />
-          </div>
-        )}
-    </div>
+              <ChevronRight className="my-auto size-4 shrink-0 text-muted-foreground/60" />
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
