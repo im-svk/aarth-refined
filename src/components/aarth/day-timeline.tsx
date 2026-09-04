@@ -54,20 +54,20 @@ export function DayTimeline({
         const isPast = nowMinutes !== undefined && nowMinutes >= start + item.minutes;
 
         return (
-          <li key={item.id} className="group relative grid grid-cols-[3.5rem_minmax(0,1fr)] gap-3 pb-3 last:pb-0">
-            <div className="numeric relative flex shrink-0 flex-col items-end pt-3 text-right">
+          <li key={item.id} className="group relative grid grid-cols-[2.5rem_minmax(0,1fr)] gap-2 pb-2 last:pb-0">
+            <div className="numeric relative flex shrink-0 flex-col items-end pt-2 text-right">
               <span className="text-[12px] font-semibold leading-none text-foreground">
                 {item.time}
               </span>
-              <span className="mt-1 text-[10px] leading-none text-muted-foreground">
+              <span className="mt-1 text-[9px] leading-none text-muted-foreground">
                 {endLabel(item.time, item.minutes)}
               </span>
               <span
-                className="absolute -right-[0.45rem] top-[1.05rem] size-1.5 rounded-full bg-border group-last:hidden"
+                className="absolute -right-[0.25rem] top-[0.7rem] size-1 rounded-full bg-border group-last:hidden"
                 aria-hidden
               />
               <span
-                className="absolute -bottom-1 -right-[0.275rem] top-[1.35rem] w-px bg-border group-last:hidden"
+                className="absolute -bottom-1 -right-[0.25rem] top-[0.95rem] w-px bg-border group-last:hidden"
                 aria-hidden
               />
             </div>
@@ -75,35 +75,35 @@ export function DayTimeline({
               to="/classes/$classId"
               params={{ classId: item.classId }}
               className={cn(
-                "press relative flex min-h-[4.75rem] min-w-0 items-center gap-3 overflow-hidden rounded-xl px-3.5 py-3 transition-[filter] hover:brightness-[0.98]",
+                "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-lg px-3 py-2 transition-[filter] hover:brightness-[0.98]",
                 tone.surface,
                 isPast && "opacity-55",
               )}
             >
-              <span className={cn("absolute inset-y-0 left-0 w-1", tone.bar)} aria-hidden />
+              <span className={cn("absolute inset-y-2 left-0 w-[2px] rounded-l-full", tone.bar)} aria-hidden />
 
-              <div className="min-w-0 flex-1 py-1">
+              <div className="min-w-0 flex-1 pl-1">
                 <div className="flex min-w-0 items-start gap-2">
-                  <p className={cn("min-w-0 flex-1 text-[14px] font-semibold leading-snug", tone.text)}>
+                  <p className={cn("min-w-0 flex-1 text-[13px] font-semibold leading-tight", tone.text)}>
                     {item.title}
                   </p>
                   {isNow && (
                     <span
                       className={cn(
-                        "shrink-0 rounded-full bg-card/70 px-2 py-0.5 text-[10px] font-semibold",
+                        "shrink-0 rounded-full bg-card/80 px-1.5 py-0.5 text-[9px] font-semibold tracking-wide",
                         tone.text,
                       )}
                     >
-                      Now
+                      NOW
                     </span>
                   )}
                 </div>
-                <p className="mt-1 truncate text-[11px] text-foreground/65">
+                <p className="mt-0.5 truncate text-[10px] text-foreground/65">
                   {classLabel(item.classId)} · {item.room}
                 </p>
               </div>
 
-              <ChevronRight className={cn("size-4 shrink-0 opacity-55", tone.text)} />
+              <ChevronRight className={cn("size-4 shrink-0 opacity-50", tone.text)} />
             </Link>
           </li>
         );
