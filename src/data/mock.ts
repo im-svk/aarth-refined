@@ -15,6 +15,8 @@ export const INSTITUTION = {
   city: "Bengaluru",
   state: "Karnataka",
   logoInitials: "SV",
+  /** Institution logo; swap this URL for the real uploaded logo. */
+  logoUrl: "",
   plan: "Essential",
 };
 
