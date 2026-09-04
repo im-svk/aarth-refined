@@ -299,9 +299,76 @@ function TopBar({ title }: { title: string }) {
 
 /* ---------------- Phone chrome ---------------- */
 
-function MobileTopBar({ title, back }: { title: string; back?: boolean | undefined }) {
+export function InstitutionMark({ size = 36 }: { size?: number }) {
+  if (INSTITUTION.logoUrl) {
+    return (
+      <img
+        src={INSTITUTION.logoUrl}
+        alt={`${INSTITUTION.name} logo`}
+        width={size}
+        height={size}
+        className="shrink-0 rounded-xl border border-border object-contain"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <span
+      className="flex shrink-0 items-center justify-center rounded-xl bg-primary text-[13px] font-bold text-primary-foreground"
+      style={{ width: size, height: size }}
+      aria-label={INSTITUTION.name}
+    >
+      {INSTITUTION.logoInitials}
+    </span>
+  );
+}
+
+function MobileTopBar({
+  title,
+  back,
+  variant = "default",
+}: {
+  title: string;
+  back?: boolean | undefined;
+  variant?: "default" | "brand";
+}) {
   const router = useRouter();
   const { user } = useApp();
+
+  if (variant === "brand") {
+    return (
+      <header
+        className="sticky top-0 z-20 grid h-16 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur md:hidden"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        <InstitutionMark />
+        <div className="min-w-0">
+          <p className="truncate text-[13px] font-semibold leading-tight text-foreground">
+            {INSTITUTION.name}
+          </p>
+          <p className="truncate text-[11px] leading-tight text-muted-foreground">
+            {INSTITUTION.area}
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <Link
+            to="/notifications"
+            aria-label="Notifications"
+            className="press relative inline-flex size-10 items-center justify-center rounded-xl text-muted-foreground"
+          >
+            <Bell className="size-5" />
+            {unread > 0 && (
+              <span className="absolute right-2 top-2 size-2 rounded-full bg-primary" />
+            )}
+          </Link>
+          <Link to="/settings" aria-label="Your profile" className="press p-0.5">
+            <Avatar name={user.name} size="sm" />
+          </Link>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header
       className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border bg-background/90 px-3 backdrop-blur md:hidden"
@@ -328,6 +395,7 @@ function MobileTopBar({ title, back }: { title: string; back?: boolean | undefin
     </header>
   );
 }
+
 
 function BottomTabs() {
   const pathname = usePathname();
@@ -379,18 +447,21 @@ export function AppShell({
   back,
   children,
   wide,
+  mobileHeader = "default",
 }: {
   title: string;
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
+  mobileHeader?: "default" | "brand";
 }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar title={title} />
-        <MobileTopBar title={title} back={back} />
+        <MobileTopBar title={title} back={back} variant={mobileHeader} />
+
         <main
           className={cn(
             "mx-auto w-full flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8",
