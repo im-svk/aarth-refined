@@ -110,69 +110,86 @@ function Profile() {
   const classTeacherOf = myClasses[0]?.id;
 
   return (
-    <AppShell title="Profile" mobileHeader="none">
-      <div className="space-y-6">
+    <AppShell title="Profile">
+      <div className="space-y-5">
         {/* Profile header */}
-        <Card>
-          <div className="flex items-start gap-4 p-4 pb-3.5">
-            <Avatar name={user.name} size="lg" className="size-16 text-lg" />
-            <div className="min-w-0 flex-1 pt-0.5">
-              <h1 className="display truncate text-[22px] font-semibold leading-tight text-foreground">
-                {user.name}
-              </h1>
-              <p className="mt-0.5 truncate text-[13px] font-medium text-muted-foreground">
-                {user.title}
-              </p>
-              <p className="mt-1 truncate text-[12px] text-muted-foreground">
-                {INSTITUTION.name} · {INSTITUTION.area}
-              </p>
+        <Card className="relative">
+          <Link
+            to="/settings"
+            aria-label="Edit profile"
+            className="press absolute right-3 top-3 inline-flex size-9 items-center justify-center rounded-full border border-border bg-card text-muted-foreground"
+          >
+            <Pencil className="size-4" />
+          </Link>
+
+          <div className="flex flex-col items-center px-6 pb-5 pt-7 text-center">
+            <Avatar
+              name={user.name}
+              className="size-24 text-[1.75rem] font-semibold shadow-[var(--shadow-raised)]"
+            />
+            <h1 className="display mt-4 text-[1.5rem] font-semibold tracking-[-0.02em] text-foreground">
+              {user.name}
+            </h1>
+            <p className="mt-1 text-[0.9375rem] font-medium text-primary">{user.title}</p>
+            <p className="mt-1 text-[13px] text-muted-foreground">
+              {INSTITUTION.name} · {INSTITUTION.area}
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              <a
+                href={`mailto:${user.email}`}
+                className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-[12px] font-medium text-muted-foreground"
+              >
+                <Mail className="size-3.5 shrink-0" />
+                <span className="truncate">{user.email}</span>
+              </a>
+              {teacher?.phone && (
+                <a
+                  href={`tel:${teacher.phone.replace(/\s/g, "")}`}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-[12px] tabular-nums font-medium text-muted-foreground"
+                >
+                  <Phone className="size-3.5 shrink-0" />
+                  {teacher.phone}
+                </a>
+              )}
             </div>
+
             <Link
               to="/settings"
-              aria-label="Edit profile"
-              className="press inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-card text-muted-foreground"
+              className="press mt-5 inline-flex h-9 items-center gap-1.5 rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground"
             >
-              <Pencil className="size-4" />
+              <Pencil className="size-3.5" />
+              Edit profile
             </Link>
           </div>
+        </Card>
 
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 px-4 pb-4">
-            <a
-              href={`mailto:${user.email}`}
-              className="inline-flex min-w-0 items-center gap-1.5 text-[12px] text-muted-foreground"
-            >
-              <Mail className="size-3.5 shrink-0" />
-              <span className="truncate">{user.email}</span>
-            </a>
-            {teacher?.phone && (
-              <a
-                href={`tel:${teacher.phone.replace(/\s/g, "")}`}
-                className="inline-flex items-center gap-1.5 text-[12px] tabular-nums text-muted-foreground"
-              >
-                <Phone className="size-3.5 shrink-0" />
-                {teacher.phone}
-              </a>
-            )}
-          </div>
-
-          {isAdmin ? (
-            <TagBlock label="Role">
+        {isAdmin ? (
+          <Card className="p-4">
+            <p className="eyebrow pb-2 text-muted-foreground">Role</p>
+            <div className="flex flex-wrap gap-1.5">
               <Tag label={user.title} tone="ev-1" />
               <Tag label={`Plan · ${INSTITUTION.plan}`} />
               <Tag label={`${classes.length} classes`} />
-            </TagBlock>
-          ) : (
-            <>
-              {mySubjects.length > 0 && (
-                <TagBlock label="My subjects">
+            </div>
+          </Card>
+        ) : (
+          <>
+            {mySubjects.length > 0 && (
+              <Card className="p-4">
+                <p className="eyebrow pb-2 text-muted-foreground">My subjects</p>
+                <div className="flex flex-wrap gap-1.5">
                   {mySubjects.map((subject) => (
                     <Tag key={subject} label={subject} tone={toneFor(subject)} />
                   ))}
                   {teacher?.department && <Tag label={`${teacher.department} dept.`} />}
-                </TagBlock>
-              )}
-              {myClasses.length > 0 && (
-                <TagBlock label="My classes">
+                </div>
+              </Card>
+            )}
+            {myClasses.length > 0 && (
+              <Card className="p-4">
+                <p className="eyebrow pb-2 text-muted-foreground">My classes</p>
+                <div className="flex flex-wrap gap-1.5">
                   {myClasses.map((cls) => (
                     <Tag
                       key={cls.id}
@@ -181,11 +198,11 @@ function Profile() {
                       {...(cls.id === classTeacherOf ? { note: "Class teacher" } : {})}
                     />
                   ))}
-                </TagBlock>
-              )}
-            </>
-          )}
-        </Card>
+                </div>
+              </Card>
+            )}
+          </>
+        )}
 
         <Group label="People">
           <Link to="/students">
