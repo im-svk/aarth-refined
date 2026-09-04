@@ -40,8 +40,11 @@ function Analytics() {
           subtitle="How your classes are performing, and where the syllabus is slipping."
         />
 
-        {!planEnabled("analytics") ? (
-          <PlanGate feature="Analytics" />
+        {!planEnabled ? (
+          <PlanGate
+            feature="Analytics"
+            description="Class performance, quiz participation and syllabus pacing insights are part of a higher institution plan. Your admin can enable it for all faculty."
+          />
         ) : (
           <>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
