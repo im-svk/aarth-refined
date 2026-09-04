@@ -1,0 +1,425 @@
+import { useState, type ReactNode } from "react";
+import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import {
+  BarChart3,
+  Bell,
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ClipboardList,
+  Compass,
+  FileText,
+  FolderOpen,
+  GraduationCap,
+  Home,
+  LayoutGrid,
+  LifeBuoy,
+  Library,
+  ListChecks,
+  LogOut,
+  Menu,
+  Moon,
+  NotebookPen,
+  Plus,
+  Presentation,
+  Search,
+  Settings,
+  Sparkles,
+  Sun,
+  Users,
+  UserSquare2,
+  X,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useApp } from "@/lib/app-context";
+import { INSTITUTION, notifications } from "@/data/mock";
+import { Avatar, IconButton, Pill } from "./primitives";
+
+type NavItem = {
+  label: string;
+  to: string;
+  icon: typeof Home;
+  roles?: ("admin" | "teacher")[];
+  gated?: boolean;
+};
+
+type NavGroup = { label: string; items: NavItem[] };
+
+const NAV: NavGroup[] = [
+  {
+    label: "Workspace",
+    items: [
+      { label: "Home", to: "/dashboard", icon: Home },
+      { label: "Classes", to: "/classes", icon: GraduationCap },
+      { label: "Class Planner", to: "/class-planner", icon: ListChecks, roles: ["teacher"], gated: true },
+      { label: "Calendar", to: "/calendar", icon: CalendarDays, roles: ["teacher"] },
+      { label: "Analytics", to: "/analytics", icon: BarChart3, roles: ["admin"], gated: true },
+    ],
+  },
+  {
+    label: "Teach",
+    items: [
+      { label: "Create Studio", to: "/academic-tools", icon: Sparkles, roles: ["teacher"] },
+      { label: "Study Material", to: "/aidocs", icon: FileText, roles: ["teacher"] },
+      { label: "Quizzes", to: "/quizzes", icon: ClipboardList, roles: ["teacher"] },
+      { label: "Question Papers", to: "/papers", icon: NotebookPen, roles: ["teacher"] },
+      { label: "Presentations", to: "/presentations", icon: Presentation, roles: ["teacher"] },
+      { label: "Assignments", to: "/assignments", icon: LayoutGrid, roles: ["teacher"], gated: true },
+      { label: "Notes", to: "/notes", icon: FolderOpen, roles: ["teacher"] },
+      { label: "Curriculum", to: "/curriculum", icon: Compass, roles: ["teacher"] },
+    ],
+  },
+  {
+    label: "Library",
+    items: [
+      { label: "Library", to: "/content", icon: Library },
+      { label: "Academic Textbooks", to: "/textbooks", icon: BookOpen },
+    ],
+  },
+  {
+    label: "People",
+    items: [
+      { label: "Students", to: "/students", icon: Users },
+      { label: "Teachers", to: "/teachers", icon: UserSquare2 },
+    ],
+  },
+  {
+    label: "More",
+    items: [
+      { label: "Notifications", to: "/notifications", icon: Bell },
+      { label: "Settings", to: "/settings", icon: Settings },
+      { label: "Help", to: "/help", icon: LifeBuoy },
+    ],
+  },
+];
+
+const TABS: { label: string; to: string; icon: typeof Home }[] = [
+  { label: "Home", to: "/dashboard", icon: Home },
+  { label: "Classes", to: "/classes", icon: GraduationCap },
+  { label: "Create", to: "/academic-tools", icon: Plus },
+  { label: "Library", to: "/content", icon: Library },
+  { label: "More", to: "/more", icon: Menu },
+];
+
+const unread = notifications.filter((n) => !n.read).length;
+
+function useVisibleNav() {
+  const { isAdmin } = useApp();
+  return NAV.map((group) => ({
+    ...group,
+    items: group.items.filter(
+      (item) => !item.roles || item.roles.includes(isAdmin ? "admin" : "teacher"),
+    ),
+  })).filter((group) => group.items.length > 0);
+}
+
+function usePathname() {
+  return useRouterState({ select: (s) => s.location.pathname });
+}
+
+/* ---------------- Desktop sidebar ---------------- */
+
+function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false);
+  const pathname = usePathname();
+  const groups = useVisibleNav();
+  const { user, isAdmin, theme, setTheme, resolvedTheme } = useApp();
+
+  return (
+    <aside
+      className={cn(
+        "sticky top-0 hidden h-screen shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex",
+        collapsed ? "w-[76px]" : "w-[268px]",
+      )}
+      style={{ transition: "width 160ms cubic-bezier(0.4,0,0.2,1)" }}
+    >
+      <div className="flex items-center gap-3 border-b border-sidebar-border px-4 py-4">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
+          {INSTITUTION.logoInitials}
+        </span>
+        {!collapsed && (
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-sidebar-foreground">Aarth Educator</p>
+            <p className="truncate text-[11px] text-muted-foreground">Management Portal</p>
+          </div>
+        )}
+        <IconButton
+          label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          onClick={() => setCollapsed((v) => !v)}
+          className="size-9"
+        >
+          <ChevronLeft className={cn("size-4", collapsed && "rotate-180")} />
+        </IconButton>
+      </div>
+
+      {isAdmin && (
+        <div className="px-3 py-3">
+          <Link
+            to="/classes"
+            className={cn(
+              "press flex h-10 items-center justify-center gap-2 rounded-xl bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/90",
+              collapsed && "px-0",
+            )}
+          >
+            <Plus className="size-4" />
+            {!collapsed && "Create New Class"}
+          </Link>
+        </div>
+      )}
+
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+        {groups.map((group) => (
+          <div key={group.label} className="mb-4">
+            {!collapsed && (
+              <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                {group.label}
+              </p>
+            )}
+            <ul className="space-y-0.5">
+              {group.items.map((item) => {
+                const active =
+                  pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(`${item.to}/`));
+                return (
+                  <li key={item.to}>
+                    <Link
+                      to={item.to}
+                      title={item.label}
+                      className={cn(
+                        "flex h-10 items-center gap-2.5 rounded-xl px-2.5 text-[13px] font-medium transition-colors",
+                        active
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        collapsed && "justify-center px-0",
+                      )}
+                    >
+                      <item.icon className="size-4 shrink-0" />
+                      {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
+                      {!collapsed && item.to === "/notifications" && unread > 0 && (
+                        <Pill tone="tint">{unread}</Pill>
+                      )}
+                      {!collapsed && item.gated && <Pill tone="outline">Plan</Pill>}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </nav>
+
+      <div className="border-t border-sidebar-border p-3">
+        <button
+          type="button"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          className={cn(
+            "press mb-2 flex h-10 w-full items-center gap-2.5 rounded-xl px-2.5 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+            collapsed && "justify-center px-0",
+          )}
+        >
+          {resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          {!collapsed && (theme === "dark" ? "Light mode" : "Dark mode")}
+        </button>
+        <div className={cn("flex items-center gap-2.5", collapsed && "justify-center")}>
+          <Avatar name={user.name} size="sm" />
+          {!collapsed && (
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-semibold text-foreground">{user.name}</p>
+              <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
+            </div>
+          )}
+          {!collapsed && (
+            <Link
+              to="/auth"
+              aria-label="Sign out"
+              className="press inline-flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              <LogOut className="size-4" />
+            </Link>
+          )}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/* ---------------- Top bar (desktop) ---------------- */
+
+function TopBar({ title }: { title: string }) {
+  const { user, role, setRole } = useApp();
+  return (
+    <header className="sticky top-0 z-20 hidden h-14 items-center gap-3 border-b border-border bg-background/85 px-6 backdrop-blur md:flex">
+      <p className="text-xs font-semibold text-muted-foreground">{title}</p>
+      <label className="ml-auto flex h-9 w-64 items-center gap-2 rounded-xl border border-border bg-card px-3">
+        <Search className="size-4 text-muted-foreground" />
+        <input
+          placeholder="Search classes, students, material"
+          className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
+        />
+      </label>
+      <select
+        value={role}
+        onChange={(event) => setRole(event.target.value as typeof role)}
+        aria-label="Preview role"
+        className="h-9 rounded-xl border border-border bg-card px-2 text-xs font-semibold text-muted-foreground outline-none"
+      >
+        <option value="teacher">Teacher view</option>
+        <option value="admin">Admin view</option>
+        <option value="super_admin">Super admin view</option>
+      </select>
+      <Link
+        to="/notifications"
+        aria-label="Notifications"
+        className="press relative inline-flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+      >
+        <Bell className="size-4" />
+        {unread > 0 && (
+          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary" />
+        )}
+      </Link>
+      <Link to="/settings" aria-label="Your profile">
+        <Avatar name={user.name} size="sm" />
+      </Link>
+    </header>
+  );
+}
+
+/* ---------------- Phone chrome ---------------- */
+
+function MobileTopBar({ title, back }: { title: string; back?: boolean }) {
+  const router = useRouter();
+  const { user } = useApp();
+  return (
+    <header
+      className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-border bg-background/90 px-3 backdrop-blur md:hidden"
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+    >
+      {back ? (
+        <IconButton label="Back" onClick={() => router.history.back()}>
+          <ChevronLeft className="size-5" />
+        </IconButton>
+      ) : (
+        <Link to="/settings" aria-label="Your profile" className="p-1.5">
+          <Avatar name={user.name} size="sm" />
+        </Link>
+      )}
+      <p className="flex-1 truncate text-center text-sm font-semibold text-foreground">{title}</p>
+      <Link
+        to="/notifications"
+        aria-label="Notifications"
+        className="press relative inline-flex size-11 items-center justify-center rounded-xl text-muted-foreground"
+      >
+        <Bell className="size-5" />
+        {unread > 0 && <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-primary" />}
+      </Link>
+    </header>
+  );
+}
+
+function BottomTabs() {
+  const pathname = usePathname();
+  return (
+    <nav
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur md:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      <ul className="flex items-stretch">
+        {TABS.map((tab) => {
+          const active = pathname === tab.to;
+          if (tab.label === "Create") {
+            return (
+              <li key={tab.to} className="flex flex-1 justify-center">
+                <Link
+                  to={tab.to}
+                  aria-label="Create"
+                  className="press -mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-raised)]"
+                >
+                  <Plus className="size-6" />
+                </Link>
+              </li>
+            );
+          }
+          return (
+            <li key={tab.to} className="flex-1">
+              <Link
+                to={tab.to}
+                className={cn(
+                  "flex min-h-[3.5rem] flex-col items-center justify-center gap-1 py-2 text-[10px] font-semibold",
+                  active ? "text-primary" : "text-muted-foreground",
+                )}
+              >
+                <tab.icon className="size-5" />
+                {tab.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+/* ---------------- Shell ---------------- */
+
+export function AppShell({
+  title,
+  back,
+  children,
+  wide,
+}: {
+  title: string;
+  back?: boolean;
+  children: ReactNode;
+  wide?: boolean;
+}) {
+  return (
+    <div className="flex min-h-screen w-full bg-background">
+      <Sidebar />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar title={title} />
+        <MobileTopBar title={title} back={back} />
+        <main
+          className={cn(
+            "mx-auto w-full flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8",
+            wide ? "max-w-[1400px]" : "max-w-6xl",
+          )}
+        >
+          {children}
+        </main>
+        <BottomTabs />
+      </div>
+    </div>
+  );
+}
+
+export function AuthLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex flex-1 items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
+              {INSTITUTION.logoInitials}
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Aarth Educator</p>
+              <p className="text-[11px] text-muted-foreground">Management Portal</p>
+            </div>
+          </div>
+          {children}
+        </div>
+      </div>
+      <footer className="border-t border-border px-4 py-5">
+        <div className="mx-auto flex max-w-md flex-wrap items-center justify-between gap-3 text-[11px] text-muted-foreground">
+          <span>© 2026 Aarth</span>
+          <div className="flex gap-4">
+            <Link to="/help">Contact</Link>
+            <a href="#terms">Terms</a>
+            <a href="#privacy">Privacy</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export { NAV, X };
