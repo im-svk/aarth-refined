@@ -850,22 +850,26 @@ export function className(id: string) {
   return classById(id)?.name ?? "Unassigned";
 }
 
+const MONTHS_SHORT = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+function pad(n: number) {
+  return String(n).padStart(2, "0");
+}
+
+// Deterministic en-IN style formatting (SSR and client must match exactly).
 export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  const d = new Date(iso);
+  return `${pad(d.getUTCDate())} ${MONTHS_SHORT[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 export function formatDateTime(iso: string) {
-  return new Date(iso).toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const d = new Date(iso);
+  return `${pad(d.getUTCDate())} ${MONTHS_SHORT[d.getUTCMonth()]}, ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
 }
+
 
 export function relativeTime(iso: string) {
   const now = new Date("2026-09-04T17:28:00+05:30").getTime();
