@@ -47,7 +47,7 @@ export function DayTimeline({
   return (
     <ul className={cn("relative flex flex-col", className)}>
       <span
-        className="absolute bottom-3 left-[2.25rem] top-3 w-px bg-border"
+        className="absolute bottom-3 left-[2.25rem] top-3 w-px bg-primary/20"
         aria-hidden
       />
       {items.map((item) => {
@@ -74,7 +74,7 @@ export function DayTimeline({
               <span
                 className={cn(
                   "absolute -right-[0.3125rem] top-[0.55rem] size-2 rounded-full border-2 border-card",
-                  isNow ? "bg-primary ring-2 ring-primary/15" : "bg-border",
+                  isNow ? "bg-primary ring-2 ring-primary/15" : "bg-muted-foreground/30",
                 )}
                 aria-hidden
               />
@@ -85,8 +85,9 @@ export function DayTimeline({
               className={cn(
                 "press relative flex min-h-[3.5rem] min-w-0 items-center gap-2 overflow-hidden rounded-md px-3 py-2 transition-[filter,box-shadow] hover:brightness-[0.98]",
                 tone.surface,
-                isPast && "opacity-55",
-                isNow && "ring-1 ring-primary/20 shadow-sm",
+                !isNow && "opacity-65",
+                isPast && "opacity-45",
+                isNow && "ring-1 ring-primary/30 shadow-sm",
               )}
             >
               <span className={cn("absolute inset-y-2 left-0 w-[2px] rounded-l-full", tone.bar)} aria-hidden />
