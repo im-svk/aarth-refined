@@ -47,16 +47,16 @@ const GROUPS: Group[] = [
     tools: [
       {
         label: "Quiz",
-        description: "AI questions with a share code for students",
+        description: "AI questions + share code",
         to: "/quizzes",
         icon: ClipboardList,
       },
       {
         label: "Question paper",
-        description: "Blueprint exam paper with a marks matrix",
+        description: "Blueprint paper with marks matrix",
         to: "/papers",
         icon: NotebookPen,
-        note: "Best on desktop",
+        note: "Desktop",
       },
     ],
   },
@@ -67,21 +67,21 @@ const GROUPS: Group[] = [
     tools: [
       {
         label: "Presentation",
-        description: "Slide deck generated from a chapter",
+        description: "Slide deck from a chapter",
         to: "/presentations",
         icon: Presentation,
-        note: "Best on desktop",
+        note: "Desktop",
       },
       {
         label: "Assignment",
-        description: "Homework, project, essay or lab report",
+        description: "Homework, project or lab report",
         to: "/assignments",
         icon: LayoutGrid,
         gated: true,
       },
       {
         label: "Note",
-        description: "Upload and organise your own teaching files",
+        description: "Upload your own teaching files",
         to: "/notes",
         icon: StickyNote,
       },
@@ -94,13 +94,13 @@ const GROUPS: Group[] = [
     tools: [
       {
         label: "Curriculum plan",
-        description: "Map chapters across the academic year",
+        description: "Map chapters across the year",
         to: "/curriculum",
         icon: Compass,
       },
       {
         label: "Class planner",
-        description: "Weekly plan of what you teach, class by class",
+        description: "Weekly plan, class by class",
         to: "/class-planner",
         icon: ListChecks,
         gated: true,
