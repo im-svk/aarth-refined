@@ -1,24 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AppShell } from "@/components/aarth/app-shell";
-import { PageHeader, LoadingPanel } from "@/components/aarth/primitives";
+import { LoginScreen } from "@/components/aarth/login-screen";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Sign in — Aarth Educator" },
-      { name: "description", content: "Sign in in Aarth Educator." },
-      { property: "og:title", content: "Sign in — Aarth Educator" },
-      { property: "og:description", content: "Sign in in Aarth Educator." },
+      { title: "Educator sign in — Aarth Educator" },
+      {
+        name: "description",
+        content: "Sign in to your Aarth Educator account to manage classes and teaching material.",
+      },
+      { property: "og:title", content: "Educator sign in — Aarth Educator" },
+      {
+        property: "og:description",
+        content: "Sign in to manage your classes, study material and assessments.",
+      },
     ],
   }),
-  component: Page,
+  component: LoginScreen,
 });
-
-function Page() {
-  return (
-    <AppShell title="Sign in">
-      <PageHeader kicker="Aarth" title="Sign in" />
-      <LoadingPanel />
-    </AppShell>
-  );
-}
