@@ -377,14 +377,61 @@ function Classes() {
         </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <SegmentedToggle
-            value={tab}
-            onChange={setTab}
-            options={[
-              { value: "active", label: "Active" },
-              { value: "archived", label: "Archived" },
-            ]}
-          />
+          <div className="flex items-center gap-2">
+            <SegmentedToggle
+              value={tab}
+              onChange={setTab}
+              options={[
+                { value: "active", label: "Active" },
+                { value: "archived", label: "Archived" },
+              ]}
+              className="flex-1 md:flex-none"
+            />
+            <div className="relative md:hidden">
+              <button
+                type="button"
+                aria-label="Filter by academic year"
+                onClick={() => setFilterOpen((v) => !v)}
+                className={cn(
+                  "press inline-flex h-11 items-center gap-1.5 rounded-xl border px-3 transition-colors",
+                  filterOpen
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
+                )}
+              >
+                <SlidersHorizontal className="size-4" />
+                <span className="text-[11px] font-semibold tabular-nums">{year}</span>
+              </button>
+              {filterOpen && (
+                <div className="absolute right-0 top-12 z-30 w-48 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 shadow-[var(--shadow-raised)]">
+                  <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    Academic year
+                  </p>
+                  {academicYears.map((y) => (
+                    <button
+                      key={y}
+                      type="button"
+                      onClick={() => {
+                        setYear(y);
+                        setFilterOpen(false);
+                      }}
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[13px] font-semibold",
+                        y === year ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
+                      )}
+                    >
+                      <span className="tabular-nums">{y}</span>
+                      {y === currentAcademicYear && (
+                        <span className="text-[10px] font-medium text-muted-foreground">
+                          current
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
           <div className="hidden md:block">
             <SearchField
               value={query}
@@ -405,6 +452,7 @@ function Classes() {
             />
           </div>
         </div>
+
 
 
 
