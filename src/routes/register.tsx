@@ -142,6 +142,7 @@ function Register() {
         <div className="mt-7 space-y-2.5">
           <button
             type="button"
+            onClick={oauth}
             disabled={busy}
             className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-primary/10 bg-primary/5 text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-primary/10 disabled:opacity-60 dark:bg-primary/10 dark:hover:bg-primary/15"
           >
