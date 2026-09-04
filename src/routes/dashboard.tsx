@@ -87,59 +87,59 @@ function TeacherHome() {
   const featured = active[3]!;
   return (
     <div className="space-y-6">
-      <PageHeader
-        kicker={todayLabel}
-        title={
-          <>
-            {greeting()}, <em className="text-primary">Ananya</em>
-          </>
-        }
-        subtitle="Two classes today and one paper waiting on you."
-      />
+      {/* Phone greeting — logo + profile live in the top bar */}
+      <div className="md:hidden">
+        <p className="eyebrow text-muted-foreground">{todayLabel}</p>
+        <h1 className="display-lg mt-1.5 text-[1.65rem] text-foreground">
+          {greeting()}, <em>Ananya</em>
+        </h1>
+        <p className="mt-1 text-[13px] text-muted-foreground">{INSTITUTION.name}</p>
+      </div>
+
+      <div className="hidden md:block">
+        <PageHeader
+          kicker={todayLabel}
+          title={
+            <>
+              {greeting()}, <em className="text-primary">Ananya</em>
+            </>
+          }
+          subtitle="Two classes today and one paper waiting on you."
+        />
+      </div>
 
       {/* Bento grid */}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-12">
-        {/* Today's schedule — anchor tile */}
-        <Card className="p-5 lg:col-span-8 lg:row-span-2">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="display text-lg text-foreground">Today's classes</h3>
-            <Pill tone="outline">{todayLabel}</Pill>
+        {/* Today's schedule — calendar day view */}
+        <Card className="p-4 sm:p-5 lg:col-span-8 lg:row-span-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
+            <div className="min-w-0">
+              <h3 className="display text-lg text-foreground">Today's classes</h3>
+              <p className="truncate text-xs text-muted-foreground">
+                {todayLabel} · {todaySchedule.length} periods
+              </p>
+            </div>
+            <Link
+              to="/calendar"
+              aria-label="Open full calendar"
+              className="press inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-foreground hover:bg-muted"
+            >
+              <CalendarDays className="size-4" />
+              <span className="hidden xs:inline sm:inline">Full calendar</span>
+            </Link>
           </div>
-          <ol className="mt-4 space-y-2">
-            {todaySchedule.map((item, index) => (
-              <li
-                key={item.id}
-                className={
-                  index === 0
-                    ? "flex items-center gap-4 rounded-xl border-l-[3px] border-primary bg-muted/60 p-3.5"
-                    : "flex items-center gap-4 rounded-xl border border-border p-3.5"
-                }
-              >
-                <div className="w-14 shrink-0">
-                  <p className="display text-base text-foreground">{item.time}</p>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">IST</p>
-                </div>
 
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-foreground">{item.title}</p>
-                  <p className="truncate text-xs text-muted-foreground">
-                    {className(item.classId)} · {item.room}
-                  </p>
-                </div>
-                {index === 0 && (
-                  <Link
-                    to="/classes/$classId"
-                    params={{ classId: featured.id }}
-                    className="hidden shrink-0 sm:block"
-                  >
-                    <Button size="sm">Open class</Button>
-                  </Link>
-                )}
-
-              </li>
-            ))}
-          </ol>
+          {todaySchedule.length === 0 ? (
+            <EmptyState
+              icon={<CalendarDays className="size-5" />}
+              title="Nothing scheduled today"
+              description="Your timetable is clear — a good day to prepare material."
+            />
+          ) : (
+            <DayTimeline items={todaySchedule} nowMinutes={575} className="mt-4" />
+          )}
         </Card>
+
 
         {/* Next up — dark navy tile */}
         <div className="rounded-3xl bg-sidebar p-6 text-sidebar-foreground lg:col-span-4">
