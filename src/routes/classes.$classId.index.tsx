@@ -81,7 +81,7 @@ function ClassWorkspace() {
     items.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
 
   return (
-    <AppShell title={klass.name} back="/classes">
+    <AppShell title={klass.name} back>
       <div className="space-y-6">
         <PageHeader
           kicker={
@@ -214,7 +214,7 @@ function ClassWorkspace() {
                     <PersonRow
                       key={student.id}
                       name={student.name}
-                      subtitle={`Roll ${student.rollNumber} · ${student.email}`}
+                      meta={`Roll ${student.rollNumber} · ${student.email}`}
                       trailing={student.invited ? <Pill tone="outline">Invited</Pill> : undefined}
                     />
                   ))}
@@ -252,7 +252,7 @@ function ClassWorkspace() {
                     <PersonRow
                       key={teacher.id}
                       name={teacher.name}
-                      subtitle={`${teacher.title} · ${teacher.specializations.join(", ")}`}
+                      meta={`${teacher.title} · ${teacher.specializations.join(", ")}`}
                       trailing={<Pill tone="tint">{teacher.department}</Pill>}
                     />
                   ))}
