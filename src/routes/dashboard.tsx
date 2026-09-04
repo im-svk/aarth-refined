@@ -328,5 +328,9 @@ function AdminHome() {
 
 function Dashboard() {
   const { isAdmin } = useApp();
-  return <AppShell title="Home">{isAdmin ? <AdminHome /> : <TeacherHome />}</AppShell>;
+  return (
+    <AppShell title="Home" mobileHeader="brand">
+      {isAdmin ? <AdminHome /> : <TeacherHome />}
+    </AppShell>
+  );
 }
