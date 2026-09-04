@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-context";
 import { INSTITUTION, notifications } from "@/data/mock";
 import { Avatar, IconButton, Pill } from "./primitives";
+import { CreateSheet } from "./create-sheet";
+
 
 type NavItem = {
   label: string;
@@ -59,8 +61,8 @@ const NAV: NavGroup[] = [
   {
     label: "Teach",
     items: [
-      { label: "Create Studio", to: "/academic-tools", icon: Sparkles, roles: ["teacher"] },
       { label: "Study Material", to: "/aidocs", icon: FileText, roles: ["teacher"] },
+
       { label: "Quizzes", to: "/quizzes", icon: ClipboardList, roles: ["teacher"] },
       { label: "Question Papers", to: "/papers", icon: NotebookPen, roles: ["teacher"] },
       { label: "Presentations", to: "/presentations", icon: Presentation, roles: ["teacher"] },
@@ -96,7 +98,7 @@ const NAV: NavGroup[] = [
 const TABS: { label: string; to: string; icon: typeof Home }[] = [
   { label: "Home", to: "/dashboard", icon: Home },
   { label: "Classes", to: "/classes", icon: GraduationCap },
-  { label: "Create", to: "/academic-tools", icon: Plus },
+  { label: "Create", to: "", icon: Plus },
   { label: "Library", to: "/content", icon: Library },
   { label: "More", to: "/more", icon: Menu },
 ];
@@ -119,7 +121,7 @@ function usePathname() {
 
 /* ---------------- Desktop sidebar ---------------- */
 
-function Sidebar() {
+function Sidebar({ onCreate }: { onCreate: () => void }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const groups = useVisibleNav();
@@ -153,8 +155,8 @@ function Sidebar() {
         </button>
       </div>
 
-      {isAdmin && (
-        <div className="px-3 py-3">
+      <div className="px-3 py-3">
+        {isAdmin ? (
           <Link
             to="/classes"
             className={cn(
@@ -165,8 +167,22 @@ function Sidebar() {
             <Plus className="size-4" />
             {!collapsed && "Create New Class"}
           </Link>
-        </div>
-      )}
+        ) : (
+          <button
+            type="button"
+            onClick={onCreate}
+            aria-label="Create"
+            className={cn(
+              "press flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
+              collapsed && "px-0",
+            )}
+          >
+            <Sparkles className="size-4" />
+            {!collapsed && "Create"}
+          </button>
+        )}
+      </div>
+
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
         {groups.map((group) => (
@@ -398,7 +414,7 @@ function MobileTopBar({
 }
 
 
-function BottomTabs() {
+function BottomTabs({ onCreate }: { onCreate: () => void }) {
   const pathname = usePathname();
   return (
     <nav
@@ -410,17 +426,19 @@ function BottomTabs() {
           const active = pathname === tab.to;
           if (tab.label === "Create") {
             return (
-              <li key={tab.to} className="flex flex-1 justify-center">
-                <Link
-                  to={tab.to}
+              <li key="create" className="flex flex-1 justify-center">
+                <button
+                  type="button"
+                  onClick={onCreate}
                   aria-label="Create"
                   className="press -mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-raised)] ring-4 ring-background transition-transform active:scale-95"
                 >
                   <Plus className="size-6" strokeWidth={2.5} />
-                </Link>
+                </button>
               </li>
             );
           }
+
           return (
             <li key={tab.to} className="flex-1">
               <Link
@@ -459,9 +477,11 @@ export function AppShell({
   wide?: boolean | undefined;
   mobileHeader?: "default" | "brand" | "none";
 }) {
+  const [createOpen, setCreateOpen] = useState(false);
+  const openCreate = () => setCreateOpen(true);
   return (
     <div className="flex min-h-screen w-full bg-background">
-      <Sidebar />
+      <Sidebar onCreate={openCreate} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar title={title} />
         <MobileTopBar title={title} back={back} variant={mobileHeader} />
@@ -474,11 +494,13 @@ export function AppShell({
         >
           {children}
         </main>
-        <BottomTabs />
+        <BottomTabs onCreate={openCreate} />
       </div>
+      <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
     </div>
   );
 }
+
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (

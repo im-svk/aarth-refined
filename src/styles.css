@@ -285,3 +285,14 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
 }
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(3%);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
