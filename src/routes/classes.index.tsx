@@ -301,6 +301,8 @@ function Classes() {
   const [year, setYear] = useState<string>(currentAcademicYear);
   const [query, setQuery] = useState("");
   const [dialog, setDialog] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [loading] = useState(false);
 
   const list = useMemo(
