@@ -401,10 +401,10 @@ function BottomTabs() {
   const pathname = usePathname();
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <ul className="flex items-stretch">
+      <ul className="flex items-stretch px-2 pt-1">
         {TABS.map((tab) => {
           const active = pathname === tab.to;
           if (tab.label === "Create") {
@@ -413,9 +413,9 @@ function BottomTabs() {
                 <Link
                   to={tab.to}
                   aria-label="Create"
-                  className="press -mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[var(--shadow-raised)]"
+                  className="press -mt-5 flex size-14 items-center justify-center rounded-2xl border border-primary/15 bg-tint text-foreground shadow-[var(--shadow-raised)] ring-4 ring-background"
                 >
-                  <Plus className="size-6" />
+                  <Plus className="size-6" strokeWidth={2.5} />
                 </Link>
               </li>
             );
@@ -425,12 +425,15 @@ function BottomTabs() {
               <Link
                 to={tab.to}
                 className={cn(
-                  "flex min-h-[3.5rem] flex-col items-center justify-center gap-1 py-2 text-[10px] font-semibold",
-                  active ? "text-primary" : "text-muted-foreground",
+                  "relative flex min-h-[3.5rem] flex-col items-center justify-center gap-1 py-2 text-[10px] font-semibold transition-colors",
+                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <tab.icon className="size-5" />
+                <tab.icon className={cn("size-5 transition-transform", active && "scale-110")} />
                 {tab.label}
+                {active && (
+                  <span className="absolute bottom-1.5 h-1 w-1 rounded-full bg-primary" />
+                )}
               </Link>
             </li>
           );
