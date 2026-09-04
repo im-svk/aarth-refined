@@ -135,19 +135,13 @@ function ToolRow({
       </span>
 
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-1.5">
-          <p className="display truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
-            {tool.label}
-          </p>
-          {tool.note && (
-            <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground/70">
-              {tool.note}
-            </span>
-          )}
-        </div>
-        <p className="mt-0.5 truncate text-[12.5px] font-medium text-muted-foreground">
-          {tool.description}
+        <p className="display truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
+          {tool.label}
         </p>
+        <p className="mt-0.5 truncate text-[12.5px] font-medium text-muted-foreground">
+          {tool.note ? `${tool.note} · ${tool.description}` : tool.description}
+        </p>
+
       </div>
 
       {locked ? (
