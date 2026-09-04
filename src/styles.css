@@ -160,7 +160,35 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+    font-feature-settings:
+      "cv05" 1,
+      "cv08" 1,
+      "ss03" 1;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.18;
+  }
+
+  button,
+  [role="button"],
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    letter-spacing: inherit;
   }
 
   button,
@@ -173,15 +201,39 @@
   }
 }
 
+/* Apple-style display type: tighter tracking as size grows. */
 @utility display {
   font-family: var(--font-serif);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  line-height: 1.06;
   & em {
     font-style: normal;
   }
 }
+
+@utility display-lg {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.034em;
+  line-height: 1.04;
+}
+
+/* Small all-caps eyebrow: lighter, less shouty than before. */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 590;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+@utility numeric {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
 
 
 @utility press {
