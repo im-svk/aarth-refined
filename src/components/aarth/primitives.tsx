@@ -156,10 +156,13 @@ export function StatTile({
   return (
     <Card className="p-4">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-xs font-medium text-muted-foreground">{label}</p>
+        <p className="text-[0.8125rem] font-medium tracking-[-0.006em] text-muted-foreground">
+          {label}
+        </p>
         {icon && <span className="text-muted-foreground">{icon}</span>}
       </div>
-      <p className="display mt-3 text-3xl text-foreground">{value}</p>
+      <p className="display numeric mt-3 text-[2rem] text-foreground">{value}</p>
+
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </Card>
   );
