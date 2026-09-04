@@ -128,7 +128,7 @@ function TeacherHome() {
               className="press inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-foreground hover:bg-muted"
             >
               <CalendarDays className="size-4" />
-              <span className="hidden xs:inline sm:inline">Full calendar</span>
+              <span className="hidden sm:inline">Full calendar</span>
             </Link>
           </div>
 
