@@ -119,7 +119,7 @@ function usePathname() {
 
 /* ---------------- Desktop sidebar ---------------- */
 
-function Sidebar() {
+function Sidebar({ onCreate }: { onCreate: () => void }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const groups = useVisibleNav();
