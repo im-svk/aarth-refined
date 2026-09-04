@@ -32,7 +32,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { calendarEvents, className, todaySchedule } from "@/data/mock";
 
 export const Route = createFileRoute("/calendar")({
@@ -111,6 +110,12 @@ const ANNOUNCEMENTS = [
 const pad = (value: number) => String(value).padStart(2, "0");
 const isoDate = (year: number, month: number, day: number) =>
   `${year}-${pad(month + 1)}-${pad(day)}`;
+
+const formatIsoLabel = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return iso;
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+};
 
 const typeIcon = (type: ActivityType) => {
   if (type === "Test") return <GraduationCap className="size-4" />;
