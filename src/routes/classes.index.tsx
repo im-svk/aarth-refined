@@ -459,23 +459,27 @@ function Classes() {
               { value: "archived", label: "Archived" },
             ]}
           />
-          <SearchField
-            value={query}
-            onChange={setQuery}
-            placeholder="Search classes"
-            className="lg:w-72"
-          />
-          <FilterChips
-            value={year}
-            onChange={setYear}
-            className="lg:ml-auto"
-            options={academicYears.map((y) => ({
-              value: y,
-              label: y,
-              ...(y === currentAcademicYear ? { hint: "· current" } : {}),
-            }))}
-          />
+          <div className="hidden md:block">
+            <SearchField
+              value={query}
+              onChange={setQuery}
+              placeholder="Search classes"
+              className="lg:w-72"
+            />
+          </div>
+          <div className="hidden md:block lg:ml-auto">
+            <FilterChips
+              value={year}
+              onChange={setYear}
+              options={academicYears.map((y) => ({
+                value: y,
+                label: y,
+                ...(y === currentAcademicYear ? { hint: "· current" } : {}),
+              }))}
+            />
+          </div>
         </div>
+
 
 
         {loading ? (
