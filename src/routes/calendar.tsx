@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarDays, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { DayTimeline } from "@/components/aarth/day-timeline";
 import { AppShell } from "@/components/aarth/app-shell";
 import {
   Card,
@@ -189,20 +190,7 @@ function TeacherCalendar() {
             <div>
               <SectionHeader title="Today's timetable" hint="IST" />
               <Card className="mt-3">
-                <div className="divide-y divide-border">
-                  {todaySchedule.map((item) => (
-                    <ListRow
-                      key={item.id}
-                      icon={<Clock className="size-4" />}
-                      title={item.title}
-                      subtitle={`${className(item.classId)} · ${item.room}`}
-                      showChevron={false}
-                      trailing={
-                        <span className="text-xs font-semibold text-foreground">{item.time}</span>
-                      }
-                    />
-                  ))}
-                </div>
+                <DayTimeline items={todaySchedule} nowMinutes={575} />
               </Card>
             </div>
           </div>
