@@ -1,31 +1,42 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Eye, EyeOff, Mail, MailCheck } from "lucide-react";
+import { Eye, EyeOff, Mail, MailCheck } from "lucide-react";
 import { toast } from "sonner";
 import { AuthLayout } from "./app-shell";
-import { Button, Card, Spinner } from "./primitives";
+import { Button, Spinner } from "./primitives";
 import { cn } from "@/lib/utils";
+import { INSTITUTION } from "@/data/mock";
 
-function Field({
+export const inputClass =
+  "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50";
+
+/* Grouped inset field, Apple Settings style */
+function GroupField({
   label,
   error,
   children,
+  last,
 }: {
   label: string;
   error?: string;
   children: React.ReactNode;
+  last?: boolean;
 }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold text-foreground">{label}</span>
-      {children}
-      {error && <span className="mt-1.5 block text-[11px] text-destructive">{error}</span>}
-    </label>
+    <div className={cn("px-4 py-3", !last && "border-b border-primary/10")}>
+      <label className="block">
+        <span className="block text-[11px] font-medium tracking-[-0.005em] text-primary/70">
+          {label}
+        </span>
+        {children}
+      </label>
+      {error && <span className="mt-1 block text-[11px] text-destructive">{error}</span>}
+    </div>
   );
 }
 
-export const inputClass =
-  "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50";
+const bareInput =
+  "mt-0.5 w-full border-0 bg-transparent p-0 text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70";
 
 export function LoginScreen() {
   const navigate = useNavigate();
@@ -66,71 +77,80 @@ export function LoginScreen() {
 
   return (
     <AuthLayout>
-      <Card className="p-7">
+      <div className="sm:hairline-card sm:p-7">
         {mode === "login" && (
           <>
-            <p className="eyebrow text-muted-foreground">
-              Educator sign in
-            </p>
-            <h1 className="display mt-2 text-[2.1rem] text-foreground">
-              Teach with <em className="text-primary">clarity</em>
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Your classes, study material and assessments in one calm workspace.
-            </p>
+            <div className="text-center sm:text-left">
+              <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-primary text-base font-bold text-primary-foreground shadow-sm sm:hidden">
+                {INSTITUTION.logoInitials}
+              </span>
+              <h1 className="display mt-5 text-[1.75rem] leading-tight text-foreground sm:mt-0 sm:text-[2.1rem]">
+                Sign in
+              </h1>
+              <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
+                to continue to Aarth Educator
+              </p>
+            </div>
 
-            <form onSubmit={submit} className="mt-7 space-y-4">
-              <Field label="Email" {...(errors.email ? { error: errors.email } : {})}>
-                <input
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@institution.edu.in"
-                  className={inputClass}
-                />
-              </Field>
-              <Field label="Password" {...(errors.password ? { error: errors.password } : {})}>
-                <div className="relative">
+            <form onSubmit={submit} className="mt-7">
+              <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
+                <GroupField label="Email" {...(errors.email ? { error: errors.email } : {})}>
                   <input
-                    type={show ? "text" : "password"}
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className={cn(inputClass, "pr-11")}
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@institution.edu.in"
+                    className={bareInput}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShow((v) => !v)}
-                    aria-label={show ? "Hide password" : "Show password"}
-                    className="absolute right-1 top-0 flex h-11 w-10 items-center justify-center text-muted-foreground"
-                  >
-                    {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                  </button>
-                </div>
-              </Field>
-
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setErrors({});
-                    setMode("reset");
-                  }}
-                  className="text-xs font-semibold text-primary"
+                </GroupField>
+                <GroupField
+                  label="Password"
+                  last
+                  {...(errors.password ? { error: errors.password } : {})}
                 >
-                  Forgot password?
-                </button>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type={show ? "text" : "password"}
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      className={bareInput}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShow((v) => !v)}
+                      aria-label={show ? "Hide password" : "Show password"}
+                      className="shrink-0 text-muted-foreground"
+                    >
+                      {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </div>
+                </GroupField>
               </div>
 
-              <Button type="submit" disabled={busy} className="w-full">
+              <button
+                type="button"
+                onClick={() => {
+                  setErrors({});
+                  setMode("reset");
+                }}
+                className="mt-3 block text-[13px] font-semibold text-primary"
+              >
+                Forgot password?
+              </button>
+
+              <Button
+                type="submit"
+                disabled={busy}
+                className="mt-6 h-12 w-full rounded-full text-[15px]"
+              >
                 {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Sign in"}
-                {!busy && <ArrowRight className="size-4" />}
               </Button>
             </form>
 
-            <p className="mt-6 text-center text-xs text-muted-foreground">
+            <p className="mt-7 text-center text-[13px] text-muted-foreground">
               New institution?{" "}
               <Link to="/register" className="font-semibold text-primary">
                 Create an account
@@ -141,30 +161,40 @@ export function LoginScreen() {
 
         {mode === "reset" && (
           <>
-            <span className="flex size-11 items-center justify-center rounded-xl bg-tint text-tint-foreground">
-              <Mail className="size-5" />
-            </span>
-            <h1 className="display mt-4 text-3xl text-foreground">Reset your password</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We'll email a secure link to set a new password.
-            </p>
-            <form onSubmit={sendReset} className="mt-6 space-y-4">
-              <Field label="Email" {...(errors.email ? { error: errors.email } : {})}>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@institution.edu.in"
-                  className={inputClass}
-                />
-              </Field>
-              <Button type="submit" disabled={busy} className="w-full">
+            <div className="text-center sm:text-left">
+              <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-tint text-tint-foreground sm:mx-0 sm:size-11 sm:rounded-xl">
+                <Mail className="size-5" />
+              </span>
+              <h1 className="display mt-5 text-[1.6rem] leading-tight text-foreground sm:mt-4 sm:text-3xl">
+                Reset your password
+              </h1>
+              <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
+                We'll email a secure link to set a new password.
+              </p>
+            </div>
+            <form onSubmit={sendReset} className="mt-7">
+              <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
+                <GroupField label="Email" last {...(errors.email ? { error: errors.email } : {})}>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@institution.edu.in"
+                    className={bareInput}
+                  />
+                </GroupField>
+              </div>
+              <Button
+                type="submit"
+                disabled={busy}
+                className="mt-6 h-12 w-full rounded-full text-[15px]"
+              >
                 {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Send reset link"}
               </Button>
               <Button
                 type="button"
                 variant="ghost"
-                className="w-full"
+                className="mt-2 h-11 w-full rounded-full"
                 onClick={() => setMode("login")}
               >
                 Back to sign in
@@ -175,24 +205,34 @@ export function LoginScreen() {
 
         {mode === "reset_sent" && (
           <div className="py-4 text-center">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-tint text-tint-foreground">
+            <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-tint text-tint-foreground">
               <MailCheck className="size-5" />
             </span>
-            <h1 className="display mt-4 text-2xl text-foreground">Check your email</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h1 className="display mt-5 text-[1.6rem] leading-tight text-foreground">
+              Check your email
+            </h1>
+            <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
               We sent a reset link to {email}. It expires in 30 minutes.
             </p>
-            <div className="mt-6 space-y-2">
-              <Button variant="outline" className="w-full" onClick={() => setMode("reset")}>
+            <div className="mt-7 space-y-2">
+              <Button
+                variant="outline"
+                className="h-12 w-full rounded-full text-[15px]"
+                onClick={() => setMode("reset")}
+              >
                 Try a different email
               </Button>
-              <Button variant="ghost" className="w-full" onClick={() => setMode("login")}>
+              <Button
+                variant="ghost"
+                className="h-11 w-full rounded-full"
+                onClick={() => setMode("login")}
+              >
                 Back to sign in
               </Button>
             </div>
           </div>
         )}
-      </Card>
+      </div>
     </AuthLayout>
   );
 }
