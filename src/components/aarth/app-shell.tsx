@@ -134,22 +134,23 @@ function Sidebar() {
       style={{ transition: "width 160ms cubic-bezier(0.4,0,0.2,1)" }}
     >
       <div className="flex items-center gap-3 border-b border-sidebar-border px-4 py-4">
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-sidebar-primary text-sm font-bold text-sidebar-primary-foreground">
           {INSTITUTION.logoInitials}
         </span>
         {!collapsed && (
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-sidebar-foreground">Aarth Educator</p>
-            <p className="truncate text-[11px] text-muted-foreground">Management Portal</p>
+            <p className="display truncate text-[15px] text-sidebar-foreground">Aarth Educator</p>
+            <p className="truncate text-[11px] text-sidebar-foreground/50">Management Portal</p>
           </div>
         )}
-        <IconButton
-          label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        <button
+          type="button"
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           onClick={() => setCollapsed((v) => !v)}
-          className="size-9"
+          className="press inline-flex size-9 items-center justify-center rounded-xl text-sidebar-foreground/60 hover:bg-white/10 hover:text-sidebar-foreground"
         >
           <ChevronLeft className={cn("size-4", collapsed && "rotate-180")} />
-        </IconButton>
+        </button>
       </div>
 
       {isAdmin && (
@@ -157,7 +158,7 @@ function Sidebar() {
           <Link
             to="/classes"
             className={cn(
-              "press flex h-10 items-center justify-center gap-2 rounded-xl bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/90",
+              "press flex h-10 items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
               collapsed && "px-0",
             )}
           >
@@ -167,11 +168,11 @@ function Sidebar() {
         </div>
       )}
 
-      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+      <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
         {groups.map((group) => (
           <div key={group.label} className="mb-4">
             {!collapsed && (
-              <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+              <p className="px-2 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/40">
                 {group.label}
               </p>
             )}
@@ -188,16 +189,22 @@ function Sidebar() {
                         "flex h-10 items-center gap-2.5 rounded-xl px-2.5 text-[13px] font-medium transition-colors",
                         active
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                          : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                          : "text-sidebar-foreground/65 hover:bg-white/5 hover:text-sidebar-foreground",
                         collapsed && "justify-center px-0",
                       )}
                     >
                       <item.icon className="size-4 shrink-0" />
                       {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
                       {!collapsed && item.to === "/notifications" && unread > 0 && (
-                        <Pill tone="tint">{unread}</Pill>
+                        <span className="rounded-full bg-sidebar-primary px-1.5 py-0.5 text-[10px] font-bold text-sidebar-primary-foreground">
+                          {unread}
+                        </span>
                       )}
-                      {!collapsed && item.gated && <Pill tone="outline">Plan</Pill>}
+                      {!collapsed && item.gated && (
+                        <span className="rounded-full border border-white/20 px-1.5 py-0.5 text-[10px] font-semibold text-sidebar-foreground/50">
+                          Plan
+                        </span>
+                      )}
                     </Link>
                   </li>
                 );
@@ -212,32 +219,39 @@ function Sidebar() {
           type="button"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
           className={cn(
-            "press mb-2 flex h-10 w-full items-center gap-2.5 rounded-xl px-2.5 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+            "press mb-2 flex h-10 w-full items-center gap-2.5 rounded-xl px-2.5 text-[13px] font-medium text-sidebar-foreground/65 hover:bg-white/5 hover:text-sidebar-foreground",
             collapsed && "justify-center px-0",
           )}
         >
           {resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-          {!collapsed && (theme === "dark" ? "Light mode" : "Dark mode")}
+          {!collapsed && (resolvedTheme === "dark" ? "Light mode" : "Dark mode")}
         </button>
         <div className={cn("flex items-center gap-2.5", collapsed && "justify-center")}>
-          <Avatar name={user.name} size="sm" />
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[11px] font-bold text-sidebar-foreground">
+            {user.name
+              .split(" ")
+              .map((p) => p[0])
+              .join("")
+              .slice(0, 2)}
+          </span>
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-semibold text-foreground">{user.name}</p>
-              <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
+              <p className="truncate text-xs font-semibold text-sidebar-foreground">{user.name}</p>
+              <p className="truncate text-[11px] text-sidebar-foreground/50">{user.email}</p>
             </div>
           )}
           {!collapsed && (
             <Link
               to="/auth"
               aria-label="Sign out"
-              className="press inline-flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="press inline-flex size-9 items-center justify-center rounded-xl text-sidebar-foreground/60 hover:bg-white/10 hover:text-sidebar-foreground"
             >
               <LogOut className="size-4" />
             </Link>
           )}
         </div>
       </div>
+
     </aside>
   );
 }

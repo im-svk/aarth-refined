@@ -86,7 +86,7 @@ function ClassRows() {
 function TeacherHome() {
   const featured = active[3]!;
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <PageHeader
         kicker={todayLabel}
         title={
@@ -97,58 +97,79 @@ function TeacherHome() {
         subtitle="Two classes today and one paper waiting on you."
       />
 
-      <Card accent className="p-5 pl-6 md:p-7 md:pl-8">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center">
-          <div className="min-w-0 flex-1">
-            <Pill tone="tint">Next up · 09:15 IST</Pill>
-            <h2 className="display mt-3 text-2xl text-foreground md:text-3xl">{featured.name}</h2>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Physics · Laws of Motion · Lab 2 · {featured.studentCount} students
-            </p>
+      {/* Bento grid */}
+      <div className="grid gap-4 lg:grid-cols-12">
+        {/* Today's schedule — anchor tile */}
+        <Card className="p-5 lg:col-span-8 lg:row-span-2">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="display text-lg text-foreground">Today's classes</h3>
+            <Pill tone="outline">{todayLabel}</Pill>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <Link to="/classes/$classId" params={{ classId: featured.id }}>
-              <Button>
-                Open class <ArrowRight className="size-4" />
-              </Button>
-            </Link>
-            <Link to="/aidocs">
-              <Button variant="outline">Create study material</Button>
-            </Link>
-          </div>
+          <ol className="mt-4 space-y-2">
+            {todaySchedule.map((item, index) => (
+              <li
+                key={item.id}
+                className={
+                  index === 0
+                    ? "flex items-center gap-4 rounded-xl border-l-[3px] border-primary bg-muted/60 p-3.5"
+                    : "flex items-center gap-4 rounded-xl border border-border p-3.5"
+                }
+              >
+                <div className="w-14 shrink-0">
+                  <p className="display text-base text-foreground">{item.time}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">IST</p>
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {className(item.classId)} · {item.room}
+                  </p>
+                </div>
+                {index === 0 && (
+                  <Link to="/classes/$classId" params={{ classId: featured.id }}>
+                    <Button size="sm">Open class</Button>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
+        </Card>
+
+        {/* Next up — dark navy tile */}
+        <div className="rounded-3xl bg-sidebar p-6 text-sidebar-foreground lg:col-span-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/50">
+            Next up · 09:15 IST
+          </p>
+          <h2 className="display mt-2 text-2xl text-sidebar-foreground">{featured.name}</h2>
+          <p className="mt-1.5 text-sm text-sidebar-foreground/60">
+            Physics · Laws of Motion · Lab 2 · {featured.studentCount} students
+          </p>
+          <Link to="/aidocs">
+            <span className="press mt-5 flex h-11 items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground hover:opacity-90">
+              Create study material <ArrowRight className="size-4" />
+            </span>
+          </Link>
         </div>
-      </Card>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Link to="/quizzes" className="press">
-          <Card interactive className="h-full p-4">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-tint text-tint-foreground">
-              <ClipboardList className="size-5" />
-            </span>
-            <p className="mt-3 text-sm font-semibold text-foreground">Generate quiz</p>
-            <p className="mt-1 text-xs text-muted-foreground">AI questions from a chapter</p>
-          </Card>
-        </Link>
-        <Link to="/aidocs" className="press">
-          <Card interactive className="h-full p-4">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-tint text-tint-foreground">
-              <FileText className="size-5" />
-            </span>
-            <p className="mt-3 text-sm font-semibold text-foreground">Study notes</p>
-            <p className="mt-1 text-xs text-muted-foreground">A4 document studio</p>
-          </Card>
-        </Link>
-        <StatTile label="To grade" value="12" hint="Across 2 classes" icon={<Layers className="size-4" />} />
-        <StatTile
-          label="Total students"
-          value={active.reduce((sum, c) => sum + c.studentCount, 0)}
-          hint="Assigned to you"
-          icon={<Users className="size-4" />}
-        />
-      </div>
+        {/* Metrics */}
+        <div className="grid grid-cols-2 gap-4 lg:col-span-4">
+          <StatTile
+            label="To grade"
+            value="12"
+            hint="Across 2 classes"
+            icon={<Layers className="size-4" />}
+          />
+          <StatTile
+            label="Students"
+            value={active.reduce((sum, c) => sum + c.studentCount, 0)}
+            hint="Assigned to you"
+            icon={<Users className="size-4" />}
+          />
+        </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <section>
+        {/* Active classes */}
+        <section className="lg:col-span-7">
           <SectionHeader
             title="Active classes"
             action={
@@ -162,63 +183,57 @@ function TeacherHome() {
           </Card>
         </section>
 
-        <div className="space-y-6">
-          <section>
-            <SectionHeader title="Today's schedule" hint={todayLabel} />
-            <Card className="mt-3 p-4">
-              <ol className="space-y-3">
-                {todaySchedule.map((item, index) => (
-                  <li key={item.id} className="flex gap-3">
-                    <div className="flex w-12 shrink-0 flex-col items-end">
-                      <span className="text-xs font-semibold text-foreground">{item.time}</span>
-                      {index === 0 && <span className="text-[10px] text-primary">Now</span>}
-                    </div>
-                    <span
-                      className={`mt-1 h-full w-[2px] shrink-0 rounded-full ${
-                        index === 0 ? "bg-primary" : "bg-border"
-                      }`}
-                    />
-                    <div className="min-w-0 pb-1">
-                      <p className="truncate text-sm font-semibold text-foreground">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {className(item.classId)} · {item.room}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </Card>
-          </section>
-
-          <section>
-            <SectionHeader
-              title="Continue working"
-              action={
-                <Link to="/aidocs" className="text-xs font-semibold text-primary">
-                  View all
+        {/* Continue working */}
+        <section className="lg:col-span-5">
+          <SectionHeader
+            title="Continue working"
+            action={
+              <Link to="/aidocs" className="text-xs font-semibold text-primary">
+                View all
+              </Link>
+            }
+          />
+          <Card className="mt-3">
+            <div className="divide-y divide-border">
+              {aiDocuments.slice(0, 3).map((doc) => (
+                <Link key={doc.id} to="/aidocs">
+                  <ListRow
+                    icon={<FileText className="size-4" />}
+                    title={doc.title}
+                    subtitle={`${doc.subject} · ${relativeTime(doc.updatedAt)}`}
+                    interactive
+                  />
                 </Link>
-              }
-            />
-            <Card className="mt-3">
-              <div className="divide-y divide-border">
-                {aiDocuments.slice(0, 3).map((doc) => (
-                  <Link key={doc.id} to="/aidocs">
-                    <ListRow
-                      icon={<FileText className="size-4" />}
-                      title={doc.title}
-                      subtitle={`${doc.subject} · ${relativeTime(doc.updatedAt)}`}
-                      interactive
-                    />
-                  </Link>
-                ))}
-              </div>
-            </Card>
-          </section>
+              ))}
+            </div>
+          </Card>
+        </section>
+
+        {/* Quick actions strip */}
+        <div className="grid gap-4 sm:grid-cols-3 lg:col-span-12">
+          {[
+            { to: "/quizzes", icon: ClipboardList, label: "New quiz", hint: "AI from a chapter" },
+            { to: "/aidocs", icon: FileText, label: "Study notes", hint: "A4 document studio" },
+            { to: "/content", icon: Library, label: "Upload material", hint: "Shared library" },
+          ].map((action) => (
+            <Link key={action.to} to={action.to} className="press">
+              <Card interactive className="flex h-full items-center gap-3 p-4">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-tint text-tint-foreground">
+                  <action.icon className="size-5" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground">{action.label}</p>
+                  <p className="text-xs text-muted-foreground">{action.hint}</p>
+                </div>
+              </Card>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
   );
 }
+
 
 function AdminHome() {
   const featured = active[2]!;
