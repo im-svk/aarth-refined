@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import {
@@ -8,8 +8,10 @@ import {
   ChevronRight,
   ClipboardList,
   GraduationCap,
+  ListChecks,
   Megaphone,
   Plus,
+  Trash2,
 } from "lucide-react";
 import { DayTimeline } from "@/components/aarth/day-timeline";
 import { AppShell } from "@/components/aarth/app-shell";
@@ -22,6 +24,15 @@ import {
   Pill,
   SectionHeader,
 } from "@/components/aarth/primitives";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { calendarEvents, className, todaySchedule } from "@/data/mock";
 
 export const Route = createFileRoute("/calendar")({
@@ -31,12 +42,12 @@ export const Route = createFileRoute("/calendar")({
       {
         name: "description",
         content:
-          "Your teaching calendar: timetable, tests and assignment due dates, key school dates and announcements.",
+          "Your teaching calendar: timetable, tests and assignment due dates, key school dates, announcements and your own activities.",
       },
       { property: "og:title", content: "My calendar — Aarth Educator" },
       {
         property: "og:description",
-        content: "Timetable, tests, due dates, key dates and announcements in one place.",
+        content: "Timetable, tests, due dates, key dates, announcements and activities in one place.",
       },
     ],
   }),
@@ -59,6 +70,23 @@ const MONTHS = [
 ];
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
+/** Today in IST for this workspace: Friday, 4 September 2026. */
+const TODAY = { year: 2026, month: 8, day: 4 };
+
+const ACTIVITY_TYPES = ["To-do", "Reminder", "Test", "Announcement"] as const;
+type ActivityType = (typeof ACTIVITY_TYPES)[number];
+
+type Activity = {
+  id: string;
+  date: string; // YYYY-MM-DD
+  type: ActivityType;
+  title: string;
+  time?: string;
+  note?: string;
+};
+
+const STORAGE_KEY = "aarth.calendar.activities";
+
 const KEY_DATES = [
   { id: "k1", label: "12 Sep", title: "Mid-term exam week begins", note: "Grades 8–12" },
   { id: "k2", label: "19 Sep", title: "Parent–teacher meeting", note: "10:00 IST · Auditorium" },
@@ -80,11 +108,56 @@ const ANNOUNCEMENTS = [
   },
 ];
 
+const pad = (value: number) => String(value).padStart(2, "0");
+const isoDate = (year: number, month: number, day: number) =>
+  `${year}-${pad(month + 1)}-${pad(day)}`;
+
+const typeIcon = (type: ActivityType) => {
+  if (type === "Test") return <GraduationCap className="size-4" />;
+  if (type === "Reminder") return <BellRing className="size-4" />;
+  if (type === "Announcement") return <Megaphone className="size-4" />;
+  return <ListChecks className="size-4" />;
+};
+
 function TeacherCalendar() {
-  const [month, setMonth] = useState(8); // September 2026
-  const year = 2026;
-  const today = 5;
-  const [view, setView] = useState<"day" | "month">("day");
+  const [cursor, setCursor] = useState({ month: TODAY.month, year: TODAY.year });
+  const { month, year } = cursor;
+  const [view, setView] = useState<"day" | "month">("month");
+  const [selected, setSelected] = useState<number>(TODAY.day);
+
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [form, setForm] = useState<{
+    type: ActivityType;
+    title: string;
+    date: string;
+    time: string;
+    note: string;
+  }>({
+    type: "To-do",
+    title: "",
+    date: isoDate(TODAY.year, TODAY.month, TODAY.day),
+    time: "",
+    note: "",
+  });
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) setActivities(JSON.parse(raw) as Activity[]);
+    } catch {
+      /* ignore corrupted storage */
+    }
+  }, []);
+
+  const persist = (next: Activity[]) => {
+    setActivities(next);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    } catch {
+      /* storage unavailable */
+    }
+  };
 
   const grid = useMemo(() => {
     const first = new Date(Date.UTC(year, month, 1)).getUTCDay();
@@ -96,30 +169,78 @@ function TeacherCalendar() {
     ];
   }, [month, year]);
 
-  const isCurrentMonth = month === 8;
+  const isCurrentMonth = month === TODAY.month && year === TODAY.year;
   const monthEvents = isCurrentMonth ? calendarEvents : [];
-  const [selected, setSelected] = useState<number | null>(today);
   const dayEvents = monthEvents.filter((event) => event.day === selected);
-  const showTimetable = isCurrentMonth && selected === today;
+  const selectedIso = isoDate(year, month, selected);
+  const dayActivities = activities.filter((item) => item.date === selectedIso);
+  const activitiesByDay = useMemo(() => {
+    const map = new Map<number, number>();
+    for (const item of activities) {
+      const [y, m, d] = item.date.split("-").map(Number);
+      if (y === year && (m ?? 0) - 1 === month && d) map.set(d, (map.get(d) ?? 0) + 1);
+    }
+    return map;
+  }, [activities, month, year]);
+  const showTimetable = isCurrentMonth && selected === TODAY.day;
 
   const weekStrip = useMemo(() => {
-    const start = today - 2;
+    const start = (isCurrentMonth ? TODAY.day : 1) - (isCurrentMonth ? 2 : 0);
+    const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
     return Array.from({ length: 7 }, (_, index) => {
       const day = start + index;
       const date = new Date(Date.UTC(year, month, day));
       return { day, weekday: WEEKDAYS[(date.getUTCDay() + 6) % 7]! };
-    }).filter((entry) => entry.day >= 1);
-  }, [month, year, today]);
+    }).filter((entry) => entry.day >= 1 && entry.day <= daysInMonth);
+  }, [month, year, isCurrentMonth]);
+
+  const shiftMonth = (delta: number) =>
+    setCursor((prev) => {
+      const next = prev.month + delta;
+      if (next < 0) return { month: 11, year: prev.year - 1 };
+      if (next > 11) return { month: 0, year: prev.year + 1 };
+      return { month: next, year: prev.year };
+    });
+
+  const openDialog = () => {
+    setForm({
+      type: "To-do",
+      title: "",
+      date: selectedIso,
+      time: "",
+      note: "",
+    });
+    setDialogOpen(true);
+  };
+
+  const saveActivity = () => {
+    if (!form.title.trim()) return;
+    const activity: Activity = {
+      id: `act-${Date.now()}`,
+      date: form.date,
+      type: form.type,
+      title: form.title.trim(),
+      ...(form.time ? { time: form.time } : {}),
+      ...(form.note.trim() ? { note: form.note.trim() } : {}),
+    };
+    persist([...activities, activity]);
+    const [y, m, d] = form.date.split("-").map(Number);
+    if (y && m && d) {
+      setCursor({ month: m - 1, year: y });
+      setSelected(d);
+    }
+    setDialogOpen(false);
+  };
 
   const monthNav = (
     <div className="flex items-center gap-1">
-      <IconButton label="Previous month" onClick={() => setMonth((prev) => (prev + 11) % 12)}>
+      <IconButton label="Previous month" onClick={() => shiftMonth(-1)}>
         <ChevronLeft className="size-4" />
       </IconButton>
-      <span className="min-w-[7.5rem] text-center text-sm font-semibold text-foreground">
+      <span className="min-w-[8.5rem] text-center text-sm font-semibold text-foreground">
         {MONTHS[month]} {year}
       </span>
-      <IconButton label="Next month" onClick={() => setMonth((prev) => (prev + 1) % 12)}>
+      <IconButton label="Next month" onClick={() => shiftMonth(1)}>
         <ChevronRight className="size-4" />
       </IconButton>
     </div>
@@ -135,7 +256,8 @@ function TeacherCalendar() {
       {grid.map((day, index) => {
         if (day === null) return <span key={`pad-${index}`} />;
         const events = monthEvents.filter((event) => event.day === day);
-        const isToday = isCurrentMonth && day === today;
+        const activityCount = activitiesByDay.get(day) ?? 0;
+        const isToday = isCurrentMonth && day === TODAY.day;
         const isSelected = selected === day;
         return (
           <button
@@ -151,15 +273,15 @@ function TeacherCalendar() {
             <span
               className={
                 isToday
-                  ? "numeric font-bold text-primary"
+                  ? "numeric flex size-6 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground"
                   : "numeric font-semibold text-foreground"
               }
             >
               {day}
             </span>
-            {events.length > 0 && (
+            {(events.length > 0 || activityCount > 0) && (
               <span className="mt-1 flex gap-0.5">
-                {events.slice(0, 3).map((event) => (
+                {events.slice(0, 2).map((event) => (
                   <span
                     key={event.id}
                     className={`size-1 rounded-full ${
@@ -167,6 +289,7 @@ function TeacherCalendar() {
                     }`}
                   />
                 ))}
+                {activityCount > 0 && <span className="size-1 rounded-full bg-emerald-500" />}
               </span>
             )}
           </button>
@@ -177,6 +300,18 @@ function TeacherCalendar() {
 
   const dayPanel = (
     <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="eyebrow text-muted-foreground">Selected day</p>
+          <h2 className="display text-[17px] leading-tight text-foreground">
+            {selected} {MONTHS[month]} {year}
+          </h2>
+        </div>
+        <Button size="sm" variant="outline" onClick={openDialog}>
+          <Plus className="size-4" /> Add activity
+        </Button>
+      </div>
+
       {showTimetable && (
         <div>
           <SectionHeader title="Classes assigned" hint="IST" />
@@ -187,10 +322,51 @@ function TeacherCalendar() {
       )}
 
       <div>
-        <SectionHeader
-          title="Tests & due dates"
-          hint={`${dayEvents.length} on ${selected ?? "—"} ${MONTHS[month]?.slice(0, 3)}`}
-        />
+        <SectionHeader title="My activities" hint={`${dayActivities.length} saved`} />
+        <Card className="mt-3">
+          {dayActivities.length === 0 ? (
+            <EmptyState
+              icon={<ListChecks className="size-5" />}
+              title="No activities yet"
+              description="Add a to-do, reminder or test for this day."
+              action={
+                <Button size="sm" variant="outline" onClick={openDialog}>
+                  <Plus className="size-4" /> Add activity
+                </Button>
+              }
+            />
+          ) : (
+            <div className="divide-y divide-border">
+              {dayActivities.map((item) => (
+                <ListRow
+                  key={item.id}
+                  icon={typeIcon(item.type)}
+                  title={item.title}
+                  subtitle={[item.time, item.note].filter(Boolean).join(" · ") || item.type}
+                  showChevron={false}
+                  trailing={
+                    <span className="flex items-center gap-2">
+                      <Pill tone={item.type === "Test" ? "tint" : "outline"}>{item.type}</Pill>
+                      <IconButton
+                        label={`Delete ${item.title}`}
+                        className="size-8"
+                        onClick={() =>
+                          persist(activities.filter((entry) => entry.id !== item.id))
+                        }
+                      >
+                        <Trash2 className="size-4" />
+                      </IconButton>
+                    </span>
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      <div>
+        <SectionHeader title="Tests & due dates" hint={`${dayEvents.length} scheduled`} />
         <Card className="mt-3">
           {dayEvents.length === 0 ? (
             <EmptyState
@@ -227,6 +403,20 @@ function TeacherCalendar() {
     </div>
   );
 
+  const legend = (
+    <div className="flex flex-wrap items-center gap-4 border-t border-border pt-3 text-[11px] text-muted-foreground">
+      <span className="flex items-center gap-1.5">
+        <span className="size-1.5 rounded-full bg-primary" /> Test
+      </span>
+      <span className="flex items-center gap-1.5">
+        <span className="size-1.5 rounded-full bg-muted-foreground" /> Assignment due
+      </span>
+      <span className="flex items-center gap-1.5">
+        <span className="size-1.5 rounded-full bg-emerald-500" /> My activity
+      </span>
+    </div>
+  );
+
   return (
     <AppShell title="My calendar" back wide>
       <div className="space-y-6">
@@ -247,43 +437,52 @@ function TeacherCalendar() {
               My calendar
             </h1>
             <p className="mt-1 max-w-xl text-[13px] text-muted-foreground">
-              Your timetable, class tests and due dates, school key dates and announcements — all in
-              IST.
+              Your timetable, class tests and due dates, school key dates, announcements and your own
+              activities — all in IST.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Pill tone="outline">2026–27</Pill>
-            <Button size="sm" variant="outline">
-              <Plus className="size-4" /> Add date
+            <Button size="sm" variant="outline" onClick={openDialog}>
+              <Plus className="size-4" /> Add activity
             </Button>
           </div>
         </header>
 
-        {/* Mobile: day / month toggle + week strip */}
+        {/* Mobile: month first, then agenda for the selected day */}
         <div className="md:hidden">
           <div className="flex rounded-xl border border-border p-1">
-            {(["day", "month"] as const).map((option) => (
+            {(["month", "day"] as const).map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => setView(option)}
-                className={`press flex-1 rounded-lg py-2 text-[12px] font-semibold capitalize ${
-                  view === option
-                    ? "bg-tint text-tint-foreground"
-                    : "text-muted-foreground"
+                className={`press flex-1 rounded-lg py-2 text-[12px] font-semibold ${
+                  view === option ? "bg-tint text-tint-foreground" : "text-muted-foreground"
                 }`}
               >
-                {option === "day" ? "Agenda" : "Month"}
+                {option === "month" ? "Month" : "Agenda"}
               </button>
             ))}
           </div>
 
-          {view === "day" ? (
+          {view === "month" ? (
+            <div className="mt-3 space-y-4">
+              <Card className="p-4">
+                <div className="mb-3 flex items-center justify-center">{monthNav}</div>
+                {monthGrid}
+                <div className="mt-4">{legend}</div>
+              </Card>
+              {dayPanel}
+            </div>
+          ) : (
             <>
               <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
                 {weekStrip.map((entry) => {
                   const active = selected === entry.day;
-                  const count = monthEvents.filter((event) => event.day === entry.day).length;
+                  const count =
+                    monthEvents.filter((event) => event.day === entry.day).length +
+                    (activitiesByDay.get(entry.day) ?? 0);
                   return (
                     <button
                       key={entry.day}
@@ -308,22 +507,6 @@ function TeacherCalendar() {
               </div>
               <div className="mt-4">{dayPanel}</div>
             </>
-          ) : (
-            <div className="mt-3 space-y-4">
-              <Card className="p-4">
-                <div className="mb-3 flex items-center justify-center">{monthNav}</div>
-                {monthGrid}
-                <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-border pt-3 text-[11px] text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <span className="size-1.5 rounded-full bg-primary" /> Test
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="size-1.5 rounded-full bg-muted-foreground" /> Assignment due
-                  </span>
-                </div>
-              </Card>
-              {dayPanel}
-            </div>
           )}
         </div>
 
@@ -335,14 +518,7 @@ function TeacherCalendar() {
               {monthNav}
             </div>
             <div className="mt-5">{monthGrid}</div>
-            <div className="mt-5 flex flex-wrap items-center gap-4 border-t border-border pt-4 text-[11px] text-muted-foreground">
-              <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-primary" /> Test
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="size-1.5 rounded-full bg-muted-foreground" /> Assignment due
-              </span>
-            </div>
+            <div className="mt-5">{legend}</div>
           </Card>
           {dayPanel}
         </div>
@@ -402,6 +578,99 @@ function TeacherCalendar() {
           </div>
         </div>
       </div>
+
+      {/* Add activity dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="display text-lg">Add activity</DialogTitle>
+            <DialogDescription>
+              Save a to-do, reminder, test or announcement to a specific day.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <p className="eyebrow mb-2 text-muted-foreground">Type</p>
+              <div className="flex flex-wrap gap-2">
+                {ACTIVITY_TYPES.map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, type }))}
+                    className={`press rounded-full border px-3 py-1.5 text-[12px] font-semibold ${
+                      form.type === type
+                        ? "border-primary/40 bg-tint text-tint-foreground"
+                        : "border-border text-muted-foreground"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="activity-title" className="eyebrow mb-2 block text-muted-foreground">
+                Title
+              </label>
+              <Input
+                id="activity-title"
+                placeholder="e.g. Grade Class 10 physics test"
+                value={form.title}
+                onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label htmlFor="activity-date" className="eyebrow mb-2 block text-muted-foreground">
+                  Date
+                </label>
+                <Input
+                  id="activity-date"
+                  type="date"
+                  value={form.date}
+                  onChange={(event) => setForm((prev) => ({ ...prev, date: event.target.value }))}
+                />
+              </div>
+              <div>
+                <label htmlFor="activity-time" className="eyebrow mb-2 block text-muted-foreground">
+                  Time (optional)
+                </label>
+                <Input
+                  id="activity-time"
+                  type="time"
+                  value={form.time}
+                  onChange={(event) => setForm((prev) => ({ ...prev, time: event.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="activity-note" className="eyebrow mb-2 block text-muted-foreground">
+                Note (optional)
+              </label>
+              <Input
+                id="activity-note"
+                placeholder="Add a short detail"
+                value={form.note}
+                onChange={(event) => setForm((prev) => ({ ...prev, note: event.target.value }))}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveActivity} disabled={!form.title.trim() || !form.date}>
+              Save activity
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+
+      </Dialog>
     </AppShell>
   );
 }
