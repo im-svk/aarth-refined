@@ -667,14 +667,31 @@ export type ScheduleItem = {
   title: string;
   classId: string;
   room: string;
+  /** Length of the period in minutes (used by the day timeline). */
+  minutes: number;
 };
 
 export const todaySchedule: ScheduleItem[] = [
-  { id: "sc1", time: "09:15", title: "Physics — Laws of Motion", classId: "c11s", room: "Lab 2" },
-  { id: "sc2", time: "10:30", title: "Science — Chemical Reactions", classId: "c10a", room: "Room 14" },
-  { id: "sc3", time: "12:00", title: "Physics practical", classId: "c11s", room: "Lab 2" },
-  { id: "sc4", time: "14:15", title: "Mentoring hour", classId: "c10a", room: "Room 14" },
+  {
+    id: "sc1",
+    time: "09:15",
+    title: "Physics — Laws of Motion",
+    classId: "c11s",
+    room: "Lab 2",
+    minutes: 45,
+  },
+  {
+    id: "sc2",
+    time: "10:30",
+    title: "Science — Chemical Reactions",
+    classId: "c10a",
+    room: "Room 14",
+    minutes: 45,
+  },
+  { id: "sc3", time: "12:00", title: "Physics practical", classId: "c11s", room: "Lab 2", minutes: 90 },
+  { id: "sc4", time: "14:15", title: "Mentoring hour", classId: "c10a", room: "Room 14", minutes: 45 },
 ];
+
 
 export type CalendarEvent = {
   id: string;
