@@ -314,24 +314,60 @@ function Classes() {
   );
 
   const subjectCount = subjects.length;
+  const yearClasses = useMemo(
+    () => classes.filter((c) => c.academicYear === year && !c.archived),
+    [year],
+  );
+  const totalStudents = yearClasses.reduce((sum, c) => sum + c.studentCount, 0);
 
   return (
-    <AppShell title="Classes">
-      <div className="space-y-6">
-        <PageHeader
-          kicker="Workspace"
-          title="Classes"
-          subtitle={`${classes.filter((c) => !c.archived).length} active classes · ${subjectCount} subjects across the institution`}
-          actions={
-            isAdmin ? (
-              <Button onClick={() => setDialog(true)}>
-                <Plus className="size-4" /> Create class
-              </Button>
-            ) : (
-              <Pill tone="outline">Read-only for faculty</Pill>
-            )
-          }
-        />
+    <AppShell title="Classes" mobileHeader="none">
+      <div className="space-y-5 md:space-y-6">
+        <div className="md:hidden" style={{ paddingTop: "env(safe-area-inset-top)" }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            {year} · Workspace
+          </p>
+          <h1 className="display mt-1 text-[26px] leading-tight text-foreground">Classes</h1>
+        </div>
+
+        <div className="hidden md:block">
+          <PageHeader
+            kicker="Workspace"
+            title="Classes"
+            subtitle={`${classes.filter((c) => !c.archived).length} active classes · ${subjectCount} subjects across the institution`}
+            actions={
+              isAdmin ? (
+                <Button onClick={() => setDialog(true)}>
+                  <Plus className="size-4" /> Create class
+                </Button>
+              ) : (
+                <Pill tone="outline">Read-only for faculty</Pill>
+              )
+            }
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { label: "Classes", value: yearClasses.length, icon: GraduationCap },
+            { label: "Students", value: totalStudents, icon: Users },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl border border-border bg-card p-3.5 shadow-[var(--shadow-card)] md:p-4"
+            >
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <stat.icon className="size-3.5" />
+                <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
+                  {stat.label}
+                </span>
+              </div>
+              <p className="display mt-1.5 text-[26px] leading-none tabular-nums text-foreground">
+                {stat.value}
+              </p>
+            </div>
+          ))}
+        </div>
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <SegmentedToggle
@@ -359,6 +395,7 @@ function Classes() {
             }))}
           />
         </div>
+
 
         {loading ? (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
