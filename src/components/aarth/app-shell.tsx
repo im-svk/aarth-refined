@@ -330,8 +330,9 @@ function MobileTopBar({
 }: {
   title: string;
   back?: boolean | undefined;
-  variant?: "default" | "brand";
+  variant?: "default" | "brand" | "none";
 }) {
+  if (variant === "none") return null;
   const router = useRouter();
   const { user } = useApp();
 
@@ -456,7 +457,7 @@ export function AppShell({
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
-  mobileHeader?: "default" | "brand";
+  mobileHeader?: "default" | "brand" | "none";
 }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
