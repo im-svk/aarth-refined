@@ -27,11 +27,16 @@ function JoinClass() {
   const [state, setState] = useState<"idle" | "busy" | "done">("idle");
 
   return (
-    <AuthLayout
-      kicker="Class invitation"
-      title="Join this class"
-      subtitle={`You've been invited to ${klass.name} at ${INSTITUTION.name}.`}
-    >
+    <AuthLayout>
+      <div className="mb-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          Class invitation
+        </p>
+        <h1 className="display mt-2 text-3xl text-foreground">Join this class</h1>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          You&apos;ve been invited to {klass.name} at {INSTITUTION.name}.
+        </p>
+      </div>
       <Card className="p-6">
         {state === "done" ? (
           <div className="text-center">
