@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-context";
 import { INSTITUTION, notifications } from "@/data/mock";
 import { Avatar, IconButton, Pill } from "./primitives";
+import { CreateSheet } from "./create-sheet";
+
 
 type NavItem = {
   label: string;
