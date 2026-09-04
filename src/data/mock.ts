@@ -897,8 +897,4 @@ export function greeting(hour = 17) {
   return "Good evening";
 }
 
-export const todayLabel = new Date("2026-09-04T17:28:00+05:30").toLocaleDateString("en-IN", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-});
+export const todayLabel = "Friday, 4 September";
