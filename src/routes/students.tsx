@@ -361,15 +361,8 @@ function Students() {
     [query, scope],
   );
 
-  const groups = useMemo(() => {
-    const map = new Map<string, StudentRecord[]>();
-    for (const student of list) {
-      const bucket = map.get(student.classId) ?? [];
-      bucket.push(student);
-      map.set(student.classId, bucket);
-    }
-    return [...map.entries()];
-  }, [list]);
+
+
 
   const selected = students.find((student) => student.id === selectedId) ?? null;
 
@@ -479,50 +472,43 @@ function Students() {
             />
           </Card>
         ) : (
-          <div className="space-y-6">
-            {groups.map(([classId, members]) => (
-              <section key={classId}>
-                <div className="sticky top-14 z-10 -mx-4 mb-2 bg-background/85 px-4 py-1.5 backdrop-blur md:static md:mx-0 md:bg-transparent md:px-0 md:backdrop-blur-none">
-                  <div className="flex items-center gap-2">
-                    <p className="eyebrow text-[11px] text-muted-foreground">
-                      {className(classId)}
-                    </p>
-                    <span className="rounded-full bg-tint px-2 py-0.5 text-[10px] font-semibold text-tint-foreground">
-                      {members.length}
-                    </span>
-                  </div>
-                </div>
+          <div>
+            <div className="mb-2 flex items-center gap-2">
+              <p className="eyebrow text-[11px] text-muted-foreground">Directory</p>
+              <span className="rounded-full bg-tint px-2 py-0.5 text-[10px] font-semibold text-tint-foreground">
+                {list.length}
+              </span>
+            </div>
 
-                <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] md:grid md:grid-cols-2 md:gap-px md:border-0 md:bg-transparent md:shadow-none">
-                  {members.map((student) => (
-                    <button
-                      key={student.id}
-                      type="button"
-                      onClick={() => setSelectedId(student.id)}
-                      className="press flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left last:border-b-0 hover:bg-muted/50 md:rounded-2xl md:border md:bg-card md:shadow-[var(--shadow-card)]"
-                    >
-                      <ToneAvatar name={student.name} seed={student.id} />
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[14px] font-semibold text-foreground">
-                          {student.name}
-                        </span>
-                        <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
-                          Roll {student.rollNumber} · {student.subjects.length} subjects
-                        </span>
-                      </span>
-                      {student.invited && (
-                        <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                          Invited
-                        </span>
-                      )}
-                      <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
-                    </button>
-                  ))}
-                </div>
-              </section>
-            ))}
+            <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)] md:grid md:grid-cols-2 md:gap-3 md:border-0 md:bg-transparent md:shadow-none">
+              {list.map((student) => (
+                <button
+                  key={student.id}
+                  type="button"
+                  onClick={() => setSelectedId(student.id)}
+                  className="press flex w-full items-center gap-3 border-b border-border px-4 py-3 text-left last:border-b-0 hover:bg-muted/50 md:rounded-2xl md:border md:bg-card md:shadow-[var(--shadow-card)]"
+                >
+                  <ToneAvatar name={student.name} seed={student.id} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[14px] font-semibold text-foreground">
+                      {student.name}
+                    </span>
+                    <span className="mt-0.5 block truncate text-[12px] text-muted-foreground">
+                      Roll {student.rollNumber} · {className(student.classId)}
+                    </span>
+                  </span>
+                  {student.invited && (
+                    <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                      Invited
+                    </span>
+                  )}
+                  <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+                </button>
+              ))}
+            </div>
           </div>
         )}
+
 
         {isAdmin && (
           <div className="md:hidden">
