@@ -447,9 +447,10 @@ function Content() {
 function FileRow({ file }: { file: (typeof libraryFiles)[number] }) {
   return (
     <li className="flex items-center gap-3 rounded-xl p-2 hover:bg-muted/60">
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-ev-1-bg text-ev-1">
-        <FileText className="size-5" />
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-1-bg">
+        <DocArt tone={file.shared ? 2 : 1} />
       </span>
+
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-medium text-foreground">{file.name}</p>
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
