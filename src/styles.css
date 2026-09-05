@@ -296,3 +296,23 @@
     opacity: 1;
   }
 }
+
+@keyframes sheet-right {
+  from {
+    transform: translateX(4%);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
