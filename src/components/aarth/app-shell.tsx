@@ -34,6 +34,7 @@ import { useApp } from "@/lib/app-context";
 import { INSTITUTION, notifications } from "@/data/mock";
 import { Avatar, IconButton, Pill } from "./primitives";
 import { CreateSheet } from "./create-sheet";
+import { AskAiFloatButton } from "./ask-ai-float";
 
 
 type NavItem = {
