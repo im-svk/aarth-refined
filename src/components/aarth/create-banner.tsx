@@ -141,20 +141,22 @@ export function CreateBanner({ className = "" }: { className?: string }) {
       >
         {SLIDES.map((slide) => (
           <div key={slide.id} className="w-full shrink-0" style={{ background: slide.tone }}>
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 p-4 pb-8 sm:gap-4 sm:p-5 sm:pb-9">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 p-4 pb-8 sm:gap-4 sm:p-5 sm:pb-9">
               <div className="min-w-0">
                 <p className="eyebrow text-[11px] text-white/65">{slide.eyebrow}</p>
                 <h2 className="display mt-1 text-[1.15rem] leading-tight text-white sm:text-xl">
                   {slide.title}
                 </h2>
                 <p className="mt-1 text-[12px] leading-snug text-white/75">{slide.hint}</p>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <div className="pointer-events-none h-16 aspect-[6/5] sm:h-20">{slide.art()}</div>
                 <Link to={slide.to}>
-                  <span className="press mt-2.5 inline-flex h-8 items-center gap-1.5 rounded-full bg-white px-3.5 text-[12px] font-semibold text-slate-900">
+                  <span className="press inline-flex h-8 items-center gap-1.5 rounded-full bg-white px-3.5 text-[12px] font-semibold text-slate-900">
                     {slide.cta} <ArrowRight className="size-3.5" />
                   </span>
                 </Link>
               </div>
-              <div className="pointer-events-none h-16 aspect-[6/5] sm:h-20">{slide.art()}</div>
             </div>
           </div>
         ))}
