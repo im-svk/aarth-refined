@@ -60,6 +60,43 @@ export const Route = createFileRoute("/dashboard")({
 
 const active = classes.filter((c) => !c.archived);
 
+type Activity = {
+  id: string;
+  title: string;
+  subtitle: string;
+  status?: string;
+  to: "/aidocs" | "/quizzes" | "/papers" | "/presentations";
+  icon: typeof FileText;
+};
+
+const recentActivity: Activity[] = [
+  ...quizzes
+    .filter((q) => q.status === "draft")
+    .map((q) => ({
+      id: q.id,
+      title: q.title,
+      subtitle: `Quiz · ${q.subject} · ${q.questions} questions`,
+      status: "Draft",
+      to: "/quizzes" as const,
+      icon: ClipboardList,
+    })),
+  ...aiDocuments.slice(0, 3).map((doc) => ({
+    id: doc.id,
+    title: doc.title,
+    subtitle: `${doc.subject} · edited ${relativeTime(doc.updatedAt)}`,
+    to: "/aidocs" as const,
+    icon: FileText,
+  })),
+].slice(0, 4);
+
+const workspaceTools: { to: Activity["to"]; label: string; hint: string; icon: typeof FileText }[] =
+  [
+    { to: "/aidocs", label: "Notes studio", hint: "3 documents in progress", icon: FileText },
+    { to: "/quizzes", label: "Quiz builder", hint: "1 draft waiting to publish", icon: ClipboardList },
+    { to: "/papers", label: "Question papers", hint: "Mid-term set, last opened Monday", icon: Layers },
+    { to: "/presentations", label: "Presentations", hint: "Start a deck from a lesson plan", icon: Library },
+  ];
+
 function ClassRows() {
   if (active.length === 0) {
     return (
