@@ -9,11 +9,9 @@ import {
   CircleUser,
   ClipboardList,
   Compass,
-  FileText,
   FolderOpen,
   GraduationCap,
   Home,
-  LayoutGrid,
   LifeBuoy,
   Library,
   ListChecks,
@@ -62,16 +60,14 @@ const NAV: NavGroup[] = [
   {
     label: "Teach",
     items: [
-      { label: "Study Material", to: "/aidocs", icon: FileText, roles: ["teacher"] },
-
       { label: "Quizzes", to: "/quizzes", icon: ClipboardList, roles: ["teacher"] },
       { label: "Question Papers", to: "/papers", icon: NotebookPen, roles: ["teacher"] },
       { label: "Presentations", to: "/presentations", icon: Presentation, roles: ["teacher"] },
-      { label: "Assignments", to: "/assignments", icon: LayoutGrid, roles: ["teacher"], gated: true },
       { label: "Notes", to: "/notes", icon: FolderOpen, roles: ["teacher"] },
       { label: "Curriculum", to: "/curriculum", icon: Compass, roles: ["teacher"] },
     ],
   },
+
   {
     label: "Library",
     items: [
