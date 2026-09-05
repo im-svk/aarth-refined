@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { Link, useLocation, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
   Bell,
@@ -34,6 +34,7 @@ import { useApp } from "@/lib/app-context";
 import { INSTITUTION, notifications } from "@/data/mock";
 import { Avatar, IconButton, Pill } from "./primitives";
 import { CreateSheet } from "./create-sheet";
+import { AskAiFloatButton } from "./ask-ai-float";
 
 
 type NavItem = {
@@ -476,6 +477,7 @@ export function AppShell({
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
+  const pathname = useLocation().pathname;
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar onCreate={openCreate} />
@@ -494,6 +496,7 @@ export function AppShell({
         <BottomTabs onCreate={openCreate} />
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
+      {pathname !== "/ai-chat" && <AskAiFloatButton />}
     </div>
   );
 }
