@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-context";
 
 type ToolRoute =
-  | "/aidocs"
   | "/quizzes"
   | "/papers"
   | "/presentations"
-  | "/assignments"
   | "/notes"
   | "/curriculum"
+  | "/calendar"
   | "/class-planner";
+
 
 type Art = (props: { tone: number }) => React.ReactElement;
 
