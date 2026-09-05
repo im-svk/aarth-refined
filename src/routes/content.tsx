@@ -414,7 +414,7 @@ function Content() {
                 {books.map((book) => (
                   <li key={book.id}>
                     <div className="flex items-center gap-3 rounded-xl p-2 hover:bg-muted/60">
-                      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-3-bg">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-3-bg ring-1 ring-inset ring-border/50">
                         <BookArt />
                       </span>
 
@@ -516,7 +516,7 @@ function Content() {
 function FileRow({ file }: { file: (typeof libraryFiles)[number] }) {
   return (
     <li className="flex items-center gap-3 rounded-xl p-2 hover:bg-muted/60">
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-1-bg">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-1-bg ring-1 ring-inset ring-border/50">
         <DocArt tone={file.shared ? 2 : 1} />
       </span>
 
