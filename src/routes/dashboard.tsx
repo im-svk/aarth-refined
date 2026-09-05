@@ -14,6 +14,7 @@ import {
   UserSquare2,
 } from "lucide-react";
 import { AppShell } from "@/components/aarth/app-shell";
+import { CreateBanner } from "@/components/aarth/create-banner";
 import { DayTimeline } from "@/components/aarth/day-timeline";
 
 import {
@@ -33,6 +34,7 @@ import {
   className,
   greeting,
   INSTITUTION,
+  quizzes,
   relativeTime,
   students,
   subjects,
@@ -58,6 +60,43 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 const active = classes.filter((c) => !c.archived);
+
+type Activity = {
+  id: string;
+  title: string;
+  subtitle: string;
+  status?: string;
+  to: "/aidocs" | "/quizzes" | "/papers" | "/presentations";
+  icon: typeof FileText;
+};
+
+const recentActivity: Activity[] = [
+  ...quizzes
+    .filter((q) => q.status === "draft")
+    .map((q) => ({
+      id: q.id,
+      title: q.title,
+      subtitle: `Quiz · ${q.subject} · ${q.questions} questions`,
+      status: "Draft",
+      to: "/quizzes" as const,
+      icon: ClipboardList,
+    })),
+  ...aiDocuments.slice(0, 3).map((doc) => ({
+    id: doc.id,
+    title: doc.title,
+    subtitle: `${doc.subject} · edited ${relativeTime(doc.updatedAt)}`,
+    to: "/aidocs" as const,
+    icon: FileText,
+  })),
+].slice(0, 4);
+
+const workspaceTools: { to: Activity["to"]; label: string; hint: string; icon: typeof FileText }[] =
+  [
+    { to: "/aidocs", label: "Notes studio", hint: "3 documents in progress", icon: FileText },
+    { to: "/quizzes", label: "Quiz builder", hint: "1 draft waiting to publish", icon: ClipboardList },
+    { to: "/papers", label: "Question papers", hint: "Mid-term set, last opened Monday", icon: Layers },
+    { to: "/presentations", label: "Presentations", hint: "Start a deck from a lesson plan", icon: Library },
+  ];
 
 function ClassRows() {
   if (active.length === 0) {
@@ -143,72 +182,21 @@ function TeacherHome() {
           )}
         </Card>
 
+        {/* Create banner — rotating */}
+        <CreateBanner className="lg:col-span-4" />
 
-        {/* Next up — dark navy tile */}
-        <div className="rounded-3xl bg-sidebar p-6 text-sidebar-foreground lg:col-span-4">
-          <p className="eyebrow text-sidebar-foreground/50">
-            Next up · 09:15 IST
-          </p>
-          <h2 className="display mt-2 text-2xl text-sidebar-foreground">{featured.name}</h2>
-          <p className="mt-1.5 text-sm text-sidebar-foreground/60">
-            Physics · Laws of Motion · Lab 2 · {featured.studentCount} students
-          </p>
-          <Link to="/aidocs">
-            <span className="press mt-5 flex h-11 items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-sm font-semibold text-sidebar-primary-foreground hover:opacity-90">
-              Create study material <ArrowRight className="size-4" />
-            </span>
-          </Link>
-        </div>
-
-        {/* Metrics */}
-        <div className="grid grid-cols-2 gap-4 lg:col-span-4">
-          <StatTile
-            label="To grade"
-            value="12"
-            hint="Across 2 classes"
-            icon={<Layers className="size-4" />}
-          />
-          <StatTile
-            label="Students"
-            value={active.reduce((sum, c) => sum + c.studentCount, 0)}
-            hint="Assigned to you"
-            icon={<Users className="size-4" />}
-          />
-        </div>
-
-        {/* Active classes */}
-        <section className="lg:col-span-7">
-          <SectionHeader
-            title="Active classes"
-            action={
-              <Link to="/classes" className="text-xs font-semibold text-primary">
-                View all
-              </Link>
-            }
-          />
-          <Card className="mt-3">
-            <ClassRows />
-          </Card>
-        </section>
-
-        {/* Continue working */}
-        <section className="lg:col-span-5">
-          <SectionHeader
-            title="Continue working"
-            action={
-              <Link to="/aidocs" className="text-xs font-semibold text-primary">
-                View all
-              </Link>
-            }
-          />
+        {/* Recent activity */}
+        <section className="lg:col-span-6">
+          <SectionHeader title="Recent activity" hint="Drafts and edits from the last few days" />
           <Card className="mt-3">
             <div className="divide-y divide-border">
-              {aiDocuments.slice(0, 3).map((doc) => (
-                <Link key={doc.id} to="/aidocs">
+              {recentActivity.map((item) => (
+                <Link key={item.id} to={item.to}>
                   <ListRow
-                    icon={<FileText className="size-4" />}
-                    title={doc.title}
-                    subtitle={`${doc.subject} · ${relativeTime(doc.updatedAt)}`}
+                    icon={<item.icon className="size-4" />}
+                    title={item.title}
+                    subtitle={item.subtitle}
+                    trailing={item.status ? <Pill tone="outline">{item.status}</Pill> : undefined}
                     interactive
                   />
                 </Link>
@@ -217,26 +205,25 @@ function TeacherHome() {
           </Card>
         </section>
 
-        {/* Quick actions strip */}
-        <div className="grid gap-4 sm:grid-cols-3 lg:col-span-12">
-          {[
-            { to: "/quizzes", icon: ClipboardList, label: "New quiz", hint: "AI from a chapter" },
-            { to: "/aidocs", icon: FileText, label: "Study notes", hint: "A4 document studio" },
-            { to: "/content", icon: Library, label: "Upload material", hint: "Shared library" },
-          ].map((action) => (
-            <Link key={action.to} to={action.to} className="press">
-              <Card interactive className="flex h-full items-center gap-3 p-4">
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-tint text-tint-foreground">
-                  <action.icon className="size-5" />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground">{action.label}</p>
-                  <p className="text-xs text-muted-foreground">{action.hint}</p>
-                </div>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {/* Continue workspace tools */}
+        <section className="lg:col-span-6">
+          <SectionHeader title="Continue workspace tools" hint="Pick up where you left off" />
+          <Card className="mt-3">
+            <div className="divide-y divide-border">
+              {workspaceTools.map((tool) => (
+                <Link key={tool.to} to={tool.to}>
+                  <ListRow
+                    icon={<tool.icon className="size-4" />}
+                    title={tool.label}
+                    subtitle={tool.hint}
+                    interactive
+                  />
+                </Link>
+              ))}
+            </div>
+          </Card>
+        </section>
+
       </div>
     </div>
   );
