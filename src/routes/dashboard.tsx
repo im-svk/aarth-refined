@@ -1,13 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import {
-  ArrowRight,
   BookOpen,
   CalendarDays,
   ClipboardList,
   Clock,
   FileText,
   GraduationCap,
-  Layers,
   Library,
   Plus,
   Users,
