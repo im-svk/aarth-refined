@@ -477,7 +477,7 @@ export function AppShell({
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
-  const pathname = usePathname();
+  const pathname = useLocation().pathname;
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar onCreate={openCreate} />
