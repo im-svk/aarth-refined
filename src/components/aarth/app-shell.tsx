@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { Link, useLocation, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
   Bell,
