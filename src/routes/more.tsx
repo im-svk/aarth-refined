@@ -230,7 +230,7 @@ function ProfileHeader({
   );
 }
 
-function SubjectCloud({ subjects, department }: { subjects: string[]; department?: string }) {
+function SubjectCloud({ subjects, department }: { subjects: string[]; department?: string | undefined }) {
   return (
     <SectionCard title="My subjects" count={subjects.length}>
       <div className="flex flex-wrap gap-2">
