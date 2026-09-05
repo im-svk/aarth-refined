@@ -245,7 +245,7 @@ function SubjectCloud({ subjects, department }: { subjects: string[]; department
   );
 }
 
-function ClassList({ myClasses, classTeacherOf }: { myClasses: (typeof classes)[number][]; classTeacherOf?: string }) {
+function ClassList({ myClasses, classTeacherOf }: { myClasses: (typeof classes)[number][]; classTeacherOf?: string | undefined }) {
   return (
     <SectionCard title="My classes" count={myClasses.length}>
       <div className="space-y-2">
