@@ -477,6 +477,7 @@ export function AppShell({
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
+  const pathname = usePathname();
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar onCreate={openCreate} />
@@ -495,6 +496,7 @@ export function AppShell({
         <BottomTabs onCreate={openCreate} />
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
+      {pathname !== "/ai-chat" && <AskAiFloatButton />}
     </div>
   );
 }
