@@ -139,7 +139,6 @@ function AiChat() {
                 disabled={status === "submitted"}
                 variant="default"
                 className="bg-primary text-primary-foreground hover:bg-primary/90"
-                tooltip="Send message"
                 aria-label="Send message"
                 type="submit"
                 size="icon-sm"
