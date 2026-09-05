@@ -361,15 +361,8 @@ function Students() {
     [query, scope],
   );
 
-  const groups = useMemo(() => {
-    const map = new Map<string, StudentRecord[]>();
-    for (const student of list) {
-      const bucket = map.get(student.classId) ?? [];
-      bucket.push(student);
-      map.set(student.classId, bucket);
-    }
-    return [...map.entries()];
-  }, [list]);
+
+
 
   const selected = students.find((student) => student.id === selectedId) ?? null;
 
