@@ -34,18 +34,8 @@ const ink = (t: number) => `var(--ev-${t})`;
 const wash = (t: number) => `var(--ev-${t}-bg)`;
 const warm = "var(--ev-4)";
 
-function StudyArt({ tone }: { tone: number }) {
-  return (
-    <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="8" y="5" width="20" height="27" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
-      <rect x="12" y="11" width="12" height="1.8" rx="0.9" fill={ink(tone)} opacity="0.55" />
-      <rect x="12" y="16" width="9" height="1.8" rx="0.9" fill={ink(tone)} opacity="0.35" />
-      <rect x="12" y="21" width="11" height="1.8" rx="0.9" fill={ink(tone)} opacity="0.35" />
-      <path d="M30 14.5l1.3 3.1 3.1 1.3-3.1 1.3L30 23.3l-1.3-3.1-3.1-1.3 3.1-1.3z" fill={warm} />
-      <circle cx="25.5" cy="9.5" r="2" fill={warm} opacity="0.7" />
-    </svg>
-  );
-}
+
+
 
 function CurriculumArt({ tone }: { tone: number }) {
   return (
@@ -96,16 +86,18 @@ function SlidesArt({ tone }: { tone: number }) {
   );
 }
 
-function AssignmentArt({ tone }: { tone: number }) {
+function ChecklistArt({ tone }: { tone: number }) {
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <path d="M5 12a3 3 0 013-3h7l2.6 3H32a3 3 0 013 3v14a3 3 0 01-3 3H8a3 3 0 01-3-3z" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.6" />
-      <rect x="11" y="15" width="18" height="9" rx="2" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.3" />
-      <path d="M14.5 19.5h8" stroke={ink(tone)} strokeWidth="1.4" strokeLinecap="round" opacity="0.5" />
-      <circle cx="27" cy="13" r="3.2" fill={warm} />
+      <rect x="8" y="5" width="24" height="30" rx="4" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.6" />
+      <path d="M13 13l2 2 3.5-3.8" stroke={warm} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13 21l2 2 3.5-3.8" stroke={ink(tone)} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
+      <circle cx="15" cy="28.5" r="1.8" fill={ink(tone)} opacity="0.35" />
+      <path d="M21.5 13.5h6M21.5 21.5h6M21.5 28.5h4" stroke={ink(tone)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
     </svg>
   );
 }
+
 
 function NoteArt({ tone }: { tone: number }) {
   return (
@@ -137,16 +129,9 @@ function PlannerArt({ tone }: { tone: number }) {
 
 const GROUPS: Group[] = [
   {
-    label: "AI study tools",
-    hint: "Aarth writes the first draft",
+    label: "Workspace tools",
+    hint: "Plan your term",
     tools: [
-      {
-        label: "Study material",
-        description: "Notes and chapter summaries",
-        to: "/aidocs",
-        art: StudyArt,
-        tone: 1,
-      },
       {
         label: "Curriculum plan",
         description: "Chapters across the year",
@@ -154,10 +139,46 @@ const GROUPS: Group[] = [
         art: CurriculumArt,
         tone: 2,
       },
+      {
+        label: "Manage calendar",
+        description: "Tests, dues and notices",
+        to: "/calendar",
+        art: PlannerArt,
+        tone: 1,
+      },
+      {
+        label: "Teaching tools",
+        description: "Weekly plan, class by class",
+        to: "/class-planner",
+        art: ChecklistArt,
+        tone: 5,
+        gated: true,
+      },
     ],
   },
   {
-    label: "Assessments",
+    label: "Create",
+    hint: "Material for the class",
+    tools: [
+      {
+        label: "Note",
+        description: "Notes and chapter summaries",
+        to: "/notes",
+        art: NoteArt,
+        tone: 3,
+      },
+      {
+        label: "Presentation",
+        description: "Slide deck from a chapter",
+        to: "/presentations",
+        art: SlidesArt,
+        tone: 1,
+        note: "Desktop",
+      },
+    ],
+  },
+  {
+    label: "Engagement tools",
     hint: "Test what was taught",
     tools: [
       {
@@ -165,7 +186,7 @@ const GROUPS: Group[] = [
         description: "Questions with a share code",
         to: "/quizzes",
         art: QuizArt,
-        tone: 3,
+        tone: 4,
       },
       {
         label: "Question paper",
@@ -177,50 +198,8 @@ const GROUPS: Group[] = [
       },
     ],
   },
-  {
-    label: "Class materials",
-    hint: "For the classroom",
-    tools: [
-      {
-        label: "Presentation",
-        description: "Slide deck from a chapter",
-        to: "/presentations",
-        art: SlidesArt,
-        tone: 1,
-        note: "Desktop",
-      },
-      {
-        label: "Assignment",
-        description: "Homework or lab report",
-        to: "/assignments",
-        art: AssignmentArt,
-        tone: 4,
-        gated: true,
-      },
-      {
-        label: "Note",
-        description: "Upload your own files",
-        to: "/notes",
-        art: NoteArt,
-        tone: 3,
-      },
-    ],
-  },
-  {
-    label: "Planning",
-    hint: "Ahead of the week",
-    tools: [
-      {
-        label: "Class planner",
-        description: "Weekly, class by class",
-        to: "/class-planner",
-        art: PlannerArt,
-        tone: 2,
-        gated: true,
-      },
-    ],
-  },
 ];
+
 
 /* ---------- tile ---------- */
 
