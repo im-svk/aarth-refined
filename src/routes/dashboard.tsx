@@ -60,6 +60,13 @@ export const Route = createFileRoute("/dashboard")({
 
 const active = classes.filter((c) => !c.archived);
 
+import {
+  NotesStudioIcon,
+  QuizBuilderIcon,
+  QuestionPapersIcon,
+  PresentationsIcon,
+} from "@/components/aarth/workspace-icons";
+
 type Activity = {
   id: string;
   title: string;
@@ -89,13 +96,17 @@ const recentActivity: Activity[] = [
   })),
 ].slice(0, 4);
 
-const workspaceTools: { to: Activity["to"]; label: string; hint: string; icon: typeof FileText }[] =
-  [
-    { to: "/aidocs", label: "Notes studio", hint: "3 documents in progress", icon: FileText },
-    { to: "/quizzes", label: "Quiz builder", hint: "1 draft waiting to publish", icon: ClipboardList },
-    { to: "/papers", label: "Question papers", hint: "Mid-term set, last opened Monday", icon: Layers },
-    { to: "/presentations", label: "Presentations", hint: "Start a deck from a lesson plan", icon: Library },
-  ];
+const workspaceTools: {
+  to: Activity["to"];
+  label: string;
+  hint: string;
+  icon: ReactNode;
+}[] = [
+  { to: "/aidocs", label: "Notes studio", hint: "3 documents in progress", icon: <NotesStudioIcon /> },
+  { to: "/quizzes", label: "Quiz builder", hint: "1 draft waiting to publish", icon: <QuizBuilderIcon /> },
+  { to: "/papers", label: "Question papers", hint: "Mid-term set, last opened Monday", icon: <QuestionPapersIcon /> },
+  { to: "/presentations", label: "Presentations", hint: "Start a deck from a lesson plan", icon: <PresentationsIcon /> },
+];
 
 function ClassRows() {
   if (active.length === 0) {
