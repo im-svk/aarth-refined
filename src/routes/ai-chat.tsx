@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AppShell } from "@/components/aarth/app-shell";
 import { AskAiIcon } from "@/components/aarth/ask-ai-float";
 import { askAi } from "@/lib/ai-chat.functions";
+import type { ChatStatus } from "ai";
 import {
   Conversation,
   ConversationContent,
