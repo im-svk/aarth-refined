@@ -223,7 +223,7 @@ function TeacherHome() {
               {workspaceTools.map((tool) => (
                 <Link key={tool.to} to={tool.to}>
                   <ListRow
-                    icon={<tool.icon className="size-4" />}
+                    icon={tool.icon}
                     title={tool.label}
                     subtitle={tool.hint}
                     interactive
