@@ -268,7 +268,7 @@ function ClassList({ myClasses, classTeacherOf }: { myClasses: (typeof classes)[
                     color: `var(--${tone})`,
                   }}
                 >
-                  {initials(cls.name)}
+                  {classCode(cls)}
                 </span>
                 <span className="min-w-0 flex-1 text-left">
                   <span className="block truncate text-sm font-semibold text-foreground">
