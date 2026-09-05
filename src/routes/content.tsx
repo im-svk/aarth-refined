@@ -345,9 +345,10 @@ function Content() {
                 {books.map((book) => (
                   <li key={book.id}>
                     <div className="flex items-center gap-3 rounded-xl p-2 hover:bg-muted/60">
-                      <span className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-ev-3-bg text-ev-3">
-                        <BookOpen className="size-5" />
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-ev-3-bg">
+                        <BookArt />
                       </span>
+
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium text-foreground">{book.title}</p>
                         <p className="mt-0.5 truncate text-xs text-muted-foreground">
