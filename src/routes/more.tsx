@@ -245,6 +245,13 @@ function SubjectCloud({ subjects, department }: { subjects: string[]; department
   );
 }
 
+function classCode(cls: (typeof classes)[number]) {
+  const section = cls.stream
+    ? cls.stream.slice(0, 2)
+    : cls.name.split(" — ")[1]?.trim().slice(0, 2) ?? "";
+  return `${cls.grade}${section}`;
+}
+
 function ClassList({ myClasses, classTeacherOf }: { myClasses: (typeof classes)[number][]; classTeacherOf?: string | undefined }) {
   return (
     <SectionCard title="My classes" count={myClasses.length}>
