@@ -50,48 +50,109 @@ const ink = (t: number) => `var(--ev-${t})`;
 const wash = (t: number) => `var(--ev-${t}-bg)`;
 const warm = "var(--ev-4)";
 
+function Defs({ id, tone }: { id: string; tone: number }) {
+  return (
+    <defs>
+      <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={wash(tone)} />
+        <stop offset="100%" stopColor={ink(tone)} stopOpacity="0.35" />
+      </linearGradient>
+      <linearGradient id={`${id}-s`} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="var(--card)" />
+        <stop offset="100%" stopColor={wash(tone)} />
+      </linearGradient>
+      <linearGradient id={`${id}-w`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={warm} stopOpacity="0.95" />
+        <stop offset="100%" stopColor={warm} stopOpacity="0.7" />
+      </linearGradient>
+    </defs>
+  );
+}
+
 function UploadsArt() {
   const t = 1;
+  const id = "art-up";
   return (
-    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
+    <svg viewBox="0 0 48 48" className="size-11" aria-hidden>
+      <Defs id={id} tone={t} />
+      {/* back folder */}
       <path
-        d="M5 12.5a3 3 0 013-3h6.2l2.6 3H32a3 3 0 013 3V29a3 3 0 01-3 3H8a3 3 0 01-3-3z"
-        fill={wash(t)}
+        d="M5 15.5a3.5 3.5 0 013.5-3.5h8.2l3 3.6h14.8a3.5 3.5 0 013.5 3.5v3H5z"
+        fill={ink(t)}
+        opacity="0.28"
+      />
+      {/* documents peeking */}
+      <rect x="14" y="8" width="14" height="17" rx="2.6" fill="var(--card)" stroke={ink(t)} strokeWidth="1.4" transform="rotate(-8 21 16.5)" />
+      <path d="M15.6 14.4l8.4-1.2M16.1 17.8l8.4-1.2" stroke={ink(t)} strokeWidth="1.2" opacity="0.35" strokeLinecap="round" />
+      <rect x="22" y="6" width="15" height="18" rx="2.8" fill="var(--card)" stroke={ink(t)} strokeWidth="1.5" transform="rotate(6 29.5 15)" />
+      <path d="M25.6 12h8.2M25.2 15.6h8.2M25 19.2h5" stroke={ink(t)} strokeWidth="1.3" opacity="0.35" strokeLinecap="round" />
+      {/* front folder */}
+      <path
+        d="M4.5 21.5h39v14.5a4 4 0 01-4 4h-31a4 4 0 01-4-4z"
+        fill={`url(#${id}-g)`}
         stroke={ink(t)}
         strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <rect x="14" y="6" width="12" height="15" rx="2.5" fill="var(--card)" stroke={ink(t)} strokeWidth="1.5" />
-      <path d="M20 17.5v-7m0 0l-2.6 2.6M20 10.5l2.6 2.6" stroke={warm} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M5 20h30" stroke={ink(t)} strokeWidth="1.4" opacity="0.25" />
+      <path d="M4.5 21.5h39" stroke={ink(t)} strokeWidth="1.6" opacity="0.6" />
+      {/* upload badge */}
+      <circle cx="36.5" cy="33" r="7" fill={`url(#${id}-w)`} />
+      <path d="M36.5 36.4v-6.6m0 0l-2.6 2.7M36.5 29.8l2.6 2.7" stroke="var(--card)" strokeWidth="1.9" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function BooksArt() {
   const t = 3;
+  const id = "art-bk";
   return (
-    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
-      <rect x="6" y="11" width="7" height="22" rx="2" fill={wash(t)} stroke={ink(t)} strokeWidth="1.5" />
-      <rect x="14" y="7" width="7" height="26" rx="2" fill="var(--card)" stroke={ink(t)} strokeWidth="1.5" />
-      <rect x="22" y="13" width="7" height="20" rx="2" fill={warm} opacity="0.85" />
-      <path d="M8 16h3M16 12h3" stroke={ink(t)} strokeWidth="1.4" strokeLinecap="round" opacity="0.5" />
-      <circle cx="29.5" cy="10.5" r="4.5" fill={ink(t)} />
-      <path d="M27.4 10.6l1.4 1.4 2.6-3" stroke="var(--card)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 48 48" className="size-11" aria-hidden>
+      <Defs id={id} tone={t} />
+      <rect x="6" y="16" width="8.5" height="26" rx="2.4" fill={`url(#${id}-s)`} stroke={ink(t)} strokeWidth="1.5" />
+      <path d="M8.6 21h3.4M8.6 24.4h3.4" stroke={ink(t)} strokeWidth="1.3" opacity="0.45" strokeLinecap="round" />
+      <rect x="15.5" y="11" width="9" height="31" rx="2.4" fill={`url(#${id}-g)`} stroke={ink(t)} strokeWidth="1.5" />
+      <path d="M18 16.5h4M18 20h4" stroke={ink(t)} strokeWidth="1.3" opacity="0.5" strokeLinecap="round" />
+      <rect x="25.5" y="19" width="8.5" height="23" rx="2.4" fill={warm} opacity="0.9" />
+      <path d="M28 24h3.4M28 27.4h3.4" stroke="var(--card)" strokeWidth="1.3" opacity="0.8" strokeLinecap="round" />
+      {/* open book on top */}
+      <path
+        d="M33 12.5c2.4-1.6 5.4-1.6 7.5 0v11c-2.1-1.6-5.1-1.6-7.5 0z"
+        fill="var(--card)"
+        stroke={ink(t)}
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M33 12.5c-2.4-1.6-4.6-1.6-6.6 0v11c2-1.6 4.2-1.6 6.6 0z"
+        fill={wash(t)}
+        stroke={ink(t)}
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+      <path d="M33 12.5v11" stroke={ink(t)} strokeWidth="1.3" opacity="0.5" />
+      <circle cx="41" cy="35" r="6" fill={ink(t)} />
+      <path d="M38.4 35.1l1.8 1.8 3.2-3.6" stroke="var(--card)" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function SharedArt() {
   const t = 2;
+  const id = "art-sh";
   return (
-    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
-      <rect x="6" y="8" width="17" height="23" rx="3" fill={wash(t)} stroke={ink(t)} strokeWidth="1.5" transform="rotate(-7 14.5 19.5)" />
-      <rect x="13" y="7" width="18" height="24" rx="3" fill="var(--card)" stroke={ink(t)} strokeWidth="1.6" />
-      <path d="M17.5 13h9M17.5 17.5h9M17.5 22h6" stroke={ink(t)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
-      <circle cx="29.5" cy="28.5" r="5" fill={warm} />
-      <circle cx="29.5" cy="26.9" r="1.5" fill="var(--card)" />
-      <path d="M26.9 31.4a2.8 2.8 0 015.2 0z" fill="var(--card)" />
+    <svg viewBox="0 0 48 48" className="size-11" aria-hidden>
+      <Defs id={id} tone={t} />
+      <rect x="6" y="10" width="20" height="27" rx="3.5" fill={`url(#${id}-g)`} stroke={ink(t)} strokeWidth="1.4" transform="rotate(-8 16 23.5)" />
+      <rect x="13" y="7" width="22" height="29" rx="3.5" fill="var(--card)" stroke={ink(t)} strokeWidth="1.6" />
+      <path d="M18 14h12M18 19h12M18 24h7.5" stroke={ink(t)} strokeWidth="1.5" opacity="0.38" strokeLinecap="round" />
+      <path d="M18 29h5" stroke={warm} strokeWidth="1.8" strokeLinecap="round" />
+      {/* people */}
+      <circle cx="31" cy="33" r="8" fill={`url(#${id}-w)`} stroke="var(--card)" strokeWidth="1.6" />
+      <circle cx="31" cy="30.4" r="2.4" fill="var(--card)" />
+      <path d="M26.7 37.4a4.5 4.5 0 018.6 0z" fill="var(--card)" />
+      <circle cx="40.5" cy="30.5" r="5.5" fill={ink(t)} stroke="var(--card)" strokeWidth="1.5" />
+      <circle cx="40.5" cy="28.7" r="1.7" fill="var(--card)" />
+      <path d="M37.6 33.6a3.1 3.1 0 015.8 0z" fill="var(--card)" />
     </svg>
   );
 }
@@ -115,44 +176,51 @@ const SHELVES: {
 ];
 
 function DocArt({ tone = 1 }: { tone?: number }) {
+  const id = `doc-${tone}`;
   return (
-    <svg viewBox="0 0 40 40" className="size-7" aria-hidden>
+    <svg viewBox="0 0 48 48" className="size-8" aria-hidden>
+      <Defs id={id} tone={tone} />
       <path
-        d="M10 6.5a2.5 2.5 0 012.5-2.5H23l7 7v22.5a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 0110 33.5z"
-        fill="var(--card)"
+        d="M13 8.5A3.5 3.5 0 0116.5 5h11L36 13.5v26A3.5 3.5 0 0132.5 43h-16A3.5 3.5 0 0113 39.5z"
+        fill={`url(#${id}-s)`}
         stroke={ink(tone)}
-        strokeWidth="1.6"
+        strokeWidth="1.7"
         strokeLinejoin="round"
       />
-      <path d="M23 4v7h7" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M14.5 18h11M14.5 22.5h11M14.5 27h7" stroke={ink(tone)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
-      <circle cx="27" cy="28.5" r="3.2" fill={warm} />
+      <path d="M27.5 5v8.5H36" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M18 21h13M18 26h13M18 31h8" stroke={ink(tone)} strokeWidth="1.6" opacity="0.35" strokeLinecap="round" />
+      <circle cx="33" cy="34.5" r="5.5" fill={`url(#${id}-w)`} />
+      <path d="M30.7 34.6l1.6 1.6 2.9-3.2" stroke="var(--card)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function BookArt({ tone = 3 }: { tone?: number }) {
+  const id = `bk-${tone}`;
   return (
-    <svg viewBox="0 0 40 40" className="size-7" aria-hidden>
+    <svg viewBox="0 0 48 48" className="size-8" aria-hidden>
+      <Defs id={id} tone={tone} />
       <path
-        d="M7 8.5A2.5 2.5 0 019.5 6H18c1.1 0 2 .9 2 2v24c0-1.1-.9-2-2-2H7z"
-        fill={wash(tone)}
+        d="M8 11a3 3 0 013-3h10c1.4 0 2.5 1.1 2.5 2.5v29c0-1.4-1.1-2.5-2.5-2.5H8z"
+        fill={`url(#${id}-g)`}
         stroke={ink(tone)}
-        strokeWidth="1.5"
+        strokeWidth="1.6"
         strokeLinejoin="round"
       />
       <path
-        d="M33 8.5A2.5 2.5 0 0030.5 6H22c-1.1 0-2 .9-2 2v24c0-1.1.9-2 2-2h11z"
+        d="M40 11a3 3 0 00-3-3H27c-1.4 0-2.5 1.1-2.5 2.5v29c0-1.4 1.1-2.5 2.5-2.5h13z"
         fill="var(--card)"
         stroke={ink(tone)}
-        strokeWidth="1.5"
+        strokeWidth="1.6"
         strokeLinejoin="round"
       />
-      <path d="M23.5 13h6M23.5 17.5h6" stroke={ink(tone)} strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
-      <path d="M26 30v5l2-1.6 2 1.6v-5z" fill={warm} />
+      <path d="M28.5 16h8M28.5 21h8M28.5 26h5" stroke={ink(tone)} strokeWidth="1.4" opacity="0.35" strokeLinecap="round" />
+      <path d="M12 16h7M12 21h7" stroke={ink(tone)} strokeWidth="1.4" opacity="0.3" strokeLinecap="round" />
+      <path d="M31 32v9l3-2.4 3 2.4v-9z" fill={`url(#${id}-w)`} stroke="var(--card)" strokeWidth="1.2" strokeLinejoin="round" />
     </svg>
   );
 }
+
 
 
 
