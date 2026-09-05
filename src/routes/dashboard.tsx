@@ -34,6 +34,7 @@ import {
   className,
   greeting,
   INSTITUTION,
+  quizzes,
   relativeTime,
   students,
   subjects,
