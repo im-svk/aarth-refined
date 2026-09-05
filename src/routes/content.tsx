@@ -44,39 +44,117 @@ export const Route = createFileRoute("/content")({
 
 type Shelf = "uploads" | "academic" | "shared";
 
+/* ---------- illustrations ---------- */
+
+const ink = (t: number) => `var(--ev-${t})`;
+const wash = (t: number) => `var(--ev-${t}-bg)`;
+const warm = "var(--ev-4)";
+
+function UploadsArt() {
+  const t = 1;
+  return (
+    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
+      <path
+        d="M5 12.5a3 3 0 013-3h6.2l2.6 3H32a3 3 0 013 3V29a3 3 0 01-3 3H8a3 3 0 01-3-3z"
+        fill={wash(t)}
+        stroke={ink(t)}
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <rect x="14" y="6" width="12" height="15" rx="2.5" fill="var(--card)" stroke={ink(t)} strokeWidth="1.5" />
+      <path d="M20 17.5v-7m0 0l-2.6 2.6M20 10.5l2.6 2.6" stroke={warm} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 20h30" stroke={ink(t)} strokeWidth="1.4" opacity="0.25" />
+    </svg>
+  );
+}
+
+function BooksArt() {
+  const t = 3;
+  return (
+    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
+      <rect x="6" y="11" width="7" height="22" rx="2" fill={wash(t)} stroke={ink(t)} strokeWidth="1.5" />
+      <rect x="14" y="7" width="7" height="26" rx="2" fill="var(--card)" stroke={ink(t)} strokeWidth="1.5" />
+      <rect x="22" y="13" width="7" height="20" rx="2" fill={warm} opacity="0.85" />
+      <path d="M8 16h3M16 12h3" stroke={ink(t)} strokeWidth="1.4" strokeLinecap="round" opacity="0.5" />
+      <circle cx="29.5" cy="10.5" r="4.5" fill={ink(t)} />
+      <path d="M27.4 10.6l1.4 1.4 2.6-3" stroke="var(--card)" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SharedArt() {
+  const t = 2;
+  return (
+    <svg viewBox="0 0 40 40" className="size-9" aria-hidden>
+      <rect x="6" y="8" width="17" height="23" rx="3" fill={wash(t)} stroke={ink(t)} strokeWidth="1.5" transform="rotate(-7 14.5 19.5)" />
+      <rect x="13" y="7" width="18" height="24" rx="3" fill="var(--card)" stroke={ink(t)} strokeWidth="1.6" />
+      <path d="M17.5 13h9M17.5 17.5h9M17.5 22h6" stroke={ink(t)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
+      <circle cx="29.5" cy="28.5" r="5" fill={warm} />
+      <circle cx="29.5" cy="26.9" r="1.5" fill="var(--card)" />
+      <path d="M26.9 31.4a2.8 2.8 0 015.2 0z" fill="var(--card)" />
+    </svg>
+  );
+}
+
 const SHELVES: {
   id: Shelf;
   label: string;
   hint: string;
-  tone: string;
   bg: string;
-  icon: typeof FolderUp;
+  art: () => React.ReactElement;
 }[] = [
-  {
-    id: "uploads",
-    label: "My Uploads",
-    hint: "Files you added",
-    tone: "text-ev-1",
-    bg: "bg-ev-1-bg",
-    icon: FolderUp,
-  },
+  { id: "uploads", label: "My Uploads", hint: "Files you added", bg: "bg-ev-1-bg", art: UploadsArt },
   {
     id: "academic",
     label: "Academic Library",
     hint: "Board textbooks",
-    tone: "text-ev-3",
     bg: "bg-ev-3-bg",
-    icon: BookOpen,
+    art: BooksArt,
   },
-  {
-    id: "shared",
-    label: "Shared Notes",
-    hint: "From your faculty",
-    tone: "text-ev-2",
-    bg: "bg-ev-2-bg",
-    icon: Users,
-  },
+  { id: "shared", label: "Shared Notes", hint: "From your faculty", bg: "bg-ev-2-bg", art: SharedArt },
 ];
+
+function DocArt({ tone = 1 }: { tone?: number }) {
+  return (
+    <svg viewBox="0 0 40 40" className="size-7" aria-hidden>
+      <path
+        d="M10 6.5a2.5 2.5 0 012.5-2.5H23l7 7v22.5a2.5 2.5 0 01-2.5 2.5h-15A2.5 2.5 0 0110 33.5z"
+        fill="var(--card)"
+        stroke={ink(tone)}
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M23 4v7h7" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.5" strokeLinejoin="round" />
+      <path d="M14.5 18h11M14.5 22.5h11M14.5 27h7" stroke={ink(tone)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
+      <circle cx="27" cy="28.5" r="3.2" fill={warm} />
+    </svg>
+  );
+}
+
+function BookArt({ tone = 3 }: { tone?: number }) {
+  return (
+    <svg viewBox="0 0 40 40" className="size-7" aria-hidden>
+      <path
+        d="M7 8.5A2.5 2.5 0 019.5 6H18c1.1 0 2 .9 2 2v24c0-1.1-.9-2-2-2H7z"
+        fill={wash(tone)}
+        stroke={ink(tone)}
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M33 8.5A2.5 2.5 0 0030.5 6H22c-1.1 0-2 .9-2 2v24c0-1.1.9-2 2-2h11z"
+        fill="var(--card)"
+        stroke={ink(tone)}
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M23.5 13h6M23.5 17.5h6" stroke={ink(tone)} strokeWidth="1.4" opacity="0.4" strokeLinecap="round" />
+      <path d="M26 30v5l2-1.6 2 1.6v-5z" fill={warm} />
+    </svg>
+  );
+}
+
+
 
 function subjectLabel(subjectId: string) {
   const subject = subjects.find((item) => item.id === subjectId);
