@@ -34,87 +34,130 @@ const ink = (t: number) => `var(--ev-${t})`;
 const wash = (t: number) => `var(--ev-${t}-bg)`;
 const warm = "var(--ev-4)";
 
+function Defs({ id, tone }: { id: string; tone: number }) {
+  return (
+    <defs>
+      <linearGradient id={`${id}-g`} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={wash(tone)} />
+        <stop offset="100%" stopColor={ink(tone)} stopOpacity="0.35" />
+      </linearGradient>
+    </defs>
+  );
+}
 
-
+function plate(tone: number, id: string) {
+  return <rect x="2" y="2" width="36" height="36" rx="9" fill={`url(#${id}-g)`} />;
+}
 
 function CurriculumArt({ tone }: { tone: number }) {
+  const id = "cs-curriculum";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <circle cx="20" cy="19" r="13" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.6" />
-      <path d="M14 25l4.5-8.5 8.5-4.5-4.5 8.5z" fill={ink(tone)} opacity="0.75" />
-      <circle cx="20" cy="19" r="2.2" fill={warm} />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <circle cx="20" cy="20" r="10" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
+      <path d="M20 10v10M20 20l7-4" stroke={ink(tone)} strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="20" cy="20" r="2.5" fill={warm} />
+      <path d="M10 29h20" stroke={ink(tone)} strokeWidth="1.4" strokeLinecap="round" opacity="0.35" />
     </svg>
   );
 }
 
 function QuizArt({ tone }: { tone: number }) {
+  const id = "cs-quiz";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="9" y="6" width="20" height="27" rx="3.5" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
-      <rect x="15" y="3.5" width="8" height="4.5" rx="2" fill={ink(tone)} />
-      <path d="M13.5 15l2 2 3.5-3.6" stroke={warm} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M13.5 22l2 2 3.5-3.6" stroke={ink(tone)} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
-      <rect x="21" y="14.5" width="5" height="1.8" rx="0.9" fill={ink(tone)} opacity="0.4" />
-      <rect x="21" y="21.5" width="5" height="1.8" rx="0.9" fill={ink(tone)} opacity="0.4" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="9" y="7" width="20" height="26" rx="3.5" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
+      <rect x="15" y="4.5" width="8" height="4.5" rx="2" fill={ink(tone)} />
+      <circle cx="14" cy="16" r="2.4" fill={ink(tone)} />
+      <path d="M12.8 16l.9.9 1.7-1.8" stroke="var(--card)" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="19.5" y="14.5" width="6" height="2.2" rx="1.1" fill={ink(tone)} opacity="0.35" />
+      <circle cx="14" cy="23" r="2.4" fill={ink(tone)} opacity="0.18" />
+      <rect x="19.5" y="21.5" width="6" height="2.2" rx="1.1" fill={ink(tone)} opacity="0.35" />
+      <circle cx="27" cy="28" r="5" fill={warm} />
+      <path d="M27 25.8a1.6 1.6 0 011.3 1.4c0 .8-.5 1.1-.8 1.3-.2.2-.3.3-.3.5v.4" stroke="var(--card)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+      <circle cx="27" cy="30.8" r="0.7" fill="var(--card)" />
     </svg>
   );
 }
 
 function PaperArt({ tone }: { tone: number }) {
+  const id = "cs-paper";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="6.5" y="7" width="18" height="25" rx="3" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.4" opacity="0.9" />
-      <rect x="12" y="4" width="20" height="27" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
-      <path d="M16 12.5h12M16 17h12M16 21.5h12" stroke={ink(tone)} strokeWidth="1.4" opacity="0.35" strokeLinecap="round" />
-      <path d="M22 8.5v14M27 8.5v14" stroke={ink(tone)} strokeWidth="1.2" opacity="0.2" />
-      <circle cx="28.5" cy="26" r="4" fill={warm} />
-      <path d="M26.8 26.1l1.2 1.2 2-2.4" stroke="var(--card)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="7" y="8" width="18" height="24" rx="3" fill={ink(tone)} opacity="0.22" transform="rotate(-5 16 20)" />
+      <rect x="12" y="6" width="18" height="24" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
+      <path d="M16 12.5h10M16 17h10M16 21.5h7" stroke={ink(tone)} strokeWidth="1.4" opacity="0.35" strokeLinecap="round" />
+      <path d="M27 25l5-5 2 2-5 5z" fill={ink(tone)} opacity="0.9" />
+      <path d="M27 25l-1 3 3-1z" fill={ink(tone)} opacity="0.6" />
     </svg>
   );
 }
 
 function SlidesArt({ tone }: { tone: number }) {
+  const id = "cs-slides";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="5" y="7" width="30" height="20" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
-      <rect x="10" y="17" width="4" height="6" rx="1.2" fill={ink(tone)} opacity="0.55" />
-      <rect x="16.5" y="13" width="4" height="10" rx="1.2" fill={ink(tone)} />
-      <rect x="23" y="15" width="4" height="8" rx="1.2" fill={warm} />
-      <path d="M16 31h8" stroke={ink(tone)} strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M20 27v4" stroke={ink(tone)} strokeWidth="1.8" strokeLinecap="round" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="5.5" y="7" width="29" height="19" rx="3.5" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
+      <rect x="9" y="18" width="4" height="5" rx="1" fill={ink(tone)} opacity="0.45" />
+      <rect x="15" y="14" width="4" height="9" rx="1" fill={ink(tone)} />
+      <rect x="21" y="16" width="4" height="7" rx="1" fill={warm} />
+      <path d="M16 29h8" stroke={ink(tone)} strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M20 25.5v3.5" stroke={ink(tone)} strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="31" cy="26" r="5" fill={ink(tone)} />
+      <path d="M29.5 26l3 1.5-3 1.5z" fill="var(--card)" />
     </svg>
   );
 }
 
 function ChecklistArt({ tone }: { tone: number }) {
+  const id = "cs-checklist";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="8" y="5" width="24" height="30" rx="4" fill={wash(tone)} stroke={ink(tone)} strokeWidth="1.6" />
-      <path d="M13 13l2 2 3.5-3.8" stroke={warm} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M13 21l2 2 3.5-3.8" stroke={ink(tone)} strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.6" />
-      <circle cx="15" cy="28.5" r="1.8" fill={ink(tone)} opacity="0.35" />
-      <path d="M21.5 13.5h6M21.5 21.5h6M21.5 28.5h4" stroke={ink(tone)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="8" y="5" width="24" height="30" rx="4" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
+      <circle cx="14" cy="13" r="2.4" fill={ink(tone)} />
+      <path d="M12.8 13l.9.9 1.7-1.8" stroke="var(--card)" strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="19.5" y="11.8" width="8" height="2.2" rx="1.1" fill={ink(tone)} opacity="0.35" />
+      <circle cx="14" cy="20.5" r="2.4" fill={ink(tone)} opacity="0.18" />
+      <rect x="19.5" y="19.3" width="6" height="2.2" rx="1.1" fill={ink(tone)} opacity="0.35" />
+      <circle cx="14" cy="28" r="2.4" fill={ink(tone)} opacity="0.18" />
+      <rect x="19.5" y="26.8" width="8" height="2.2" rx="1.1" fill={ink(tone)} opacity="0.35" />
     </svg>
   );
 }
 
-
 function NoteArt({ tone }: { tone: number }) {
+  const id = "cs-note";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="9" y="5" width="21" height="28" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="9" y="5" width="21" height="28" rx="3" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
       <rect x="6" y="10" width="5" height="3" rx="1.5" fill={ink(tone)} />
       <rect x="6" y="18" width="5" height="3" rx="1.5" fill={warm} />
       <rect x="6" y="26" width="5" height="3" rx="1.5" fill={ink(tone)} opacity="0.5" />
       <path d="M15 13h10M15 19h10M15 25h6" stroke={ink(tone)} strokeWidth="1.5" opacity="0.4" strokeLinecap="round" />
+      <circle cx="29" cy="28" r="5" fill={ink(tone)} />
+      <path d="M26.8 28.1l1.2 1.2 2.2-2.4" stroke="var(--card)" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function PlannerArt({ tone }: { tone: number }) {
+  const id = "cs-planner";
   return (
     <svg viewBox="0 0 40 40" className="size-10" aria-hidden>
-      <rect x="5.5" y="8" width="29" height="24" rx="3.5" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.6" />
+      <Defs id={id} tone={tone} />
+      {plate(tone, id)}
+      <rect x="5.5" y="8" width="29" height="24" rx="3.5" fill="var(--card)" stroke={ink(tone)} strokeWidth="1.5" />
       <path d="M5.5 14.5h29" stroke={ink(tone)} strokeWidth="1.4" />
       <path d="M13 5.5v5M27 5.5v5" stroke={ink(tone)} strokeWidth="1.8" strokeLinecap="round" />
       <rect x="9.5" y="18" width="6" height="4" rx="1.3" fill={ink(tone)} opacity="0.35" />
@@ -209,10 +252,7 @@ function ToolTile({ tool, onClose }: { tool: Tool; onClose: () => void }) {
 
   const body = (
     <>
-      <span
-        className="flex size-[52px] shrink-0 items-center justify-center rounded-[18px]"
-        style={{ backgroundColor: `var(--ev-${tool.tone}-bg)` }}
-      >
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-tint text-tint-foreground">
         <tool.art tone={tool.tone} />
       </span>
 
