@@ -252,10 +252,7 @@ function ToolTile({ tool, onClose }: { tool: Tool; onClose: () => void }) {
 
   const body = (
     <>
-      <span
-        className="flex size-[52px] shrink-0 items-center justify-center rounded-[18px]"
-        style={{ backgroundColor: `var(--ev-${tool.tone}-bg)` }}
-      >
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-tint text-tint-foreground">
         <tool.art tone={tool.tone} />
       </span>
 
