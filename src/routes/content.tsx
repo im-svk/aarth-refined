@@ -359,10 +359,11 @@ function Content() {
                   >
                     <span
                       className={cn(
-                        "flex size-14 shrink-0 items-center justify-center rounded-2xl",
+                        "flex size-16 shrink-0 items-center justify-center rounded-[1.15rem] ring-1 ring-inset ring-border/60",
                         item.bg,
                       )}
                     >
+
                       <Art />
                     </span>
 
