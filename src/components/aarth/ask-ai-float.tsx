@@ -10,13 +10,14 @@ export function AskAiIcon({ className }: { className?: string }) {
       aria-hidden="true"
     >
       <path
-        d="M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v5a4 4 0 0 1-4 4h-2.5l-3.5 3.5V17H8a4 4 0 0 1-4-4V8Z"
+        d="M4 8a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-2l-3 3v-3H8a4 4 0 0 1-4-4V8Z"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M12 6.5 13.5 10H17l-2.75 2 .75 3.25L12 12.75 8.5 15.25l.75-3.25L6.5 10h3.5L12 6.5Z"
+        d="M12 7.5 13.25 10.5 16.5 11 14 13.25 14.5 16.5 12 15 9.5 16.5 10 13.25 7.5 11 10.75 10.5Z"
         fill="currentColor"
       />
     </svg>
