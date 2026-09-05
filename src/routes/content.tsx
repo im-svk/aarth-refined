@@ -280,7 +280,7 @@ function Content() {
           <div className="space-y-6">
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {SHELVES.map((item) => {
-                const Icon = item.icon;
+                const Art = item.art;
                 const count = counts[item.id];
                 return (
                   <button
@@ -291,13 +291,13 @@ function Content() {
                   >
                     <span
                       className={cn(
-                        "flex size-14 shrink-0 items-center justify-center rounded-xl",
+                        "flex size-14 shrink-0 items-center justify-center rounded-2xl",
                         item.bg,
-                        item.tone,
                       )}
                     >
-                      <Icon className="size-6" />
+                      <Art />
                     </span>
+
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[15px] font-semibold text-foreground">
                         {item.label}
