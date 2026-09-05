@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AiChatRouteImport } from './routes/ai-chat'
 import { Route as AidocsRouteImport } from './routes/aidocs'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
@@ -43,6 +44,11 @@ import { Route as ClassesClassIdSubjectsSubjectIdRouteImport } from './routes/cl
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiChatRoute = AiChatRouteImport.update({
+  id: '/ai-chat',
+  path: '/ai-chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AidocsRoute = AidocsRouteImport.update({
@@ -196,6 +202,7 @@ const ClassesClassIdSubjectsSubjectIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-chat': typeof AiChatRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-chat': typeof AiChatRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -261,6 +269,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-chat': typeof AiChatRoute
   '/aidocs': typeof AidocsRoute
   '/analytics': typeof AnalyticsRoute
   '/assignments': typeof AssignmentsRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai-chat'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-chat'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/ai-chat'
     | '/aidocs'
     | '/analytics'
     | '/assignments'
@@ -392,6 +404,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiChatRoute: typeof AiChatRoute
   AidocsRoute: typeof AidocsRoute
   AnalyticsRoute: typeof AnalyticsRoute
   AssignmentsRoute: typeof AssignmentsRoute
@@ -430,6 +443,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-chat': {
+      id: '/ai-chat'
+      path: '/ai-chat'
+      fullPath: '/ai-chat'
+      preLoaderRoute: typeof AiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/aidocs': {
@@ -640,6 +660,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiChatRoute: AiChatRoute,
   AidocsRoute: AidocsRoute,
   AnalyticsRoute: AnalyticsRoute,
   AssignmentsRoute: AssignmentsRoute,
