@@ -148,27 +148,27 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
   );
 }
 
-function DocumentCard({ doc }: { doc: (typeof aiDocuments)[number] }) {
+function DocumentRow({ doc, last }: { doc: (typeof aiDocuments)[number]; last: boolean }) {
   return (
-    <article className="group flex min-h-[196px] flex-col rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-raised)] sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <StudyDocumentIcon tone={TEMPLATE_TONE[doc.template] ?? 1} />
-        <div className="flex items-center gap-1">
-          {doc.pinned && <Pin className="size-4 text-primary" fill="currentColor" aria-label="Pinned" />}
-          <IconButton label={`More options for ${doc.title}`} className="size-9">
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
-      </div>
-      <button type="button" onClick={() => toast.success(`Opening ${doc.title}`)} className="mt-4 min-w-0 text-left">
-        <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">{doc.title}</h3>
-        <p className="mt-1.5 text-xs text-muted-foreground">{className(doc.classId)} · {doc.subject}</p>
+    <div className={cn("group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50 sm:px-4", !last && "border-b border-border/70")}>
+      <StudyDocumentIcon tone={TEMPLATE_TONE[doc.template] ?? 1} />
+      <button type="button" onClick={() => toast.success(`Opening ${doc.title}`)} className="min-w-0 flex-1 text-left">
+        <span className="block truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+          {doc.pinned && <Pin className="mr-1.5 inline-block size-3.5 -translate-y-px text-primary" fill="currentColor" aria-label="Pinned" />}
+          {doc.title}
+        </span>
+        <span className="mt-0.5 block truncate text-xs text-muted-foreground md:hidden">
+          {className(doc.classId)} · {doc.subject} · Edited {relativeTime(doc.updatedAt)}
+        </span>
       </button>
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
-        <span className="text-[11px] text-muted-foreground">Edited {relativeTime(doc.updatedAt)}</span>
-        <Pill tone="outline">{TEMPLATE_LABEL[doc.template]}</Pill>
-      </div>
-    </article>
+      <span className="hidden w-36 shrink-0 truncate text-xs text-muted-foreground md:block">{className(doc.classId)}</span>
+      <span className="hidden w-24 shrink-0 truncate text-xs text-muted-foreground lg:block">{doc.subject}</span>
+      <span className="hidden w-32 shrink-0 text-xs text-muted-foreground md:block">{relativeTime(doc.updatedAt)}</span>
+      <Pill tone="outline" className="hidden shrink-0 sm:inline-flex">{TEMPLATE_LABEL[doc.template]}</Pill>
+      <IconButton label={`More options for ${doc.title}`} className="size-9 shrink-0">
+        <MoreHorizontal className="size-4" />
+      </IconButton>
+    </div>
   );
 }
 
@@ -236,7 +236,7 @@ function StudyMaterial() {
           <div className="border-b border-border p-4 sm:p-5">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Your documents</h2>
+                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Recent</h2>
                 <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
               </div>
               <Button size="sm" onClick={() => setDialog(true)} className="hidden sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
@@ -256,15 +256,24 @@ function StudyMaterial() {
             </div>
           </div>
 
-          <div className="bg-background/40 p-3 sm:p-5">
-            {documents.length === 0 ? (
+          {documents.length === 0 ? (
+            <div className="bg-background/40 p-3 sm:p-5">
               <EmptyState icon={<FileText className="size-5" />} title="No matching documents" description="Try another search or class, or create a new document." action={<Button onClick={() => setDialog(true)}>Create material</Button>} />
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {documents.map((doc) => <DocumentCard key={doc.id} doc={doc} />)}
+            </div>
+          ) : (
+            <div>
+              <div className="hidden items-center gap-3 border-b border-border bg-muted/30 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground md:flex">
+                <span className="flex-1">Name</span>
+                <span className="w-36 shrink-0">Class</span>
+                <span className="hidden w-24 shrink-0 lg:block">Subject</span>
+                <span className="w-32 shrink-0">Last edited</span>
+                <span className="w-[104px] shrink-0 xl:w-[148px]" aria-hidden="true" />
               </div>
-            )}
-          </div>
+              {documents.map((doc, index) => (
+                <DocumentRow key={doc.id} doc={doc} last={index === documents.length - 1} />
+              ))}
+            </div>
+          )}
         </section>
 
         <div className="hidden justify-end sm:flex">
