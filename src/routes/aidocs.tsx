@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2 } from "lucide-react";
+import { FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { StudyDocumentIcon, StudyMaterialHeroArt } from "@/components/aarth/study-material-art";
@@ -176,7 +176,7 @@ function StudyMaterial() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  
 
   const docs = useMemo(() => aiDocuments.filter((doc) =>
     (scope === "all" || doc.classId === scope) &&
@@ -207,65 +207,56 @@ function StudyMaterial() {
           </div>
         </section>
 
-        <div className="flex items-center gap-2 md:gap-3">
-          <div className="flex items-center gap-2 md:hidden">
-            {!searchOpen ? (
-              <>
-                <label className="relative flex-1">
-                  <span className="sr-only">Filter by class</span>
-                  <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} h-10 appearance-none pr-9`}>
-                    <option value="all">All classes</option>
-                    {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                  </select>
-                </label>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 md:gap-3">
+            <label className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-full border border-transparent bg-muted px-4 transition-colors focus-within:border-primary/40 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10 md:h-10 md:rounded-xl md:border-border md:bg-card md:shadow-[var(--shadow-card)]">
+              <Search className="size-[18px] shrink-0 text-muted-foreground" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search your documents"
+                className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+              />
+              {query && (
                 <button
                   type="button"
-                  aria-label="Search documents"
-                  onClick={() => setSearchOpen(true)}
-                  className="press inline-flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)]"
+                  aria-label="Clear search"
+                  onClick={() => setQuery("")}
+                  className="press inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-foreground/5"
                 >
-                  <Search className="size-[18px]" />
+                  <X className="size-4" />
                 </button>
-              </>
-            ) : (
-              <div className="flex w-full items-center gap-2">
-                <input
-                  autoFocus
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search title, chapter or subject"
-                  className="h-10 flex-1 rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50"
-                />
-                <button
-                  type="button"
-                  aria-label="Close search"
-                  onClick={() => {
-                    setQuery("");
-                    setSearchOpen(false);
-                  }}
-                  className="press inline-flex h-10 items-center justify-center rounded-xl px-3 text-[13px] font-semibold text-muted-foreground"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="hidden flex-1 gap-3 md:flex">
-            <label className="flex h-10 flex-1 items-center gap-2.5 rounded-xl border border-border bg-card px-3 shadow-[var(--shadow-card)] focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10">
-              <Search className="size-4 shrink-0 text-muted-foreground" />
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
+              )}
             </label>
-            <label className="relative w-52">
+            <label className="relative hidden w-52 md:block">
               <span className="sr-only">Filter by class</span>
               <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} h-10 appearance-none pr-9`}>
                 <option value="all">All classes</option>
                 {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
               </select>
             </label>
+            <Button size="sm" onClick={() => setDialog(true)} className="hidden h-10 shrink-0 sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
           </div>
 
-          <Button size="sm" onClick={() => setDialog(true)} className="hidden h-10 shrink-0 sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
+          <div className="flex gap-2 overflow-x-auto pb-0.5 md:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <button
+              type="button"
+              onClick={() => setScope("all")}
+              className={`press shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${scope === "all" ? "border-primary/20 bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground"}`}
+            >
+              All classes
+            </button>
+            {classes.filter((item) => !item.archived).map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setScope(item.id)}
+                className={`press shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${scope === item.id ? "border-primary/20 bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground"}`}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
