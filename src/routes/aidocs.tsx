@@ -214,15 +214,13 @@ function StudyMaterial() {
         >
           <ArrowLeft className="size-5" />
         </button>
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          <span className="flex size-8 items-center justify-center rounded-xl bg-tint text-tint-foreground">
-            <FileText className="size-4" />
-          </span>
-          <span className="truncate text-[15px] font-semibold text-foreground">Study material</span>
+        <div className="flex min-w-0 flex-1 items-center gap-2.5">
+          <NotesStudioIcon />
+          <div className="min-w-0">
+            <p className="truncate text-[15px] font-semibold leading-tight text-foreground">Study material</p>
+            <p className="truncate text-[11px] leading-tight text-muted-foreground">Notes, worksheets & question banks</p>
+          </div>
         </div>
-        <Button onClick={() => setDialog(true)} className="h-9 gap-1.5 rounded-full px-3.5 text-xs">
-          <Plus className="size-4" /> New
-        </Button>
       </header>
 
       <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
