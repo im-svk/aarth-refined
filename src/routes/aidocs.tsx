@@ -206,19 +206,21 @@ function StudyMaterial() {
       <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
         {/* Hero card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="relative z-10 flex items-start gap-4 sm:items-center sm:gap-6">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm sm:size-14">
-              <Sparkles className="size-6 sm:size-7" />
+          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+            <div className="flex items-start gap-4 sm:items-center sm:gap-6">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm sm:size-14">
+                <Sparkles className="size-6 sm:size-7" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+                  Create classroom-ready study material
+                </h1>
+                <p className="mt-0.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
+                  Generate AI-drafted notes, question papers and lesson plans aligned to your syllabus. Edit, pin and share with your class.
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
-                Create classroom-ready study material
-              </h1>
-              <p className="mt-0.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
-                Generate AI-drafted notes, question papers and lesson plans aligned to your syllabus. Edit, pin and share with your class.
-              </p>
-            </div>
-            <Button onClick={() => setDialog(true)} className="h-10 shrink-0 rounded-full px-4">
+            <Button onClick={() => setDialog(true)} className="h-11 w-full shrink-0 rounded-full px-4 sm:h-10 sm:w-auto">
               <Plus className="size-4" /> New material
             </Button>
           </div>
