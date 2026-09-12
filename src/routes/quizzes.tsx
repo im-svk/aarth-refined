@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, ClipboardList, Copy, MoreHorizontal, Plus, Search, Sparkles, X } from "lucide-react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, ChevronDown, ClipboardList, Copy, MoreHorizontal, Plus, Search, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
