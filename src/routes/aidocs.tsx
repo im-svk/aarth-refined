@@ -248,9 +248,6 @@ function StudyMaterial() {
             )}
           </label>
           <ClassSelect value={scope} onChange={setScope} className="w-[132px] shrink-0 sm:w-44" />
-          <Button onClick={() => setDialog(true)} className="h-11 w-11 shrink-0 rounded-full p-0 sm:hidden">
-            <Plus className="size-5" />
-          </Button>
         </div>
 
         {/* Recent documents */}
