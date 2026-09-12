@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
-import { StudyDocumentIcon, StudyMaterialHeroArt } from "@/components/aarth/study-material-art";
+import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
 import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
 import { ResponsiveDialog } from "@/components/aarth/responsive-dialog";
 import { aiDocuments, chapters, classes, className, relativeTime, subjectsForClass } from "@/data/mock";
