@@ -207,74 +207,75 @@ function StudyMaterial() {
           </div>
         </section>
 
-        <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
-          <div className="border-b border-border p-4 sm:p-5">
-            <div className="flex items-end justify-between gap-3">
-              <div>
-                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Recent</h2>
-                <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
-              </div>
-              <Button size="sm" onClick={() => setDialog(true)} className="hidden sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
-            </div>
-            <div className="mt-4">
-              <div className="flex items-center gap-2 md:hidden">
-                {!searchOpen ? (
-                  <>
-                    <label className="relative flex-1">
-                      <span className="sr-only">Filter by class</span>
-                      <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
-                        <option value="all">All classes</option>
-                        {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                      </select>
-                    </label>
-                    <button
-                      type="button"
-                      aria-label="Search documents"
-                      onClick={() => setSearchOpen(true)}
-                      className="press inline-flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)]"
-                    >
-                      <Search className="size-[18px]" />
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex w-full items-center gap-2">
-                    <input
-                      autoFocus
-                      value={query}
-                      onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Search title, chapter or subject"
-                      className="h-11 flex-1 rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50"
-                    />
-                    <button
-                      type="button"
-                      aria-label="Close search"
-                      onClick={() => {
-                        setQuery("");
-                        setSearchOpen(false);
-                      }}
-                      className="press inline-flex h-11 items-center justify-center rounded-xl px-3 text-[13px] font-semibold text-muted-foreground"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="hidden gap-3 md:grid lg:grid-cols-[minmax(260px,1fr)_220px]">
-                <label className="flex h-11 items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 focus-within:border-primary/50 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10">
-                  <Search className="size-4 shrink-0 text-muted-foreground" />
-                  <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
-                </label>
-                <label className="relative">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 md:hidden">
+            {!searchOpen ? (
+              <>
+                <label className="relative flex-1">
                   <span className="sr-only">Filter by class</span>
-                  <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
+                  <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} h-10 appearance-none pr-9`}>
                     <option value="all">All classes</option>
                     {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
                   </select>
                 </label>
+                <button
+                  type="button"
+                  aria-label="Search documents"
+                  onClick={() => setSearchOpen(true)}
+                  className="press inline-flex size-10 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)]"
+                >
+                  <Search className="size-[18px]" />
+                </button>
+              </>
+            ) : (
+              <div className="flex w-full items-center gap-2">
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search title, chapter or subject"
+                  className="h-10 flex-1 rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50"
+                />
+                <button
+                  type="button"
+                  aria-label="Close search"
+                  onClick={() => {
+                    setQuery("");
+                    setSearchOpen(false);
+                  }}
+                  className="press inline-flex h-10 items-center justify-center rounded-xl px-3 text-[13px] font-semibold text-muted-foreground"
+                >
+                  Cancel
+                </button>
               </div>
+            )}
+          </div>
+
+          <div className="hidden flex-1 gap-3 md:flex">
+            <label className="flex h-10 flex-1 items-center gap-2.5 rounded-xl border border-border bg-card px-3 shadow-[var(--shadow-card)] focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10">
+              <Search className="size-4 shrink-0 text-muted-foreground" />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
+            </label>
+            <label className="relative w-52">
+              <span className="sr-only">Filter by class</span>
+              <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} h-10 appearance-none pr-9`}>
+                <option value="all">All classes</option>
+                {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+              </select>
+            </label>
+          </div>
+
+          <Button size="sm" onClick={() => setDialog(true)} className="hidden h-10 shrink-0 sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
+        </div>
+
+        <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
+          <div className="flex items-center justify-between gap-3 border-b border-border p-4 sm:p-5">
+            <div>
+              <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Recent</h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
             </div>
           </div>
+
 
           {documents.length === 0 ? (
             <div className="bg-background/40 p-3 sm:p-5">
