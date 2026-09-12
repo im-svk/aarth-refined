@@ -204,17 +204,26 @@ function StudyMaterial() {
   return (
     <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
       <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
-        {/* Page heading + primary action */}
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">Study material</h1>
-            <p className="mt-0.5 text-[13px] text-muted-foreground">
-              AI-drafted notes, question papers and lesson plans, ready to edit.
-            </p>
+        {/* Hero card */}
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+          <div className="relative z-10 flex items-start gap-4 sm:items-center sm:gap-6">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm sm:size-14">
+              <Sparkles className="size-6 sm:size-7" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+                Create classroom-ready study material
+              </h1>
+              <p className="mt-0.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
+                Generate AI-drafted notes, question papers and lesson plans aligned to your syllabus. Edit, pin and share with your class.
+              </p>
+            </div>
+            <Button onClick={() => setDialog(true)} className="hidden h-10 shrink-0 rounded-full px-4 sm:inline-flex">
+              <Plus className="size-4" /> New material
+            </Button>
           </div>
-          <Button onClick={() => setDialog(true)} className="h-10 shrink-0 rounded-full px-4">
-            <Plus className="size-4" /> New material
-          </Button>
+          <div className="absolute -right-8 -top-8 size-32 rounded-full bg-primary/5 blur-2xl" aria-hidden="true" />
+          <div className="absolute -bottom-10 -left-10 size-40 rounded-full bg-primary/[0.03] blur-3xl" aria-hidden="true" />
         </div>
 
         {/* Search + filter toolbar */}
