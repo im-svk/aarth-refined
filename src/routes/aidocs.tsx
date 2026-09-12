@@ -236,7 +236,7 @@ function StudyMaterial() {
           <div className="border-b border-border p-4 sm:p-5">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Your documents</h2>
+                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Recent</h2>
                 <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
               </div>
               <Button size="sm" onClick={() => setDialog(true)} className="hidden sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
@@ -256,15 +256,24 @@ function StudyMaterial() {
             </div>
           </div>
 
-          <div className="bg-background/40 p-3 sm:p-5">
-            {documents.length === 0 ? (
+          {documents.length === 0 ? (
+            <div className="bg-background/40 p-3 sm:p-5">
               <EmptyState icon={<FileText className="size-5" />} title="No matching documents" description="Try another search or class, or create a new document." action={<Button onClick={() => setDialog(true)}>Create material</Button>} />
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {documents.map((doc) => <DocumentCard key={doc.id} doc={doc} />)}
+            </div>
+          ) : (
+            <div>
+              <div className="hidden items-center gap-3 border-b border-border bg-muted/30 px-4 py-2 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground md:flex">
+                <span className="flex-1">Name</span>
+                <span className="w-36 shrink-0">Class</span>
+                <span className="hidden w-24 shrink-0 lg:block">Subject</span>
+                <span className="w-32 shrink-0">Last edited</span>
+                <span className="w-[104px] shrink-0 xl:w-[148px]" aria-hidden="true" />
               </div>
-            )}
-          </div>
+              {documents.map((doc, index) => (
+                <DocumentRow key={doc.id} doc={doc} last={index === documents.length - 1} />
+              ))}
+            </div>
+          )}
         </section>
 
         <div className="hidden justify-end sm:flex">
