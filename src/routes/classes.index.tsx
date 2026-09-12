@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Archive,
   BookOpen,
+  ChevronDown,
   ChevronRight,
   GraduationCap,
   MoreHorizontal,
@@ -12,8 +13,6 @@ import {
   SlidersHorizontal,
   Trash2,
   Users,
-
-  
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
@@ -21,7 +20,6 @@ import {
   Button,
   Card,
   EmptyState,
-  FilterChips,
   PageHeader,
   Pill,
   SearchField,
