@@ -190,6 +190,7 @@ function DocumentRow({ doc, last }: { doc: (typeof aiDocuments)[number]; last: b
 }
 
 function StudyMaterial() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
@@ -202,7 +203,28 @@ function StudyMaterial() {
   const documents = pinned ? [pinned, ...docs.filter((doc) => doc.id !== pinned.id)] : docs;
 
   return (
-    <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
+    <AppShell title="Study Material" wide hideHeader hideFooter>
+      {/* Custom header */}
+      <header className="sticky top-0 z-20 -mx-4 mb-5 flex h-14 items-center gap-2 border-b border-border/70 bg-background/90 px-4 backdrop-blur-xl md:-mx-8 md:mb-6 md:px-8">
+        <button
+          type="button"
+          onClick={() => router.history.back()}
+          aria-label="Go back"
+          className="press inline-flex size-9 items-center justify-center rounded-full text-foreground hover:bg-muted"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <span className="flex size-8 items-center justify-center rounded-xl bg-tint text-tint-foreground">
+            <FileText className="size-4" />
+          </span>
+          <span className="truncate text-[15px] font-semibold text-foreground">Study material</span>
+        </div>
+        <Button onClick={() => setDialog(true)} className="h-9 gap-1.5 rounded-full px-3.5 text-xs">
+          <Plus className="size-4" /> New
+        </Button>
+      </header>
+
       <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
         {/* Hero card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
