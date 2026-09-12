@@ -521,12 +521,14 @@ export function AppShell({
   children,
   wide,
   mobileHeader = "default",
+  hideFooter = false,
 }: {
   title: string;
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
   mobileHeader?: "default" | "brand" | "study" | "none";
+  hideFooter?: boolean | undefined;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
@@ -540,13 +542,14 @@ export function AppShell({
 
         <main
           className={cn(
-            "mx-auto w-full flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8",
+            "mx-auto w-full flex-1 px-4 pt-5 md:px-8 md:pt-8",
+            hideFooter ? "pb-5 md:pb-12" : "pb-28 md:pb-12",
             wide ? "max-w-[1400px]" : "max-w-6xl",
           )}
         >
           {children}
         </main>
-        <BottomTabs onCreate={openCreate} />
+        {!hideFooter && <BottomTabs onCreate={openCreate} />}
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
       {pathname !== "/ai-chat" && <AskAiFloatButton />}
