@@ -188,47 +188,21 @@ function StudyMaterial() {
     <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
       <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
         <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-card shadow-[var(--shadow-card)]">
-          <div className="grid min-h-[220px] grid-cols-1 items-center md:grid-cols-[minmax(0,1.2fr)_minmax(240px,.8fr)]">
-            <div className="relative z-10 p-5 sm:p-7 lg:p-9">
-              <p className="text-xs font-semibold uppercase text-primary [letter-spacing:.08em]">AI teaching workspace</p>
-              <h1 className="mt-2 max-w-xl text-[1.8rem] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-[2.35rem]">
-                Turn a chapter into classroom-ready material.
+          <div className="grid min-h-[150px] grid-cols-1 items-center md:grid-cols-[minmax(0,1fr)_180px]">
+            <div className="relative z-10 p-5 sm:p-6">
+              <h1 className="max-w-md text-xl font-semibold leading-snug text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-2xl">
+                Create classroom-ready study material.
               </h1>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
-                Create clear notes, summaries and lesson plans grounded in your prescribed textbooks.
+              <p className="mt-1.5 max-w-md text-sm text-muted-foreground">
+                Notes, summaries and lesson plans from any chapter.
               </p>
-              <Button onClick={() => setDialog(true)} className="mt-5">
-                <Sparkles className="size-4" /> Create material
+              <Button size="sm" onClick={() => setDialog(true)} className="mt-4">
+                <Sparkles className="size-3.5" /> Create material
               </Button>
             </div>
-            <div className="absolute -right-9 top-3 w-48 opacity-45 sm:right-2 sm:w-56 md:static md:flex md:w-auto md:justify-center md:p-6 md:opacity-100">
+            <div className="absolute -right-6 -top-4 w-36 opacity-30 sm:-right-2 sm:w-40 md:static md:flex md:w-auto md:items-center md:justify-center md:p-5 md:opacity-100">
               <StudyMaterialHeroArt />
             </div>
-          </div>
-        </section>
-
-        <section aria-labelledby="start-title">
-          <div className="mb-3 flex items-end justify-between gap-3">
-            <div>
-              <h2 id="start-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Start with a format</h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">Aarth structures the first draft for you.</p>
-            </div>
-          </div>
-          <div className="grid gap-2.5 sm:grid-cols-3">
-            {[
-              { kind: "notes" as const, title: "Study notes", copy: "Explain a chapter clearly" },
-              { kind: "lesson" as const, title: "Lesson plan", copy: "Plan a classroom session" },
-              { kind: "summary" as const, title: "Chapter summary", copy: "Create a quick revision guide" },
-            ].map((item) => (
-              <Button key={item.kind} variant="outline" onClick={() => setDialog(true)} className="h-auto min-h-[72px] justify-start gap-3 p-3 text-left hover:border-primary/35 hover:bg-tint/40">
-                <TemplateIcon kind={item.kind} />
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-foreground">{item.title}</span>
-                  <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{item.copy}</span>
-                </span>
-                <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
-              </Button>
-            ))}
           </div>
         </section>
 
