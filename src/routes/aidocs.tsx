@@ -1,82 +1,73 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, Pin, Plus, Sparkles, Trash2 } from "lucide-react";
+import { ArrowRight, FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
-import {
-  Button,
-  Card,
-  EmptyState,
-  FilterChips,
-  IconButton,
-  ListRow,
-  PageHeader,
-  Pill,
-  SearchField,
-  SectionHeader,
-  Skeleton,
-  Spinner,
-} from "@/components/aarth/primitives";
+import { StudyDocumentIcon, StudyMaterialHeroArt, TemplateIcon } from "@/components/aarth/study-material-art";
+import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
 import { ResponsiveDialog } from "@/components/aarth/responsive-dialog";
-import {
-  aiDocuments,
-  chapters,
-  classes,
-  className,
-  relativeTime,
-  subjectsForClass,
-} from "@/data/mock";
+import { aiDocuments, chapters, classes, className, relativeTime, subjectsForClass } from "@/data/mock";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/aidocs")({
   head: () => ({
     meta: [
       { title: "AI Study Material — Aarth Educator" },
-      {
-        name: "description",
-        content:
-          "Generate chapter-accurate study notes, lesson plans and summaries as editable A4 documents.",
-      },
+      { name: "description", content: "Create and organise editable, textbook-aligned teaching material." },
       { property: "og:title", content: "AI Study Material — Aarth Educator" },
-      {
-        property: "og:description",
-        content: "Chapter-accurate notes and lesson plans, ready to edit.",
-      },
+      { property: "og:description", content: "Create and organise editable, textbook-aligned teaching material." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: StudyMaterial,
 });
 
 const TEMPLATE_LABEL: Record<string, string> = {
-  blank: "Blank",
+  blank: "Blank document",
   question_paper: "Question paper",
-  study_material: "Study material",
+  study_material: "Study notes",
   lesson_plan: "Lesson plan",
   report: "Report",
 };
 
+const TEMPLATE_TONE: Record<string, 1 | 2 | 3 | 4> = {
+  blank: 1,
+  study_material: 1,
+  lesson_plan: 2,
+  question_paper: 3,
+  report: 4,
+};
+
 const inputClass =
-  "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50";
+  "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10";
 
 function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [classId, setClassId] = useState(classes[3]!.id);
-  const [subject, setSubject] = useState("Physics");
-  const [chapter, setChapter] = useState(chapters[2]!.name);
+  const initialClass = classes.find((item) => !item.archived);
+  const initialChapter = chapters[0];
+  const [classId, setClassId] = useState(initialClass?.id ?? "");
+  const availableSubjects = subjectsForClass(classId);
+  const [subject, setSubject] = useState(availableSubjects[0]?.name ?? "Science");
+  const [chapter, setChapter] = useState(initialChapter?.name ?? "");
   const [template, setTemplate] = useState("study_material");
   const [depth, setDepth] = useState("standard");
   const [generating, setGenerating] = useState(false);
+
+  const chooseClass = (nextClassId: string) => {
+    setClassId(nextClassId);
+    setSubject(subjectsForClass(nextClassId)[0]?.name ?? "");
+  };
 
   return (
     <ResponsiveDialog
       open={open}
       onClose={onClose}
-      title="Generate study material"
-      description="Aarth drafts from the prescribed textbook for the class and board you pick."
+      title="Create study material"
+      description="Choose the class and chapter. Aarth will prepare an editable first draft."
       size="lg"
       footer={
         <>
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
+          <Button variant="ghost" onClick={onClose}>Cancel</Button>
           <Button
             disabled={generating}
             onClick={() => {
@@ -84,19 +75,11 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
               setTimeout(() => {
                 setGenerating(false);
                 onClose();
-                toast.success("Document ready to edit");
+                toast.success("Your material is ready to edit");
               }, 1400);
             }}
           >
-            {generating ? (
-              <>
-                <Spinner /> Generating…
-              </>
-            ) : (
-              <>
-                <Sparkles className="size-4" /> Generate
-              </>
-            )}
+            {generating ? <><Spinner className="text-primary-foreground" /> Creating…</> : <><Sparkles className="size-4" /> Create draft</>}
           </Button>
         </>
       }
@@ -104,90 +87,88 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="mb-1.5 block text-xs font-semibold text-foreground">Class</span>
-          <select
-            value={classId}
-            onChange={(event) => setClassId(event.target.value)}
-            className={inputClass}
-          >
-            {classes
-              .filter((klass) => !klass.archived)
-              .map((klass) => (
-                <option key={klass.id} value={klass.id}>
-                  {klass.name}
-                </option>
-              ))}
+          <select value={classId} onChange={(event) => chooseClass(event.target.value)} className={inputClass}>
+            {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
           </select>
         </label>
         <label className="block">
           <span className="mb-1.5 block text-xs font-semibold text-foreground">Subject</span>
-          <select
-            value={subject}
-            onChange={(event) => setSubject(event.target.value)}
-            className={inputClass}
-          >
-            {subjectsForClass(classId).map((item) => (
-              <option key={item.id}>{item.name}</option>
-            ))}
+          <select value={subject} onChange={(event) => setSubject(event.target.value)} className={inputClass}>
+            {availableSubjects.map((item) => <option key={item.id}>{item.name}</option>)}
           </select>
         </label>
         <label className="block sm:col-span-2">
           <span className="mb-1.5 block text-xs font-semibold text-foreground">Chapter</span>
-          <select
-            value={chapter}
-            onChange={(event) => setChapter(event.target.value)}
-            className={inputClass}
-          >
-            {chapters.map((item) => (
-              <option key={item.id}>{item.name}</option>
-            ))}
+          <select value={chapter} onChange={(event) => setChapter(event.target.value)} className={inputClass}>
+            {chapters.map((item) => <option key={item.id}>{item.name}</option>)}
           </select>
         </label>
       </div>
 
-      <div className="mt-4">
-        <p className="mb-2 text-xs font-semibold text-foreground">Template</p>
-        <div className="grid gap-2 sm:grid-cols-2">
+      <fieldset className="mt-5">
+        <legend className="mb-2 text-xs font-semibold text-foreground">What do you want to create?</legend>
+        <div className="grid grid-cols-2 gap-2">
           {["study_material", "lesson_plan", "report", "blank"].map((value) => (
-            <button
+            <Button
               key={value}
               type="button"
+              variant="outline"
               onClick={() => setTemplate(value)}
-              className={`press rounded-xl border px-3 py-3 text-left text-xs font-semibold ${
-                template === value
-                  ? "border-primary/40 bg-tint text-tint-foreground"
-                  : "border-border bg-card text-muted-foreground"
-              }`}
+              className={cn("h-auto min-h-11 justify-start px-3 py-2.5 text-left", template === value && "border-primary/40 bg-tint text-tint-foreground")}
             >
               {TEMPLATE_LABEL[value]}
-            </button>
+            </Button>
           ))}
         </div>
-      </div>
+      </fieldset>
 
-      <div className="mt-4">
-        <p className="mb-2 text-xs font-semibold text-foreground">Depth</p>
-        <FilterChips
-          value={depth}
-          onChange={setDepth}
-          options={[
-            { value: "brief", label: "Brief" },
-            { value: "standard", label: "Standard" },
-            { value: "detailed", label: "Detailed" },
-          ]}
-        />
-      </div>
+      <fieldset className="mt-5">
+        <legend className="mb-2 text-xs font-semibold text-foreground">Level of detail</legend>
+        <div className="grid grid-cols-3 rounded-xl border border-border bg-muted/50 p-1">
+          {["brief", "standard", "detailed"].map((value) => (
+            <Button
+              key={value}
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setDepth(value)}
+              className={cn("capitalize", depth === value && "bg-card text-foreground shadow-[var(--shadow-card)]")}
+            >
+              {value}
+            </Button>
+          ))}
+        </div>
+      </fieldset>
 
-      <label className="mt-4 block">
-        <span className="mb-1.5 block text-xs font-semibold text-foreground">
-          Extra instructions
-        </span>
-        <textarea
-          rows={3}
-          placeholder="Add numericals with IST-friendly examples, and a 5-question recap at the end."
-          className="w-full rounded-xl border border-border bg-card p-3 text-sm outline-none focus:border-primary/50"
-        />
+      <label className="mt-5 block">
+        <span className="mb-1.5 block text-xs font-semibold text-foreground">Anything else? <span className="font-normal text-muted-foreground">Optional</span></span>
+        <textarea rows={3} placeholder="For example: add five recap questions at the end." className="w-full rounded-xl border border-border bg-card p-3 text-sm text-foreground outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10" />
       </label>
     </ResponsiveDialog>
+  );
+}
+
+function DocumentCard({ doc }: { doc: (typeof aiDocuments)[number] }) {
+  return (
+    <article className="group flex min-h-[196px] flex-col rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-raised)] sm:p-5">
+      <div className="flex items-start justify-between gap-3">
+        <StudyDocumentIcon tone={TEMPLATE_TONE[doc.template] ?? 1} />
+        <div className="flex items-center gap-1">
+          {doc.pinned && <Pin className="size-4 text-primary" fill="currentColor" aria-label="Pinned" />}
+          <IconButton label={`More options for ${doc.title}`} className="size-9">
+            <MoreHorizontal className="size-4" />
+          </IconButton>
+        </div>
+      </div>
+      <button type="button" onClick={() => toast.success(`Opening ${doc.title}`)} className="mt-4 min-w-0 text-left">
+        <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">{doc.title}</h3>
+        <p className="mt-1.5 text-xs text-muted-foreground">{className(doc.classId)} · {doc.subject}</p>
+      </button>
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
+        <span className="text-[11px] text-muted-foreground">Edited {relativeTime(doc.updatedAt)}</span>
+        <Pill tone="outline">{TEMPLATE_LABEL[doc.template]}</Pill>
+      </div>
+    </article>
   );
 }
 
@@ -195,129 +176,101 @@ function StudyMaterial() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
-  const [loading] = useState(false);
 
-  const docs = useMemo(
-    () =>
-      aiDocuments.filter(
-        (doc) =>
-          (scope === "all" || doc.classId === scope) &&
-          doc.title.toLowerCase().includes(query.toLowerCase()),
-      ),
-    [query, scope],
-  );
-
-  const pinned = docs.filter((doc) => doc.pinned);
-  const rest = docs.filter((doc) => !doc.pinned);
+  const docs = useMemo(() => aiDocuments.filter((doc) =>
+    (scope === "all" || doc.classId === scope) &&
+    `${doc.title} ${doc.subject}`.toLowerCase().includes(query.toLowerCase()),
+  ), [query, scope]);
+  const pinned = docs.find((doc) => doc.pinned);
+  const documents = pinned ? [pinned, ...docs.filter((doc) => doc.id !== pinned.id)] : docs;
 
   return (
-    <AppShell title="Study Material">
-      <div className="space-y-6">
-        <PageHeader
-          kicker="Create"
-          title="Study material"
-          subtitle="Editable A4 documents generated from your prescribed textbooks."
-          actions={
-            <Button onClick={() => setDialog(true)}>
-              <Sparkles className="size-4" /> Generate
-            </Button>
-          }
-        />
-
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <SearchField
-            value={query}
-            onChange={setQuery}
-            placeholder="Search documents"
-            className="lg:w-80"
-          />
-          <FilterChips
-            value={scope}
-            onChange={setScope}
-            className="lg:ml-auto"
-            options={[
-              { value: "all", label: "All classes" },
-              ...classes
-                .filter((klass) => !klass.archived)
-                .map((klass) => ({
-                  value: klass.id,
-                  label: klass.name.replace("Class ", "Cl. "),
-                })),
-            ]}
-          />
-        </div>
-
-        {loading ? (
-          <Card className="divide-y divide-border">
-            {[0, 1, 2].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-4">
-                <Skeleton className="size-10 rounded-xl" />
-                <div className="flex-1">
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="mt-2 h-3 w-1/4" />
-                </div>
-              </div>
-            ))}
-          </Card>
-        ) : docs.length === 0 ? (
-          <Card>
-            <EmptyState
-              icon={<FileText className="size-5" />}
-              title="No documents yet"
-              description="Generate notes, a chapter summary or a lesson plan and it will appear here."
-              action={
-                <Button onClick={() => setDialog(true)}>
-                  <Plus className="size-4" /> New document
-                </Button>
-              }
-            />
-          </Card>
-        ) : (
-          <div className="space-y-6">
-            {pinned.length > 0 && (
-              <section>
-                <SectionHeader title="Pinned" hint="Quick access" />
-                <Card className="mt-3 divide-y divide-border">
-                  {pinned.map((doc) => (
-                    <ListRow
-                      key={doc.id}
-                      icon={<Pin className="size-4" />}
-                      title={doc.title}
-                      subtitle={`${className(doc.classId)} · ${doc.subject} · ${relativeTime(doc.updatedAt)}`}
-                      trailing={<Pill tone="outline">{TEMPLATE_LABEL[doc.template]}</Pill>}
-                      onClick={() => toast.success(`Opening ${doc.title}`)}
-                    />
-                  ))}
-                </Card>
-              </section>
-            )}
-
-            <section>
-              <SectionHeader title="All documents" hint={`${rest.length} documents`} />
-              <Card className="mt-3 divide-y divide-border">
-                {rest.map((doc) => (
-                  <ListRow
-                    key={doc.id}
-                    icon={<FileText className="size-4" />}
-                    title={doc.title}
-                    subtitle={`${className(doc.classId)} · ${doc.subject} · ${relativeTime(doc.updatedAt)}`}
-                    showChevron={false}
-                    trailing={
-                      <div className="flex items-center gap-2">
-                        <Pill tone="outline">{TEMPLATE_LABEL[doc.template]}</Pill>
-                        <IconButton label="Delete" onClick={() => toast.success("Document deleted")}>
-                          <Trash2 className="size-4" />
-                        </IconButton>
-                      </div>
-                    }
-                  />
-                ))}
-              </Card>
-            </section>
+    <AppShell title="Study Material" wide>
+      <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
+        <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-card shadow-[var(--shadow-card)]">
+          <div className="grid min-h-[220px] grid-cols-1 items-center md:grid-cols-[minmax(0,1.2fr)_minmax(240px,.8fr)]">
+            <div className="relative z-10 p-5 sm:p-7 lg:p-9">
+              <p className="text-xs font-semibold uppercase text-primary [letter-spacing:.08em]">AI teaching workspace</p>
+              <h1 className="mt-2 max-w-xl text-[1.8rem] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-[2.35rem]">
+                Turn a chapter into classroom-ready material.
+              </h1>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-[15px]">
+                Create clear notes, summaries and lesson plans grounded in your prescribed textbooks.
+              </p>
+              <Button onClick={() => setDialog(true)} className="mt-5">
+                <Sparkles className="size-4" /> Create material
+              </Button>
+            </div>
+            <div className="absolute -right-6 top-5 w-44 opacity-35 sm:right-2 sm:w-52 md:static md:flex md:w-auto md:justify-center md:p-6 md:opacity-100">
+              <StudyMaterialHeroArt />
+            </div>
           </div>
-        )}
-      </div>
+        </section>
 
+        <section aria-labelledby="start-title">
+          <div className="mb-3 flex items-end justify-between gap-3">
+            <div>
+              <h2 id="start-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Start with a format</h2>
+              <p className="mt-0.5 text-xs text-muted-foreground">Aarth structures the first draft for you.</p>
+            </div>
+          </div>
+          <div className="grid gap-2.5 sm:grid-cols-3">
+            {[
+              { kind: "notes" as const, title: "Study notes", copy: "Explain a chapter clearly" },
+              { kind: "lesson" as const, title: "Lesson plan", copy: "Plan a classroom session" },
+              { kind: "summary" as const, title: "Chapter summary", copy: "Create a quick revision guide" },
+            ].map((item) => (
+              <Button key={item.kind} variant="outline" onClick={() => setDialog(true)} className="h-auto min-h-[72px] justify-start gap-3 p-3 text-left hover:border-primary/35 hover:bg-tint/40">
+                <TemplateIcon kind={item.kind} />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold text-foreground">{item.title}</span>
+                  <span className="mt-0.5 block text-xs font-normal text-muted-foreground">{item.copy}</span>
+                </span>
+                <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
+              </Button>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
+          <div className="border-b border-border p-4 sm:p-5">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Your documents</h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
+              </div>
+              <Button size="sm" onClick={() => setDialog(true)} className="hidden sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
+            </div>
+            <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(260px,1fr)_220px]">
+              <label className="flex h-11 items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 focus-within:border-primary/50 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10">
+                <Search className="size-4 shrink-0 text-muted-foreground" />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
+              </label>
+              <label className="relative">
+                <span className="sr-only">Filter by class</span>
+                <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
+                  <option value="all">All classes</option>
+                  {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div className="bg-background/40 p-3 sm:p-5">
+            {documents.length === 0 ? (
+              <EmptyState icon={<FileText className="size-5" />} title="No matching documents" description="Try another search or class, or create a new document." action={<Button onClick={() => setDialog(true)}>Create material</Button>} />
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {documents.map((doc) => <DocumentCard key={doc.id} doc={doc} />)}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <div className="hidden justify-end sm:flex">
+          <Button variant="danger" size="sm" onClick={() => toast.success("Select a document to remove it")}><Trash2 className="size-3.5" /> Manage documents</Button>
+        </div>
+      </div>
       <GenerateDialog open={dialog} onClose={() => setDialog(false)} />
     </AppShell>
   );
