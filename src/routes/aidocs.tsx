@@ -185,7 +185,7 @@ function StudyMaterial() {
   const documents = pinned ? [pinned, ...docs.filter((doc) => doc.id !== pinned.id)] : docs;
 
   return (
-    <AppShell title="Study Material" wide>
+    <AppShell title="Study Material" wide mobileHeader="study">
       <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
         <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-card shadow-[var(--shadow-card)]">
           <div className="grid min-h-[220px] grid-cols-1 items-center md:grid-cols-[minmax(0,1.2fr)_minmax(240px,.8fr)]">
@@ -201,7 +201,7 @@ function StudyMaterial() {
                 <Sparkles className="size-4" /> Create material
               </Button>
             </div>
-            <div className="absolute -right-6 top-5 w-44 opacity-35 sm:right-2 sm:w-52 md:static md:flex md:w-auto md:justify-center md:p-6 md:opacity-100">
+            <div className="absolute -right-9 top-3 w-48 opacity-45 sm:right-2 sm:w-56 md:static md:flex md:w-auto md:justify-center md:p-6 md:opacity-100">
               <StudyMaterialHeroArt />
             </div>
           </div>

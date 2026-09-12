@@ -344,7 +344,7 @@ function MobileTopBar({
 }: {
   title: string;
   back?: boolean | undefined;
-  variant?: "default" | "brand" | "none";
+  variant?: "default" | "brand" | "study" | "none";
 }) {
   if (variant === "none") return null;
   const router = useRouter();
@@ -380,6 +380,33 @@ function MobileTopBar({
             <Avatar name={user.name} size="sm" />
           </Link>
         </div>
+      </header>
+    );
+  }
+
+  if (variant === "study") {
+    return (
+      <header
+        className="sticky top-0 z-20 grid min-h-[4.5rem] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-aidocs-line bg-card/95 px-4 backdrop-blur md:hidden"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        <span className="flex size-10 items-center justify-center rounded-xl bg-aidocs-sky text-aidocs-blue">
+          <BookOpen className="size-5" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-[15px] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif]">
+            {title}
+          </p>
+          <p className="mt-0.5 truncate text-[11px] leading-tight text-muted-foreground">Your AI teaching workspace</p>
+        </div>
+        <Link
+          to="/notifications"
+          aria-label="Notifications"
+          className="press relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-background text-muted-foreground"
+        >
+          <Bell className="size-[18px]" />
+          {unread > 0 && <span className="absolute right-2 top-2 size-2 rounded-full bg-primary ring-2 ring-card" />}
+        </Link>
       </header>
     );
   }
@@ -473,7 +500,7 @@ export function AppShell({
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
-  mobileHeader?: "default" | "brand" | "none";
+  mobileHeader?: "default" | "brand" | "study" | "none";
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
