@@ -185,7 +185,7 @@ function StudyMaterial() {
   const documents = pinned ? [pinned, ...docs.filter((doc) => doc.id !== pinned.id)] : docs;
 
   return (
-    <AppShell title="Study Material" wide mobileHeader="study">
+    <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
       <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
         <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-card shadow-[var(--shadow-card)]">
           <div className="grid min-h-[220px] grid-cols-1 items-center md:grid-cols-[minmax(0,1.2fr)_minmax(240px,.8fr)]">

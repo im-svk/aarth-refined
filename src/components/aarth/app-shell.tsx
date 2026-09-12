@@ -407,9 +407,17 @@ function MobileTopBar({
   if (variant === "study") {
     return (
       <header
-        className="sticky top-0 z-20 grid min-h-[4.5rem] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-aidocs-line bg-card/95 px-4 backdrop-blur md:hidden"
+        className={cn(
+          "sticky top-0 z-20 grid min-h-[4.5rem] items-center gap-2 border-b border-aidocs-line bg-card/95 px-3 backdrop-blur md:hidden",
+          back ? "grid-cols-[auto_auto_minmax(0,1fr)_auto]" : "grid-cols-[auto_minmax(0,1fr)_auto]",
+        )}
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
+        {back && (
+          <IconButton label="Back" onClick={() => router.history.back()} className="size-9">
+            <ChevronLeft className="size-5" />
+          </IconButton>
+        )}
         <StudyWorkspaceIcon />
         <div className="min-w-0">
           <p className="truncate text-[15px] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif]">
@@ -513,12 +521,14 @@ export function AppShell({
   children,
   wide,
   mobileHeader = "default",
+  hideFooter = false,
 }: {
   title: string;
   back?: boolean | undefined;
   children: ReactNode;
   wide?: boolean | undefined;
   mobileHeader?: "default" | "brand" | "study" | "none";
+  hideFooter?: boolean | undefined;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
@@ -532,13 +542,14 @@ export function AppShell({
 
         <main
           className={cn(
-            "mx-auto w-full flex-1 px-4 pb-28 pt-5 md:px-8 md:pb-12 md:pt-8",
+            "mx-auto w-full flex-1 px-4 pt-5 md:px-8 md:pt-8",
+            hideFooter ? "pb-5 md:pb-12" : "pb-28 md:pb-12",
             wide ? "max-w-[1400px]" : "max-w-6xl",
           )}
         >
           {children}
         </main>
-        <BottomTabs onCreate={openCreate} />
+        {!hideFooter && <BottomTabs onCreate={openCreate} />}
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
       {pathname !== "/ai-chat" && <AskAiFloatButton />}
