@@ -148,27 +148,27 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
   );
 }
 
-function DocumentCard({ doc }: { doc: (typeof aiDocuments)[number] }) {
+function DocumentRow({ doc, last }: { doc: (typeof aiDocuments)[number]; last: boolean }) {
   return (
-    <article className="group flex min-h-[196px] flex-col rounded-xl border border-border bg-card p-4 shadow-[var(--shadow-card)] transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-raised)] sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <StudyDocumentIcon tone={TEMPLATE_TONE[doc.template] ?? 1} />
-        <div className="flex items-center gap-1">
-          {doc.pinned && <Pin className="size-4 text-primary" fill="currentColor" aria-label="Pinned" />}
-          <IconButton label={`More options for ${doc.title}`} className="size-9">
-            <MoreHorizontal className="size-4" />
-          </IconButton>
-        </div>
-      </div>
-      <button type="button" onClick={() => toast.success(`Opening ${doc.title}`)} className="mt-4 min-w-0 text-left">
-        <h3 className="line-clamp-2 text-[15px] font-semibold leading-snug text-foreground transition-colors group-hover:text-primary">{doc.title}</h3>
-        <p className="mt-1.5 text-xs text-muted-foreground">{className(doc.classId)} · {doc.subject}</p>
+    <div className={cn("group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50 sm:px-4", !last && "border-b border-border/70")}>
+      <StudyDocumentIcon tone={TEMPLATE_TONE[doc.template] ?? 1} />
+      <button type="button" onClick={() => toast.success(`Opening ${doc.title}`)} className="min-w-0 flex-1 text-left">
+        <span className="block truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+          {doc.pinned && <Pin className="mr-1.5 inline-block size-3.5 -translate-y-px text-primary" fill="currentColor" aria-label="Pinned" />}
+          {doc.title}
+        </span>
+        <span className="mt-0.5 block truncate text-xs text-muted-foreground md:hidden">
+          {className(doc.classId)} · {doc.subject} · Edited {relativeTime(doc.updatedAt)}
+        </span>
       </button>
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
-        <span className="text-[11px] text-muted-foreground">Edited {relativeTime(doc.updatedAt)}</span>
-        <Pill tone="outline">{TEMPLATE_LABEL[doc.template]}</Pill>
-      </div>
-    </article>
+      <span className="hidden w-36 shrink-0 truncate text-xs text-muted-foreground md:block">{className(doc.classId)}</span>
+      <span className="hidden w-24 shrink-0 truncate text-xs text-muted-foreground lg:block">{doc.subject}</span>
+      <span className="hidden w-32 shrink-0 text-xs text-muted-foreground md:block">{relativeTime(doc.updatedAt)}</span>
+      <Pill tone="outline" className="hidden shrink-0 sm:inline-flex">{TEMPLATE_LABEL[doc.template]}</Pill>
+      <IconButton label={`More options for ${doc.title}`} className="size-9 shrink-0">
+        <MoreHorizontal className="size-4" />
+      </IconButton>
+    </div>
   );
 }
 
