@@ -176,7 +176,7 @@ function StudyMaterial() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  
 
   const docs = useMemo(() => aiDocuments.filter((doc) =>
     (scope === "all" || doc.classId === scope) &&
