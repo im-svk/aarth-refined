@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2, X } from "lucide-react";
+import { ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
@@ -148,6 +148,23 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
   );
 }
 
+function ClassSelect({ value, onChange, className: cls }: { value: string; onChange: (value: string) => void; className?: string }) {
+  return (
+    <label className={cn("relative block", cls)}>
+      <span className="sr-only">Filter by class</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-10 w-full appearance-none rounded-full border border-border bg-card pl-4 pr-9 text-[13px] font-medium text-foreground outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/10"
+      >
+        <option value="all">All classes</option>
+        {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+    </label>
+  );
+}
+
 function DocumentRow({ doc, last }: { doc: (typeof aiDocuments)[number]; last: boolean }) {
   return (
     <div className={cn("group flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/50 sm:px-4", !last && "border-b border-border/70")}>
@@ -176,7 +193,6 @@ function StudyMaterial() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
-  
 
   const docs = useMemo(() => aiDocuments.filter((doc) =>
     (scope === "all" || doc.classId === scope) &&
@@ -187,87 +203,50 @@ function StudyMaterial() {
 
   return (
     <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
-      <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
-        <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-gradient-to-br from-aidocs-sky/40 via-card to-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl" aria-hidden="true" />
-          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-lg">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
-                <Sparkles className="size-3" /> AI-powered
-              </span>
-              <h1 className="mt-3 text-xl font-semibold leading-snug text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-2xl">
-                Create classroom-ready study material.
-              </h1>
-              <p className="mt-1.5 max-w-md text-sm text-muted-foreground">
-                Notes, summaries and lesson plans from any chapter.
-              </p>
-            </div>
-            <Button onClick={() => setDialog(true)} className="h-11 shrink-0 self-start sm:self-center">
-              <Sparkles className="size-4" /> Create material
-            </Button>
+      <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
+        {/* Page heading + primary action */}
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">Study material</h1>
+            <p className="mt-0.5 text-[13px] text-muted-foreground">
+              AI-drafted notes, question papers and lesson plans, ready to edit.
+            </p>
           </div>
-        </section>
-
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 md:gap-3">
-            <label className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-full border border-transparent bg-muted px-4 transition-colors focus-within:border-primary/40 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10 md:h-10 md:rounded-xl md:border-border md:bg-card md:shadow-[var(--shadow-card)]">
-              <Search className="size-[18px] shrink-0 text-muted-foreground" />
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search your documents"
-                className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-              />
-              {query && (
-                <button
-                  type="button"
-                  aria-label="Clear search"
-                  onClick={() => setQuery("")}
-                  className="press inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-foreground/5"
-                >
-                  <X className="size-4" />
-                </button>
-              )}
-            </label>
-            <label className="relative hidden w-52 md:block">
-              <span className="sr-only">Filter by class</span>
-              <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} h-10 appearance-none pr-9`}>
-                <option value="all">All classes</option>
-                {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-              </select>
-            </label>
-            <Button size="sm" onClick={() => setDialog(true)} className="hidden h-10 shrink-0 sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-0.5 md:hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <button
-              type="button"
-              onClick={() => setScope("all")}
-              className={`press shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${scope === "all" ? "border-primary/20 bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground"}`}
-            >
-              All classes
-            </button>
-            {classes.filter((item) => !item.archived).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setScope(item.id)}
-                className={`press shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors ${scope === item.id ? "border-primary/20 bg-primary/10 text-primary" : "border-border bg-card text-muted-foreground"}`}
-              >
-                {item.name}
-              </button>
-            ))}
-          </div>
+          <Button onClick={() => setDialog(true)} className="h-10 shrink-0 rounded-full px-4">
+            <Plus className="size-4" /> New material
+          </Button>
         </div>
 
-        <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
-          <div className="flex items-center justify-between gap-3 border-b border-border p-4 sm:p-5">
-            <div>
-              <h2 id="documents-title" className="text-base font-semibold text-foreground [font-family:'Space_Grotesk',sans-serif]">Recent</h2>
-              <p className="mt-0.5 text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</p>
-            </div>
-          </div>
+        {/* Search + filter toolbar */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <label className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-full bg-muted px-4 transition-colors focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/25 sm:h-10 sm:rounded-xl sm:border sm:border-border sm:bg-card sm:focus-within:border-primary/40">
+            <Search className="size-[18px] shrink-0 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search in study material"
+              className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            />
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                onClick={() => setQuery("")}
+                className="press inline-flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-foreground/5"
+              >
+                <X className="size-4" />
+              </button>
+            )}
+          </label>
+          <ClassSelect value={scope} onChange={setScope} className="w-[132px] shrink-0 sm:w-44" />
+        </div>
 
+        {/* Recent documents */}
+        <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
+          <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
+            <h2 id="documents-title" className="text-sm font-semibold text-foreground">Recent</h2>
+            <span className="text-xs text-muted-foreground">{docs.length} {docs.length === 1 ? "document" : "documents"}</span>
+          </div>
 
           {documents.length === 0 ? (
             <div className="bg-background/40 p-3 sm:p-5">
@@ -288,10 +267,6 @@ function StudyMaterial() {
             </div>
           )}
         </section>
-
-        <div className="hidden justify-end sm:flex">
-          <Button variant="danger" size="sm" onClick={() => toast.success("Select a document to remove it")}><Trash2 className="size-3.5" /> Manage documents</Button>
-        </div>
       </div>
       <GenerateDialog open={dialog} onClose={() => setDialog(false)} />
     </AppShell>
