@@ -152,6 +152,151 @@ function ClassCard({
   );
 }
 
+function ClassesHeroArt() {
+  return (
+    <svg viewBox="0 0 80 80" className="size-24 text-primary md:size-28" aria-hidden>
+      <defs>
+        <linearGradient id="classes-hero-grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.06" />
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="72" height="72" rx="18" fill="url(#classes-hero-grad)" />
+      <rect
+        x="18"
+        y="26"
+        width="44"
+        height="32"
+        rx="6"
+        fill="var(--card)"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeOpacity="0.28"
+      />
+      <path
+        d="M26 36h28M26 44h20M26 52h14"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeOpacity="0.35"
+      />
+      <circle
+        cx="58"
+        cy="26"
+        r="11"
+        fill="var(--card)"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeOpacity="0.28"
+      />
+      <path
+        d="M58 21v7l5 2.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity="0.65"
+      />
+    </svg>
+  );
+}
+
+function ClassesHeroCard({
+  year,
+  totalClasses,
+  totalStudents,
+}: {
+  year: string;
+  totalClasses: number;
+  totalStudents: number;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] via-card to-card p-5 shadow-[var(--shadow-card)] md:p-6">
+      <div className="relative z-10 flex items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary/80">
+            Academic year {year}
+          </p>
+          <h2 className="display mt-1 text-xl font-semibold tracking-[-0.02em] text-foreground md:text-2xl">
+            All your classes in one place
+          </h2>
+          <p className="mt-1 max-w-md text-[13px] text-muted-foreground">
+            Manage grades, subjects, students and terms for every batch.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-foreground">
+              <GraduationCap className="size-3.5 text-primary" />
+              {totalClasses} classes
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-foreground">
+              <Users className="size-3.5 text-primary" />
+              {totalStudents} students
+            </span>
+          </div>
+        </div>
+        <div className="hidden shrink-0 sm:block">
+          <ClassesHeroArt />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function YearDropdown({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-label="Academic year"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "press inline-flex h-11 items-center gap-2 rounded-xl border px-3 text-[13px] font-semibold transition-colors",
+          open
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
+        )}
+      >
+        <SlidersHorizontal className="size-4" />
+        <span className="tabular-nums">{value}</span>
+        <ChevronDown className="size-3.5 opacity-70" />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-12 z-30 w-48 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 shadow-[var(--shadow-raised)]">
+          <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Academic year
+          </p>
+          {academicYears.map((y) => (
+            <button
+              key={y}
+              type="button"
+              onClick={() => {
+                onChange(y);
+                setOpen(false);
+              }}
+              className={cn(
+                "flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[13px] font-semibold",
+                y === value ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
+              )}
+            >
+              <span className="tabular-nums">{y}</span>
+              {y === currentAcademicYear && (
+                <span className="text-[10px] font-medium text-muted-foreground">current</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ClassDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [name, setName] = useState("");
