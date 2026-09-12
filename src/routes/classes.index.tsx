@@ -533,27 +533,11 @@ function Classes() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { label: "Classes", value: yearClasses.length, icon: GraduationCap },
-            { label: "Students", value: totalStudents, icon: Users },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-border bg-card p-3.5 shadow-[var(--shadow-card)] md:p-4"
-            >
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <stat.icon className="size-3.5" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
-                  {stat.label}
-                </span>
-              </div>
-              <p className="display mt-1.5 text-[26px] leading-none tabular-nums text-foreground">
-                {stat.value}
-              </p>
-            </div>
-          ))}
-        </div>
+        <ClassesHeroCard
+          year={year}
+          totalClasses={yearClasses.length}
+          totalStudents={totalStudents}
+        />
 
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
           <div className="flex items-center gap-2">
