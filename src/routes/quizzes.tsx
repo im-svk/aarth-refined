@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
 import { ResponsiveDialog } from "@/components/aarth/responsive-dialog";
+import { QuizBuilderIcon } from "@/components/aarth/workspace-icons";
 import { chapters, classes, className, quizzes, subjectsForClass } from "@/data/mock";
 import { cn } from "@/lib/utils";
 

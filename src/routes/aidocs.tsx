@@ -4,6 +4,7 @@ import { ArrowLeft, ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sp
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
+import { NotesStudioIcon } from "@/components/aarth/workspace-icons";
 import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
 import { ResponsiveDialog } from "@/components/aarth/responsive-dialog";
 import { aiDocuments, chapters, classes, className, relativeTime, subjectsForClass } from "@/data/mock";
