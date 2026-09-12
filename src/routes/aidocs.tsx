@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sparkles, X } from "lucide-react";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { ArrowLeft, ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
