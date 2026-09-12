@@ -176,6 +176,7 @@ function StudyMaterial() {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const docs = useMemo(() => aiDocuments.filter((doc) =>
     (scope === "all" || doc.classId === scope) &&
@@ -215,18 +216,63 @@ function StudyMaterial() {
               </div>
               <Button size="sm" onClick={() => setDialog(true)} className="hidden sm:inline-flex"><Sparkles className="size-3.5" /> New</Button>
             </div>
-            <div className="mt-4 grid gap-3 lg:grid-cols-[minmax(260px,1fr)_220px]">
-              <label className="flex h-11 items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 focus-within:border-primary/50 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10">
-                <Search className="size-4 shrink-0 text-muted-foreground" />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
-              </label>
-              <label className="relative">
-                <span className="sr-only">Filter by class</span>
-                <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
-                  <option value="all">All classes</option>
-                  {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-                </select>
-              </label>
+            <div className="mt-4">
+              <div className="flex items-center gap-2 md:hidden">
+                {!searchOpen ? (
+                  <>
+                    <label className="relative flex-1">
+                      <span className="sr-only">Filter by class</span>
+                      <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
+                        <option value="all">All classes</option>
+                        {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                      </select>
+                    </label>
+                    <button
+                      type="button"
+                      aria-label="Search documents"
+                      onClick={() => setSearchOpen(true)}
+                      className="press inline-flex size-11 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-[var(--shadow-card)]"
+                    >
+                      <Search className="size-[18px]" />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex w-full items-center gap-2">
+                    <input
+                      autoFocus
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Search title, chapter or subject"
+                      className="h-11 flex-1 rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none focus:border-primary/50"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Close search"
+                      onClick={() => {
+                        setQuery("");
+                        setSearchOpen(false);
+                      }}
+                      className="press inline-flex h-11 items-center justify-center rounded-xl px-3 text-[13px] font-semibold text-muted-foreground"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="hidden gap-3 md:grid lg:grid-cols-[minmax(260px,1fr)_220px]">
+                <label className="flex h-11 items-center gap-2.5 rounded-xl border border-border bg-muted/40 px-3 focus-within:border-primary/50 focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/10">
+                  <Search className="size-4 shrink-0 text-muted-foreground" />
+                  <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, chapter or subject" className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
+                </label>
+                <label className="relative">
+                  <span className="sr-only">Filter by class</span>
+                  <select value={scope} onChange={(event) => setScope(event.target.value)} className={`${inputClass} appearance-none pr-9`}>
+                    <option value="all">All classes</option>
+                    {classes.filter((item) => !item.archived).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
 
