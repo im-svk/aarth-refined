@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FileText, MoreHorizontal, Pin, Search, Sparkles, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
-import { StudyDocumentIcon, StudyMaterialHeroArt } from "@/components/aarth/study-material-art";
+import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
 import { Button, EmptyState, IconButton, Pill, Spinner } from "@/components/aarth/primitives";
 import { ResponsiveDialog } from "@/components/aarth/responsive-dialog";
 import { aiDocuments, chapters, classes, className, relativeTime, subjectsForClass } from "@/data/mock";
@@ -188,22 +188,23 @@ function StudyMaterial() {
   return (
     <AppShell title="Study Material" wide mobileHeader="study" back hideFooter>
       <div className="aidocs-workspace mx-auto max-w-[1180px] space-y-5 [font-family:'DM_Sans',sans-serif] sm:space-y-6">
-        <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-card shadow-[var(--shadow-card)]">
-          <div className="grid min-h-[150px] grid-cols-1 items-center md:grid-cols-[minmax(0,1fr)_180px]">
-            <div className="relative z-10 p-5 sm:p-6">
-              <h1 className="max-w-md text-xl font-semibold leading-snug text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-2xl">
+        <section className="relative overflow-hidden rounded-2xl border border-aidocs-line bg-gradient-to-br from-aidocs-sky/40 via-card to-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-primary/5 blur-3xl" aria-hidden="true" />
+          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-lg">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/10 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+                <Sparkles className="size-3" /> AI-powered
+              </span>
+              <h1 className="mt-3 text-xl font-semibold leading-snug text-foreground [font-family:'Space_Grotesk',sans-serif] sm:text-2xl">
                 Create classroom-ready study material.
               </h1>
               <p className="mt-1.5 max-w-md text-sm text-muted-foreground">
                 Notes, summaries and lesson plans from any chapter.
               </p>
-              <Button size="sm" onClick={() => setDialog(true)} className="mt-4">
-                <Sparkles className="size-3.5" /> Create material
-              </Button>
             </div>
-            <div className="absolute -right-6 -top-4 w-36 opacity-30 sm:-right-2 sm:w-40 md:static md:flex md:w-auto md:items-center md:justify-center md:p-5 md:opacity-100">
-              <StudyMaterialHeroArt />
-            </div>
+            <Button onClick={() => setDialog(true)} className="h-11 shrink-0 self-start sm:self-center">
+              <Sparkles className="size-4" /> Create material
+            </Button>
           </div>
         </section>
 

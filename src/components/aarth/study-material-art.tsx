@@ -1,31 +1,3 @@
-function DocumentStack({ className = "h-auto w-full" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 300 190" className={className} aria-hidden="true">
-      <ellipse cx="154" cy="170" rx="116" ry="8" fill="var(--aidocs-line)" opacity=".45" />
-      <path d="M38 51a14 14 0 0 1 14-14h119a14 14 0 0 1 14 14v103H52a14 14 0 0 1-14-14Z" fill="var(--aidocs-sky)" />
-      <g transform="rotate(-4 127 94)">
-        <rect x="66" y="21" width="132" height="143" rx="12" fill="var(--card)" stroke="var(--aidocs-line)" strokeWidth="2" />
-        <rect x="84" y="42" width="56" height="8" rx="4" fill="var(--aidocs-blue)" opacity=".22" />
-        <rect x="84" y="61" width="94" height="5" rx="2.5" fill="var(--aidocs-ink)" opacity=".12" />
-        <rect x="84" y="73" width="77" height="5" rx="2.5" fill="var(--aidocs-ink)" opacity=".12" />
-        <rect x="84" y="91" width="94" height="48" rx="8" fill="var(--aidocs-sky)" opacity=".72" />
-        <path d="m96 127 17-16 13 10 20-22 20 28" fill="none" stroke="var(--aidocs-blue)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="151" cy="107" r="5" fill="var(--aidocs-yellow)" />
-      </g>
-      <path d="M197 47c0-8 6-14 14-14h45c8 0 14 6 14 14v38c0 8-6 14-14 14h-14l-15 13V99h-16c-8 0-14-6-14-14Z" fill="var(--aidocs-blue)" />
-      <path d="m232 47 3 8 8 3-8 3-3 8-3-8-8-3 8-3Z" fill="var(--primary-foreground)" />
-      <path d="M216 78h32" stroke="var(--primary-foreground)" strokeWidth="4" strokeLinecap="round" opacity=".55" />
-      <circle cx="255" cy="126" r="20" fill="var(--aidocs-yellow)" stroke="var(--card)" strokeWidth="5" />
-      <path d="m247 126 6 6 11-13" fill="none" stroke="var(--aidocs-ink)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M49 23v16M41 31h16M223 138v12M217 144h12" stroke="var(--aidocs-blue)" strokeWidth="2.5" strokeLinecap="round" opacity=".45" />
-    </svg>
-  );
-}
-
-export function StudyMaterialHeroArt() {
-  return <DocumentStack className="h-auto w-full max-w-[300px]" />;
-}
-
 export function StudyDocumentIcon({ tone = 1 }: { tone?: 1 | 2 | 3 | 4 }) {
   const fills = {
     1: ["var(--aidocs-sky)", "var(--aidocs-blue)"],
