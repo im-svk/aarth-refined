@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Archive,
   BookOpen,
+  ChevronDown,
   ChevronRight,
   GraduationCap,
   MoreHorizontal,
@@ -12,8 +13,6 @@ import {
   SlidersHorizontal,
   Trash2,
   Users,
-
-  
 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
@@ -21,7 +20,6 @@ import {
   Button,
   Card,
   EmptyState,
-  FilterChips,
   PageHeader,
   Pill,
   SearchField,
@@ -154,6 +152,151 @@ function ClassCard({
   );
 }
 
+function ClassesHeroArt() {
+  return (
+    <svg viewBox="0 0 80 80" className="size-24 text-primary md:size-28" aria-hidden>
+      <defs>
+        <linearGradient id="classes-hero-grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.22" />
+          <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.06" />
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="72" height="72" rx="18" fill="url(#classes-hero-grad)" />
+      <rect
+        x="18"
+        y="26"
+        width="44"
+        height="32"
+        rx="6"
+        fill="var(--card)"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeOpacity="0.28"
+      />
+      <path
+        d="M26 36h28M26 44h20M26 52h14"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeOpacity="0.35"
+      />
+      <circle
+        cx="58"
+        cy="26"
+        r="11"
+        fill="var(--card)"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeOpacity="0.28"
+      />
+      <path
+        d="M58 21v7l5 2.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity="0.65"
+      />
+    </svg>
+  );
+}
+
+function ClassesHeroCard({
+  year,
+  totalClasses,
+  totalStudents,
+}: {
+  year: string;
+  totalClasses: number;
+  totalStudents: number;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary/[0.06] via-card to-card p-5 shadow-[var(--shadow-card)] md:p-6">
+      <div className="relative z-10 flex items-center justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary/80">
+            Academic year {year}
+          </p>
+          <h2 className="display mt-1 text-xl font-semibold tracking-[-0.02em] text-foreground md:text-2xl">
+            All your classes in one place
+          </h2>
+          <p className="mt-1 max-w-md text-[13px] text-muted-foreground">
+            Manage grades, subjects, students and terms for every batch.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-foreground">
+              <GraduationCap className="size-3.5 text-primary" />
+              {totalClasses} classes
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-semibold text-foreground">
+              <Users className="size-3.5 text-primary" />
+              {totalStudents} students
+            </span>
+          </div>
+        </div>
+        <div className="hidden shrink-0 sm:block">
+          <ClassesHeroArt />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function YearDropdown({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        aria-label="Academic year"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "press inline-flex h-11 items-center gap-2 rounded-xl border px-3 text-[13px] font-semibold transition-colors",
+          open
+            ? "border-primary bg-primary text-primary-foreground"
+            : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
+        )}
+      >
+        <SlidersHorizontal className="size-4" />
+        <span className="tabular-nums">{value}</span>
+        <ChevronDown className="size-3.5 opacity-70" />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-12 z-30 w-48 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 shadow-[var(--shadow-raised)]">
+          <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Academic year
+          </p>
+          {academicYears.map((y) => (
+            <button
+              key={y}
+              type="button"
+              onClick={() => {
+                onChange(y);
+                setOpen(false);
+              }}
+              className={cn(
+                "flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[13px] font-semibold",
+                y === value ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
+              )}
+            >
+              <span className="tabular-nums">{y}</span>
+              {y === currentAcademicYear && (
+                <span className="text-[10px] font-medium text-muted-foreground">current</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ClassDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [name, setName] = useState("");
@@ -300,7 +443,6 @@ function Classes() {
   const [query, setQuery] = useState("");
   const [dialog, setDialog] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
   const [loading] = useState(false);
 
   const list = useMemo(
@@ -390,102 +532,30 @@ function Classes() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { label: "Classes", value: yearClasses.length, icon: GraduationCap },
-            { label: "Students", value: totalStudents, icon: Users },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-border bg-card p-3.5 shadow-[var(--shadow-card)] md:p-4"
-            >
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <stat.icon className="size-3.5" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.1em]">
-                  {stat.label}
-                </span>
-              </div>
-              <p className="display mt-1.5 text-[26px] leading-none tabular-nums text-foreground">
-                {stat.value}
-              </p>
-            </div>
-          ))}
-        </div>
+        <ClassesHeroCard
+          year={year}
+          totalClasses={yearClasses.length}
+          totalStudents={totalStudents}
+        />
 
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div className="flex items-center gap-2">
-            <SegmentedToggle
-              value={tab}
-              onChange={setTab}
-              options={[
-                { value: "active", label: "Active" },
-                { value: "archived", label: "Archived" },
-              ]}
-              className="flex-1 md:flex-none"
-            />
-            <div className="relative md:hidden">
-              <button
-                type="button"
-                aria-label="Filter by academic year"
-                onClick={() => setFilterOpen((v) => !v)}
-                className={cn(
-                  "press inline-flex h-11 items-center gap-1.5 rounded-xl border px-3 transition-colors",
-                  filterOpen
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-card text-foreground shadow-[var(--shadow-card)]",
-                )}
-              >
-                <SlidersHorizontal className="size-4" />
-                <span className="text-[11px] font-semibold tabular-nums">{year}</span>
-              </button>
-              {filterOpen && (
-                <div className="absolute right-0 top-12 z-30 w-48 overflow-hidden rounded-2xl border border-border bg-popover p-1.5 shadow-[var(--shadow-raised)]">
-                  <p className="px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Academic year
-                  </p>
-                  {academicYears.map((y) => (
-                    <button
-                      key={y}
-                      type="button"
-                      onClick={() => {
-                        setYear(y);
-                        setFilterOpen(false);
-                      }}
-                      className={cn(
-                        "flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-left text-[13px] font-semibold",
-                        y === year ? "bg-primary/10 text-primary" : "text-foreground hover:bg-muted",
-                      )}
-                    >
-                      <span className="tabular-nums">{y}</span>
-                      {y === currentAcademicYear && (
-                        <span className="text-[10px] font-medium text-muted-foreground">
-                          current
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="hidden md:block">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+          <SegmentedToggle
+            value={tab}
+            onChange={setTab}
+            options={[
+              { value: "active", label: "Active" },
+              { value: "archived", label: "Archived" },
+            ]}
+            className="flex-1 md:flex-none"
+          />
+          <div className="flex items-center gap-2 md:ml-auto">
             <SearchField
               value={query}
               onChange={setQuery}
               placeholder="Search classes"
-              className="lg:w-72"
+              className="hidden md:flex lg:w-72"
             />
-          </div>
-          <div className="hidden md:block lg:ml-auto">
-            <FilterChips
-              value={year}
-              onChange={setYear}
-              options={academicYears.map((y) => ({
-                value: y,
-                label: y,
-                ...(y === currentAcademicYear ? { hint: "· current" } : {}),
-              }))}
-            />
+            <YearDropdown value={year} onChange={setYear} />
           </div>
         </div>
 
