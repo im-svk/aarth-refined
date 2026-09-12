@@ -337,6 +337,39 @@ export function InstitutionMark({ size = 36 }: { size?: number }) {
   );
 }
 
+function StudyWorkspaceIcon() {
+  return (
+    <span
+      className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-aidocs-line bg-aidocs-sky shadow-sm"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 44 44" className="size-11" fill="none">
+        <path
+          d="M10.5 12.5c3.8-.9 7.1-.1 10 2.1v18c-3-2.1-6.2-2.8-10-1.8v-18.3Z"
+          className="fill-background stroke-aidocs-blue"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M33.5 12.5c-3.8-.9-7.1-.1-10 2.1v18c3-2.1 6.2-2.8 10-1.8v-18.3Z"
+          className="fill-background stroke-aidocs-blue"
+          strokeWidth="1.6"
+          strokeLinejoin="round"
+        />
+        <path d="M20.5 14.6c.5.4 1 .8 1.5 1.3.5-.5 1-.9 1.5-1.3v18c-.5.3-1 .8-1.5 1.3-.5-.5-1-.9-1.5-1.3v-18Z" className="fill-aidocs-blue/15" />
+        <path d="M13.8 18.2c1.4-.1 2.8.2 4.1.8M13.8 21.4c1.4-.1 2.8.2 4.1.8M30.2 18.2c-1.4-.1-2.8.2-4.1.8M30.2 21.4c-1.4-.1-2.8.2-4.1.8" className="stroke-aidocs-blue/55" strokeWidth="1.2" strokeLinecap="round" />
+        <path
+          d="m32.7 7.7.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"
+          className="fill-aidocs-yellow stroke-aidocs-blue"
+          strokeWidth=".7"
+          strokeLinejoin="round"
+        />
+        <circle cx="9.3" cy="9.7" r="1.6" className="fill-aidocs-yellow" />
+      </svg>
+    </span>
+  );
+}
+
 function MobileTopBar({
   title,
   back,
@@ -390,9 +423,7 @@ function MobileTopBar({
         className="sticky top-0 z-20 grid min-h-[4.5rem] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-aidocs-line bg-card/95 px-4 backdrop-blur md:hidden"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        <span className="flex size-10 items-center justify-center rounded-xl bg-aidocs-sky text-aidocs-blue">
-          <BookOpen className="size-5" strokeWidth={2} aria-hidden="true" />
-        </span>
+        <StudyWorkspaceIcon />
         <div className="min-w-0">
           <p className="truncate text-[15px] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif]">
             {title}
