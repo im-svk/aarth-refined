@@ -407,9 +407,17 @@ function MobileTopBar({
   if (variant === "study") {
     return (
       <header
-        className="sticky top-0 z-20 grid min-h-[4.5rem] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-aidocs-line bg-card/95 px-4 backdrop-blur md:hidden"
+        className={cn(
+          "sticky top-0 z-20 grid min-h-[4.5rem] items-center gap-2 border-b border-aidocs-line bg-card/95 px-3 backdrop-blur md:hidden",
+          back ? "grid-cols-[auto_auto_minmax(0,1fr)_auto]" : "grid-cols-[auto_minmax(0,1fr)_auto]",
+        )}
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
+        {back && (
+          <IconButton label="Back" onClick={() => router.history.back()} className="size-9">
+            <ChevronLeft className="size-5" />
+          </IconButton>
+        )}
         <StudyWorkspaceIcon />
         <div className="min-w-0">
           <p className="truncate text-[15px] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif]">
