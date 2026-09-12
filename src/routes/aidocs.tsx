@@ -218,7 +218,7 @@ function StudyMaterial() {
                 Generate AI-drafted notes, question papers and lesson plans aligned to your syllabus. Edit, pin and share with your class.
               </p>
             </div>
-            <Button onClick={() => setDialog(true)} className="hidden h-10 shrink-0 rounded-full px-4 sm:inline-flex">
+            <Button onClick={() => setDialog(true)} className="h-10 shrink-0 rounded-full px-4">
               <Plus className="size-4" /> New material
             </Button>
           </div>
