@@ -522,6 +522,7 @@ export function AppShell({
   wide,
   mobileHeader = "default",
   hideFooter = false,
+  hideHeader = false,
 }: {
   title: string;
   back?: boolean | undefined;
@@ -529,20 +530,23 @@ export function AppShell({
   wide?: boolean | undefined;
   mobileHeader?: "default" | "brand" | "study" | "none";
   hideFooter?: boolean | undefined;
+  hideHeader?: boolean | undefined;
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
   const pathname = useLocation().pathname;
+  const noFloat = pathname === "/ai-chat" || pathname === "/quizzes" || pathname === "/aidocs";
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar onCreate={openCreate} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar title={title} />
-        <MobileTopBar title={title} back={back} variant={mobileHeader} />
+        {!hideHeader && <TopBar title={title} />}
+        {!hideHeader && <MobileTopBar title={title} back={back} variant={mobileHeader} />}
 
         <main
           className={cn(
-            "mx-auto w-full flex-1 px-4 pt-5 md:px-8 md:pt-8",
+            "mx-auto w-full flex-1 px-4 md:px-8",
+            hideHeader ? "pt-0" : "pt-5 md:pt-8",
             hideFooter ? "pb-5 md:pb-12" : "pb-28 md:pb-12",
             wide ? "max-w-[1400px]" : "max-w-6xl",
           )}
@@ -552,7 +556,7 @@ export function AppShell({
         {!hideFooter && <BottomTabs onCreate={openCreate} />}
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
-      {pathname !== "/ai-chat" && <AskAiFloatButton />}
+      {!noFloat && <AskAiFloatButton />}
     </div>
   );
 }
