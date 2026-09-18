@@ -5,7 +5,7 @@ import { AuthLayout } from "@/components/aarth/app-shell";
 import { Button, Card, ListRow, Pill } from "@/components/aarth/primitives";
 import { INSTITUTION, formatDate, libraryFiles, subjects } from "@/data/mock";
 
-export const Route = createFileRoute("/join/$token")({
+export const Route = createFileRoute("/join/")({
   head: () => ({
     meta: [
       { title: "Shared class notes — Aarth Notes AI" },
