@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { ArrowLeft, ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sparkles, X } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ChevronDown, FileText, MoreHorizontal, Pin, Plus, Search, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
 import { StudyDocumentIcon } from "@/components/aarth/study-material-art";
@@ -13,10 +13,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/aidocs")({
   head: () => ({
     meta: [
-      { title: "AI Study Material — Aarth Educator" },
-      { name: "description", content: "Create and organise editable, textbook-aligned teaching material." },
-      { property: "og:title", content: "AI Study Material — Aarth Educator" },
-      { property: "og:description", content: "Create and organise editable, textbook-aligned teaching material." },
+      { title: "AI study material — Aarth Notes AI" },
+      { name: "description", content: "Generate and organise classroom-ready study material by subject and class." },
+      { property: "og:title", content: "AI study material — Aarth Notes AI" },
+      { property: "og:description", content: "AI-generated notes and study material for teachers." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -50,7 +50,6 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
   const availableSubjects = subjectsForClass(classId);
   const [subject, setSubject] = useState(availableSubjects[0]?.name ?? "Science");
   const [chapter, setChapter] = useState(initialChapter?.name ?? "");
-  const [template, setTemplate] = useState("study_material");
   const [depth, setDepth] = useState("standard");
   const [generating, setGenerating] = useState(false);
 
@@ -63,8 +62,8 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
     <ResponsiveDialog
       open={open}
       onClose={onClose}
-      title="Create study material"
-      description="Choose the class and chapter. Aarth will prepare an editable first draft."
+      title="Create AI study material"
+      description="Choose a class and chapter. Aarth prepares a clean draft you can edit and share."
       size="lg"
       footer={
         <>
@@ -76,8 +75,8 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
               setTimeout(() => {
                 setGenerating(false);
                 onClose();
-                toast.success("Your material is ready to edit");
-              }, 1400);
+                toast.success("Study material saved to notes");
+              }, 1200);
             }}
           >
             {generating ? <><Spinner className="text-primary-foreground" /> Creating…</> : <><Sparkles className="size-4" /> Create draft</>}
@@ -107,23 +106,6 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
       </div>
 
       <fieldset className="mt-5">
-        <legend className="mb-2 text-xs font-semibold text-foreground">What do you want to create?</legend>
-        <div className="grid grid-cols-2 gap-2">
-          {["study_material", "lesson_plan", "report", "blank"].map((value) => (
-            <Button
-              key={value}
-              type="button"
-              variant="outline"
-              onClick={() => setTemplate(value)}
-              className={cn("h-auto min-h-11 justify-start px-3 py-2.5 text-left", template === value && "border-primary/40 bg-tint text-tint-foreground")}
-            >
-              {TEMPLATE_LABEL[value]}
-            </Button>
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="mt-5">
         <legend className="mb-2 text-xs font-semibold text-foreground">Level of detail</legend>
         <div className="grid grid-cols-3 rounded-xl border border-border bg-muted/50 p-1">
           {["brief", "standard", "detailed"].map((value) => (
@@ -142,8 +124,8 @@ function GenerateDialog({ open, onClose }: { open: boolean; onClose: () => void 
       </fieldset>
 
       <label className="mt-5 block">
-        <span className="mb-1.5 block text-xs font-semibold text-foreground">Anything else? <span className="font-normal text-muted-foreground">Optional</span></span>
-        <textarea rows={3} placeholder="For example: add five recap questions at the end." className="w-full rounded-xl border border-border bg-card p-3 text-sm text-foreground outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10" />
+        <span className="mb-1.5 block text-xs font-semibold text-foreground">Teaching note <span className="font-normal text-muted-foreground">Optional</span></span>
+        <textarea rows={4} placeholder="For example: include two solved examples and five recap questions." className="w-full rounded-xl border border-border bg-card p-3 text-sm text-foreground outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/10" />
       </label>
     </ResponsiveDialog>
   );
@@ -191,7 +173,6 @@ function DocumentRow({ doc, last }: { doc: (typeof aiDocuments)[number]; last: b
 }
 
 function StudyMaterial() {
-  const router = useRouter();
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const [dialog, setDialog] = useState(false);
@@ -204,59 +185,37 @@ function StudyMaterial() {
   const documents = pinned ? [pinned, ...docs.filter((doc) => doc.id !== pinned.id)] : docs;
 
   return (
-    <AppShell title="Study Material" wide hideHeader hideFooter>
-      {/* Custom header */}
-      <header className="sticky top-0 z-20 -mx-4 mb-5 flex h-14 items-center gap-2 border-b border-border/70 bg-background/90 px-4 backdrop-blur-xl md:-mx-8 md:mb-6 md:px-8">
-        <button
-          type="button"
-          onClick={() => router.history.back()}
-          aria-label="Go back"
-          className="press inline-flex size-9 items-center justify-center rounded-full text-foreground hover:bg-muted"
-        >
-          <ArrowLeft className="size-5" />
-        </button>
-        <div className="flex min-w-0 flex-1 items-center gap-2.5">
-          <NotesStudioIcon />
-          <div className="min-w-0">
-            <p className="truncate text-[15px] font-semibold leading-tight text-foreground">Study material</p>
-            <p className="truncate text-[11px] leading-tight text-muted-foreground">Notes, worksheets & question banks</p>
-          </div>
-        </div>
-      </header>
-
+    <AppShell title="AI Material" mobileHeader="default">
       <div className="mx-auto max-w-[1180px] space-y-5 sm:space-y-6">
-        {/* Hero card */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-            <div className="flex items-start gap-4 sm:items-center sm:gap-6">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm sm:size-14">
-                <Sparkles className="size-6 sm:size-7" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+        <section className="relative overflow-hidden rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-card)] sm:p-6">
+          <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-tint text-tint-foreground">
+                <NotesStudioIcon />
+              </span>
+              <div className="min-w-0">
+                <Pill tone="tint">AI study material</Pill>
+                <h1 className="display mt-3 text-[1.75rem] leading-tight text-foreground sm:text-[2.2rem]">
                   Create classroom-ready study material
                 </h1>
-                <p className="mt-0.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
-                  Generate AI-drafted notes, question papers and lesson plans aligned to your syllabus. Edit, pin and share with your class.
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                  Generate chapter notes, summaries, recap questions, and lesson-ready drafts. Save them into your notes library and share with students.
                 </p>
               </div>
             </div>
-            <Button onClick={() => setDialog(true)} className="h-11 w-full shrink-0 rounded-full px-4 sm:h-10 sm:w-auto">
-              <Plus className="size-4" /> New material
+            <Button onClick={() => setDialog(true)} className="h-11 w-full shrink-0 rounded-full sm:w-auto">
+              <Plus className="size-4" /> Create material
             </Button>
           </div>
-          <div className="absolute -right-8 -top-8 size-32 rounded-full bg-primary/5 blur-2xl" aria-hidden="true" />
-          <div className="absolute -bottom-10 -left-10 size-40 rounded-full bg-primary/[0.03] blur-3xl" aria-hidden="true" />
-        </div>
+        </section>
 
-        {/* Search + filter toolbar */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <label className="flex h-11 min-w-0 flex-1 items-center gap-2.5 rounded-full bg-muted px-4 transition-colors focus-within:bg-card focus-within:ring-2 focus-within:ring-primary/25 sm:h-10 sm:rounded-xl sm:border sm:border-border sm:bg-card sm:focus-within:border-primary/40">
+        <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
+          <label className="flex h-11 min-w-0 items-center gap-2.5 rounded-full border border-border bg-card px-4 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
             <Search className="size-[18px] shrink-0 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search in study material"
+              placeholder="Search study material"
               className="min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
             />
             {query && (
@@ -270,10 +229,9 @@ function StudyMaterial() {
               </button>
             )}
           </label>
-          <ClassSelect value={scope} onChange={setScope} className="w-[132px] shrink-0 sm:w-44" />
+          <ClassSelect value={scope} onChange={setScope} />
         </div>
 
-        {/* Recent documents */}
         <section aria-labelledby="documents-title" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
             <h2 id="documents-title" className="text-sm font-semibold text-foreground">Recent</h2>
