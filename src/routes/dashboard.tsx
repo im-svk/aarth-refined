@@ -1,333 +1,198 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import {
-  BookOpen,
-  CalendarDays,
-  ClipboardList,
-  Clock,
-  FileText,
-  GraduationCap,
-  Library,
-  Plus,
-  Users,
-  UserSquare2,
-} from "lucide-react";
+import { Copy, FileText, Plus, Share2, Sparkles, Upload } from "lucide-react";
+import { toast } from "sonner";
 import { AppShell } from "@/components/aarth/app-shell";
-import { CreateBanner } from "@/components/aarth/create-banner";
-import { DayTimeline } from "@/components/aarth/day-timeline";
-
-import {
-  Button,
-  Card,
-  EmptyState,
-  ListRow,
-  PageHeader,
-  Pill,
-  SectionHeader,
-  StatTile,
-} from "@/components/aarth/primitives";
+import { Button, Card, ListRow, Pill, SectionHeader } from "@/components/aarth/primitives";
+import { NotesStudioIcon } from "@/components/aarth/workspace-icons";
 import { useApp } from "@/lib/app-context";
-import {
-  aiDocuments,
-  classes,
-  className,
-  greeting,
-  INSTITUTION,
-  quizzes,
-  relativeTime,
-  students,
-  subjects,
-  teachers,
-  todayLabel,
-  todaySchedule,
-} from "@/data/mock";
+import { aiDocuments, className, classes, formatDate, libraryFiles, relativeTime, subjects } from "@/data/mock";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Home — Aarth Educator" },
+      { title: "Teacher workspace — Aarth Notes AI" },
       {
         name: "description",
-        content:
-          "Your teaching day at a glance: active classes, today's schedule and recent AI-generated material.",
+        content: "A simple teacher workspace for notes, AI study material, and class-code sharing.",
       },
-      { property: "og:title", content: "Home — Aarth Educator" },
-      { property: "og:description", content: "Your teaching day at a glance." },
+      { property: "og:title", content: "Teacher workspace — Aarth Notes AI" },
+      { property: "og:description", content: "Notes, AI study material, and student sharing in one clean workspace." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Dashboard,
 });
 
-const active = classes.filter((c) => !c.archived);
-
-import {
-  NotesStudioIcon,
-  QuizBuilderIcon,
-  QuestionPapersIcon,
-  PresentationsIcon,
-} from "@/components/aarth/workspace-icons";
-
-type Activity = {
-  id: string;
-  title: string;
-  subtitle: string;
-  status?: string;
-  to: "/aidocs" | "/quizzes" | "/papers" | "/presentations";
-  icon: typeof FileText;
-};
-
-const recentActivity: Activity[] = [
-  ...quizzes
-    .filter((q) => q.status === "draft")
-    .map((q) => ({
-      id: q.id,
-      title: q.title,
-      subtitle: `Quiz · ${q.subject} · ${q.questions} questions`,
-      status: "Draft",
-      to: "/quizzes" as const,
-      icon: ClipboardList,
-    })),
-  ...aiDocuments.slice(0, 3).map((doc) => ({
+const activeClasses = classes.filter((klass) => !klass.archived).slice(0, 2);
+const sharedNotes = libraryFiles.filter((file) => file.shared);
+const recentItems = [
+  ...aiDocuments.slice(0, 2).map((doc) => ({
     id: doc.id,
     title: doc.title,
-    subtitle: `${doc.subject} · edited ${relativeTime(doc.updatedAt)}`,
+    subtitle: `${doc.subject} · ${className(doc.classId)} · edited ${relativeTime(doc.updatedAt)}`,
+    icon: <Sparkles className="size-4" />,
     to: "/aidocs" as const,
-    icon: FileText,
+    tag: "AI draft",
   })),
-].slice(0, 4);
-
-const workspaceTools: {
-  to: Activity["to"];
-  label: string;
-  hint: string;
-  icon: ReactNode;
-}[] = [
-  { to: "/aidocs", label: "Notes studio", hint: "3 documents in progress", icon: <NotesStudioIcon /> },
-  { to: "/quizzes", label: "Quiz builder", hint: "1 draft waiting to publish", icon: <QuizBuilderIcon /> },
-  { to: "/papers", label: "Question papers", hint: "Mid-term set, last opened Monday", icon: <QuestionPapersIcon /> },
-  { to: "/presentations", label: "Presentations", hint: "Start a deck from a lesson plan", icon: <PresentationsIcon /> },
+  ...libraryFiles.slice(0, 2).map((file) => {
+    const subject = subjects.find((item) => item.id === file.subjectId);
+    return {
+      id: file.id,
+      title: file.name,
+      subtitle: `${subject?.name ?? "Notes"} · ${subject ? className(subject.classId) : "Class notes"} · ${formatDate(file.uploadedAt)}`,
+      icon: <FileText className="size-4" />,
+      to: "/notes" as const,
+      tag: file.shared ? "Shared" : "Private",
+    };
+  }),
 ];
 
-function ClassRows() {
-  if (active.length === 0) {
-    return (
-      <EmptyState
-        icon={<GraduationCap className="size-5" />}
-        title="No classes created yet"
-        description="Once classes are added they'll appear here with their subjects and student counts."
-      />
-    );
-  }
+function StudyMaterialArt() {
   return (
-    <div className="divide-y divide-border">
-      {active.slice(0, 5).map((klass) => (
-        <Link key={klass.id} to="/classes/$classId" params={{ classId: klass.id }}>
-          <ListRow
-            icon={<span className="text-xs font-bold">{klass.grade}</span>}
-            title={klass.name}
-            subtitle={`${klass.subjectCount} subjects · ${klass.studentCount} students · ${klass.term}`}
-            trailing={<Pill tone="outline">{klass.board}</Pill>}
-            interactive
-          />
-        </Link>
-      ))}
-    </div>
+    <svg viewBox="0 0 220 160" className="h-auto w-full" aria-hidden="true">
+      <defs>
+        <linearGradient id="home-study-card" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--ev-1-bg)" />
+          <stop offset="100%" stopColor="var(--ev-1)" stopOpacity="0.28" />
+        </linearGradient>
+      </defs>
+      <rect x="14" y="18" width="192" height="124" rx="28" fill="url(#home-study-card)" />
+      <rect x="44" y="42" width="70" height="88" rx="14" fill="var(--card)" stroke="var(--ev-1)" strokeWidth="2" />
+      <rect x="58" y="62" width="42" height="6" rx="3" fill="var(--ev-1)" opacity="0.28" />
+      <rect x="58" y="78" width="34" height="6" rx="3" fill="var(--ev-1)" opacity="0.18" />
+      <rect x="58" y="94" width="42" height="6" rx="3" fill="var(--ev-1)" opacity="0.18" />
+      <rect x="124" y="50" width="54" height="54" rx="16" fill="var(--card)" stroke="var(--ev-2)" strokeWidth="2" />
+      <path d="m151 63 2.4 7.4h7.6l-6.2 4.5 2.4 7.3-6.2-4.5-6.2 4.5 2.4-7.3-6.2-4.5h7.6z" fill="var(--ev-2)" />
+      <circle cx="176" cy="40" r="11" fill="var(--ev-4)" />
+      <path d="M72 130h84" stroke="var(--ev-1)" strokeWidth="8" strokeLinecap="round" opacity="0.14" />
+    </svg>
   );
 }
 
-function TeacherHome() {
-  const featured = active[3]!;
+function MiniStat({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="space-y-6">
-      {/* Phone greeting — logo + profile live in the top bar */}
-      <div className="md:hidden">
-        <p className="eyebrow text-muted-foreground">{todayLabel}</p>
-        <h1 className="display-lg mt-1.5 text-[1.65rem] text-foreground">
-          {greeting()}, <em>Ananya</em>
-        </h1>
-        <p className="mt-1 text-[13px] text-muted-foreground">{INSTITUTION.name}</p>
-      </div>
-
-      <div className="hidden md:block">
-        <PageHeader
-          kicker={todayLabel}
-          title={
-            <>
-              {greeting()}, <em className="text-primary">Ananya</em>
-            </>
-          }
-          subtitle="Two classes today and one paper waiting on you."
-        />
-      </div>
-
-      {/* Bento grid */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-12">
-        {/* Today's schedule — calendar day view */}
-        <Card className="p-4 sm:p-5 lg:col-span-8 lg:row-span-2">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-            <div className="min-w-0">
-              <h3 className="display text-lg text-foreground">Today's classes</h3>
-              <p className="truncate text-xs text-muted-foreground">
-                {todayLabel} · {todaySchedule.length} periods
-              </p>
-            </div>
-            <Link
-              to="/calendar"
-              aria-label="Open full calendar"
-              className="press inline-flex h-10 shrink-0 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-foreground hover:bg-muted"
-            >
-              <CalendarDays className="size-4" />
-              <span className="hidden sm:inline">Full calendar</span>
-            </Link>
-          </div>
-
-          {todaySchedule.length === 0 ? (
-            <EmptyState
-              icon={<CalendarDays className="size-5" />}
-              title="Nothing scheduled today"
-              description="Your timetable is clear — a good day to prepare material."
-            />
-          ) : (
-            <DayTimeline items={todaySchedule} nowMinutes={575} className="mt-4" />
-          )}
-        </Card>
-
-        {/* Create banner — rotating */}
-        <CreateBanner className="lg:col-span-4" />
-
-        {/* Recent activity */}
-        <section className="lg:col-span-6">
-          <SectionHeader title="Recent activity" hint="Drafts and edits from the last few days" />
-          <Card className="mt-3">
-            <div className="divide-y divide-border">
-              {recentActivity.map((item) => (
-                <Link key={item.id} to={item.to}>
-                  <ListRow
-                    icon={<item.icon className="size-4" />}
-                    title={item.title}
-                    subtitle={item.subtitle}
-                    trailing={item.status ? <Pill tone="outline">{item.status}</Pill> : undefined}
-                    interactive
-                  />
-                </Link>
-              ))}
-            </div>
-          </Card>
-        </section>
-
-        {/* Continue workspace tools */}
-        <section className="lg:col-span-6">
-          <SectionHeader title="Continue workspace tools" hint="Pick up where you left off" />
-          <Card className="mt-3">
-            <div className="divide-y divide-border">
-              {workspaceTools.map((tool) => (
-                <Link key={tool.to} to={tool.to}>
-                  <ListRow
-                    icon={tool.icon}
-                    title={tool.label}
-                    subtitle={tool.hint}
-                    interactive
-                  />
-                </Link>
-              ))}
-            </div>
-          </Card>
-        </section>
-
-      </div>
-    </div>
-  );
-}
-
-
-function AdminHome() {
-  const featured = active[2]!;
-  return (
-    <div className="space-y-8">
-      <PageHeader
-        kicker="Institution overview"
-        title={
-          <>
-            {greeting()}, <em className="text-primary">Rajesh</em>
-          </>
-        }
-        subtitle={`${INSTITUTION.name} · ${INSTITUTION.area}, ${INSTITUTION.city}`}
-      />
-
-      <Card accent className="p-5 pl-6 md:p-7 md:pl-8">
-        <div className="flex flex-col gap-5 md:flex-row md:items-center">
-          <div className="min-w-0 flex-1">
-            <Pill tone="tint">{active.length} active classes</Pill>
-            <h2 className="display mt-3 text-2xl text-foreground md:text-3xl">{featured.name}</h2>
-            <p className="mt-1.5 text-sm text-muted-foreground">
-              Largest batch this term · {featured.studentCount} students · {featured.teacherCount}{" "}
-              faculty
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Link to="/classes">
-              <Button>
-                <Plus className="size-4" /> Create class
-              </Button>
-            </Link>
-            <Link to="/students">
-              <Button variant="outline">Invite people</Button>
-            </Link>
-          </div>
-        </div>
-      </Card>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile label="Classes" value={active.length} hint="2026–27" icon={<GraduationCap className="size-4" />} />
-        <StatTile label="Faculty" value={teachers.length} hint="All departments" icon={<UserSquare2 className="size-4" />} />
-        <StatTile label="Students" value={students.length * 24} hint="Enrolled" icon={<Users className="size-4" />} />
-        <StatTile label="Subjects" value={subjects.length} hint="Across classes" icon={<BookOpen className="size-4" />} />
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-        <section>
-          <SectionHeader
-            title="Active classes"
-            action={
-              <Link to="/classes" className="text-xs font-semibold text-primary">
-                View all
-              </Link>
-            }
-          />
-          <Card className="mt-3">
-            <ClassRows />
-          </Card>
-        </section>
-
-        <section>
-          <SectionHeader title="Institution setup" hint="Finish the basics" />
-          <Card className="mt-3">
-            <div className="divide-y divide-border">
-              <Link to="/teachers">
-                <ListRow icon={<UserSquare2 className="size-4" />} title="Faculty" subtitle="Add teachers and assign classes" interactive />
-              </Link>
-              <Link to="/students">
-                <ListRow icon={<Users className="size-4" />} title="Students" subtitle="Invite students or share a class link" interactive />
-              </Link>
-              <Link to="/content">
-                <ListRow icon={<Library className="size-4" />} title="Shared library" subtitle="Upload institution teaching files" interactive />
-              </Link>
-              <Link to="/settings">
-                <ListRow icon={<Clock className="size-4" />} title="Branding & theme" subtitle="Logo, campus details, appearance" interactive />
-              </Link>
-            </div>
-          </Card>
-        </section>
-      </div>
+    <div className="rounded-2xl border border-border bg-card px-4 py-3">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-lg font-semibold text-foreground">{value}</p>
     </div>
   );
 }
 
 function Dashboard() {
-  const { isAdmin } = useApp();
+  const { teacherProfile, user } = useApp();
+  const primaryCode = teacherProfile.classCodes[0] ?? teacherProfile.inviteCode;
+
   return (
     <AppShell title="Home" mobileHeader="brand">
-      {isAdmin ? <AdminHome /> : <TeacherHome />}
+      <div className="space-y-6">
+        <section className="overflow-hidden rounded-[28px] border border-border bg-card shadow-[var(--shadow-card)]">
+          <div className="grid gap-4 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-center">
+            <div>
+              <Pill tone="tint">{teacherProfile.institution}</Pill>
+              <h1 className="display mt-3 text-[1.9rem] leading-tight text-foreground sm:text-[2.4rem]">
+                Your notes workspace, {user.name.split(" ")[0]}
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Create notes, generate clean study material, and share everything with students using one class code.
+              </p>
+              <div className="mt-5 flex flex-col gap-2 sm:flex-row">
+                <Link to="/notes">
+                  <Button className="h-11 w-full rounded-full sm:w-auto">
+                    <Plus className="size-4" /> New note
+                  </Button>
+                </Link>
+                <Link to="/aidocs">
+                  <Button variant="outline" className="h-11 w-full rounded-full sm:w-auto">
+                    <Sparkles className="size-4" /> AI material
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="hidden lg:block">
+              <StudyMaterialArt />
+            </div>
+          </div>
+        </section>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          <MiniStat label="Shared notes" value={sharedNotes.length} />
+          <MiniStat label="Subjects" value={teacherProfile.subjects.join(", ")} />
+          <MiniStat label="Class code" value={<span className="font-mono">{primaryCode}</span>} />
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+          <section>
+            <SectionHeader title="Recent notes" hint="Drafts and uploads ready for class" />
+            <Card className="mt-3">
+              <div className="divide-y divide-border">
+                {recentItems.map((item) => (
+                  <Link key={item.id} to={item.to}>
+                    <ListRow
+                      icon={item.icon}
+                      title={item.title}
+                      subtitle={item.subtitle}
+                      trailing={<Pill tone={item.tag === "Shared" ? "tint" : "outline"}>{item.tag}</Pill>}
+                      interactive
+                    />
+                  </Link>
+                ))}
+              </div>
+            </Card>
+          </section>
+
+          <section className="space-y-5">
+            <div>
+              <SectionHeader title="Share with students" hint="No student account required" />
+              <Card className="mt-3 p-4">
+                <div className="flex items-start gap-3">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-tint text-tint-foreground">
+                    <Share2 className="size-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-foreground">Class access code</p>
+                    <p className="mt-1 font-mono text-2xl font-semibold tracking-wide text-foreground">{primaryCode}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Students enter this code to see shared notes by subject.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => toast.success(`Code ${primaryCode} copied`)}
+                    className="rounded-full"
+                  >
+                    <Copy className="size-4" /> Copy code
+                  </Button>
+                  <Link to="/student-view">
+                    <Button className="w-full rounded-full">Preview student view</Button>
+                  </Link>
+                </div>
+              </Card>
+            </div>
+
+            <div>
+              <SectionHeader title="My classes" hint="Connected to this teacher code" />
+              <Card className="mt-3">
+                <div className="divide-y divide-border">
+                  {activeClasses.map((klass) => (
+                    <ListRow
+                      key={klass.id}
+                      icon={<NotesStudioIcon />}
+                      title={klass.name}
+                      subtitle={`${klass.board} · ${klass.term}`}
+                      trailing={<Pill tone="outline">{klass.studentCount} students</Pill>}
+                      showChevron={false}
+                    />
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </section>
+        </div>
+      </div>
     </AppShell>
   );
 }
