@@ -1,41 +1,24 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation, useRouter, useRouterState } from "@tanstack/react-router";
 import {
-  BarChart3,
-  Bell,
-  BookOpen,
-  CalendarDays,
+  BookOpenCheck,
   ChevronLeft,
   CircleUser,
-  ClipboardList,
-  Compass,
-  FolderOpen,
-  GraduationCap,
+  FileText,
   Home,
-  LifeBuoy,
-  Library,
-  ListChecks,
   LogOut,
-  
   Moon,
-  NotebookPen,
   Plus,
-  Presentation,
-  Search,
-  Settings,
+  Share2,
   Sparkles,
   Sun,
-  Users,
-  UserSquare2,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/lib/app-context";
-import { INSTITUTION, notifications } from "@/data/mock";
+import { INSTITUTION } from "@/data/mock";
 import { Avatar, IconButton, Pill } from "./primitives";
 import { CreateSheet } from "./create-sheet";
-import { AskAiFloatButton } from "./ask-ai-float";
-
 
 type NavItem = {
   label: string;
@@ -52,56 +35,20 @@ const NAV: NavGroup[] = [
     label: "Workspace",
     items: [
       { label: "Home", to: "/dashboard", icon: Home },
-      { label: "Classes", to: "/classes", icon: GraduationCap },
-      { label: "Class Planner", to: "/class-planner", icon: ListChecks, roles: ["teacher"], gated: true },
-      { label: "Calendar", to: "/calendar", icon: CalendarDays, roles: ["teacher"] },
-      { label: "Analytics", to: "/analytics", icon: BarChart3, roles: ["admin"], gated: true },
-    ],
-  },
-  {
-    label: "Teach",
-    items: [
-      { label: "Quizzes", to: "/quizzes", icon: ClipboardList, roles: ["teacher"] },
-      { label: "Question Papers", to: "/papers", icon: NotebookPen, roles: ["teacher"] },
-      { label: "Presentations", to: "/presentations", icon: Presentation, roles: ["teacher"] },
-      { label: "Notes", to: "/notes", icon: FolderOpen, roles: ["teacher"] },
-      { label: "Curriculum", to: "/curriculum", icon: Compass, roles: ["teacher"] },
-    ],
-  },
-
-  {
-    label: "Library",
-    items: [
-      { label: "Library", to: "/content", icon: Library },
-      { label: "Academic Textbooks", to: "/textbooks", icon: BookOpen },
-    ],
-  },
-  {
-    label: "People",
-    items: [
-      { label: "Students", to: "/students", icon: Users },
-      { label: "Teachers", to: "/teachers", icon: UserSquare2 },
-    ],
-  },
-  {
-    label: "Account",
-    items: [
-      { label: "Notifications", to: "/notifications", icon: Bell },
-      { label: "Settings", to: "/settings", icon: Settings },
-      { label: "Help", to: "/help", icon: LifeBuoy },
+      { label: "Notes", to: "/notes", icon: FileText },
+      { label: "AI Material", to: "/aidocs", icon: Sparkles },
+      { label: "Class Codes", to: "/student-view", icon: Share2 },
     ],
   },
 ];
 
 const TABS: { label: string; to: string; icon: typeof Home }[] = [
   { label: "Home", to: "/dashboard", icon: Home },
-  { label: "Classes", to: "/classes", icon: GraduationCap },
+  { label: "Notes", to: "/notes", icon: FileText },
   { label: "Create", to: "", icon: Plus },
-  { label: "Library", to: "/content", icon: Library },
-  { label: "Profile", to: "/more", icon: CircleUser },
+  { label: "AI", to: "/aidocs", icon: Sparkles },
+  { label: "Share", to: "/student-view", icon: Share2 },
 ];
-
-const unread = notifications.filter((n) => !n.read).length;
 
 function useVisibleNav() {
   const { isAdmin } = useApp();
@@ -117,13 +64,11 @@ function usePathname() {
   return useRouterState({ select: (s) => s.location.pathname });
 }
 
-/* ---------------- Desktop sidebar ---------------- */
-
 function Sidebar({ onCreate }: { onCreate: () => void }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const groups = useVisibleNav();
-  const { user, isAdmin, theme, setTheme, resolvedTheme } = useApp();
+  const { user, teacherProfile, setTheme, resolvedTheme } = useApp();
 
   return (
     <aside
@@ -139,14 +84,14 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
         </span>
         {!collapsed && (
           <div className="min-w-0 flex-1">
-            <p className="display truncate text-[15px] text-sidebar-foreground">Aarth Educator</p>
-            <p className="truncate text-[11px] text-sidebar-foreground/50">Management Portal</p>
+            <p className="display truncate text-[15px] text-sidebar-foreground">Aarth Notes AI</p>
+            <p className="truncate text-[11px] text-sidebar-foreground/50">{teacherProfile.institution}</p>
           </div>
         )}
         <button
           type="button"
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          onClick={() => setCollapsed((v) => !v)}
+          onClick={() => setCollapsed((value) => !value)}
           className="press inline-flex size-9 items-center justify-center rounded-xl text-sidebar-foreground/60 hover:bg-white/10 hover:text-sidebar-foreground"
         >
           <ChevronLeft className={cn("size-4", collapsed && "rotate-180")} />
@@ -154,46 +99,29 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
       </div>
 
       <div className="px-3 py-3">
-        {isAdmin ? (
-          <Link
-            to="/classes"
-            className={cn(
-              "press flex h-10 items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
-              collapsed && "px-0",
-            )}
-          >
-            <Plus className="size-4" />
-            {!collapsed && "Create New Class"}
-          </Link>
-        ) : (
-          <button
-            type="button"
-            onClick={onCreate}
-            aria-label="Create"
-            className={cn(
-              "press flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
-              collapsed && "px-0",
-            )}
-          >
-            <Sparkles className="size-4" />
-            {!collapsed && "Create"}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onCreate}
+          aria-label="Create note or study material"
+          className={cn(
+            "press flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground hover:opacity-90",
+            collapsed && "px-0",
+          )}
+        >
+          <Sparkles className="size-4" />
+          {!collapsed && "Create material"}
+        </button>
       </div>
-
 
       <nav className="flex-1 overflow-y-auto px-3 pb-4 pt-2">
         {groups.map((group) => (
           <div key={group.label} className="mb-4">
             {!collapsed && (
-              <p className="px-2 pb-1.5 eyebrow text-sidebar-foreground/40">
-                {group.label}
-              </p>
+              <p className="px-2 pb-1.5 eyebrow text-sidebar-foreground/40">{group.label}</p>
             )}
             <ul className="space-y-0.5">
               {group.items.map((item) => {
-                const active =
-                  pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(`${item.to}/`));
+                const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(`${item.to}/`));
                 return (
                   <li key={item.to}>
                     <Link
@@ -209,11 +137,6 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
                     >
                       <item.icon className="size-4 shrink-0" />
                       {!collapsed && <span className="flex-1 truncate">{item.label}</span>}
-                      {!collapsed && item.to === "/notifications" && unread > 0 && (
-                        <span className="rounded-full bg-sidebar-primary px-1.5 py-0.5 text-[10px] font-bold text-sidebar-primary-foreground">
-                          {unread}
-                        </span>
-                      )}
                       {!collapsed && item.gated && (
                         <span className="rounded-full border border-white/20 px-1.5 py-0.5 text-[10px] font-semibold text-sidebar-foreground/50">
                           Plan
@@ -244,14 +167,14 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[11px] font-bold text-sidebar-foreground">
             {user.name
               .split(" ")
-              .map((p) => p[0])
+              .map((part) => part[0])
               .join("")
               .slice(0, 2)}
           </span>
           {!collapsed && (
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-sidebar-foreground">{user.name}</p>
-              <p className="truncate text-[11px] text-sidebar-foreground/50">{user.email}</p>
+              <p className="truncate text-[11px] text-sidebar-foreground/50">{teacherProfile.inviteCode}</p>
             </div>
           )}
           {!collapsed && (
@@ -265,53 +188,23 @@ function Sidebar({ onCreate }: { onCreate: () => void }) {
           )}
         </div>
       </div>
-
     </aside>
   );
 }
 
-/* ---------------- Top bar (desktop) ---------------- */
-
 function TopBar({ title }: { title: string }) {
-  const { user, role, setRole } = useApp();
+  const { user, teacherProfile } = useApp();
   return (
     <header className="sticky top-0 z-20 hidden h-14 items-center gap-3 border-b border-border bg-background/85 px-6 backdrop-blur md:flex">
       <p className="text-xs font-semibold text-muted-foreground">{title}</p>
-      <label className="ml-auto flex h-9 w-64 items-center gap-2 rounded-xl border border-border bg-card px-3">
-        <Search className="size-4 text-muted-foreground" />
-        <input
-          placeholder="Search classes, students, material"
-          className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground"
-        />
-      </label>
-      <select
-        value={role}
-        onChange={(event) => setRole(event.target.value as typeof role)}
-        aria-label="Preview role"
-        className="h-9 rounded-xl border border-border bg-card px-2 text-xs font-semibold text-muted-foreground outline-none"
-      >
-        <option value="teacher">Teacher view</option>
-        <option value="admin">Admin view</option>
-        <option value="super_admin">Super admin view</option>
-      </select>
-      <Link
-        to="/notifications"
-        aria-label="Notifications"
-        className="press relative inline-flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
-      >
-        <Bell className="size-4" />
-        {unread > 0 && (
-          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary" />
-        )}
+      <Pill tone="tint" className="ml-auto font-mono">{teacherProfile.classCodes[0]}</Pill>
+      <Link to="/student-view" className="press inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-foreground hover:bg-muted">
+        <Share2 className="size-4" /> Share
       </Link>
-      <Link to="/settings" aria-label="Your profile">
-        <Avatar name={user.name} size="sm" />
-      </Link>
+      <Avatar name={user.name} size="sm" />
     </header>
   );
 }
-
-/* ---------------- Phone chrome ---------------- */
 
 export function InstitutionMark({ size = 36 }: { size?: number }) {
   if (INSTITUTION.logoUrl) {
@@ -337,26 +230,6 @@ export function InstitutionMark({ size = 36 }: { size?: number }) {
   );
 }
 
-function StudyWorkspaceIcon() {
-  return (
-    <svg viewBox="0 0 40 40" className="size-10 shrink-0" aria-hidden="true">
-      <defs>
-        <linearGradient id="study-header-gradient" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--ev-2-bg)" />
-          <stop offset="100%" stopColor="var(--ev-2)" stopOpacity="0.35" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="36" height="36" rx="9" fill="url(#study-header-gradient)" />
-      <rect x="8" y="7" width="21" height="27" rx="3" fill="var(--card)" stroke="var(--ev-2)" strokeWidth="1.5" />
-      <path d="M24 7v7h5" fill="var(--ev-2-bg)" stroke="var(--ev-2)" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M13 17h10M13 21.5h10M13 26h6" stroke="var(--ev-2)" strokeWidth="1.4" opacity="0.38" strokeLinecap="round" />
-      <circle cx="28.5" cy="28.5" r="6" fill="var(--ev-2)" />
-      <path d="m28.5 24.8.65 2.05 2.05.65-2.05.65-.65 2.05-.65-2.05-2.05-.65 2.05-.65.65-2.05Z" fill="var(--card)" stroke="var(--card)" strokeWidth=".7" strokeLinejoin="round" />
-      <circle cx="32.5" cy="18.5" r="2" fill="var(--ev-4)" />
-    </svg>
-  );
-}
-
 function MobileTopBar({
   title,
   back,
@@ -368,7 +241,7 @@ function MobileTopBar({
 }) {
   if (variant === "none") return null;
   const router = useRouter();
-  const { user } = useApp();
+  const { user, teacherProfile } = useApp();
 
   if (variant === "brand") {
     return (
@@ -379,60 +252,11 @@ function MobileTopBar({
         <InstitutionMark />
         <div className="min-w-0">
           <p className="truncate text-[13px] font-semibold leading-tight text-foreground">
-            {INSTITUTION.name}
+            {teacherProfile.institution}
           </p>
-          <p className="truncate text-[11px] leading-tight text-muted-foreground">
-            {INSTITUTION.area}
-          </p>
+          <p className="truncate text-[11px] leading-tight text-muted-foreground">Aarth Notes AI</p>
         </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <Link
-            to="/notifications"
-            aria-label="Notifications"
-            className="press relative inline-flex size-10 items-center justify-center rounded-xl text-muted-foreground"
-          >
-            <Bell className="size-5" />
-            {unread > 0 && (
-              <span className="absolute right-2 top-2 size-2 rounded-full bg-primary" />
-            )}
-          </Link>
-          <Link to="/settings" aria-label="Your profile" className="press p-0.5">
-            <Avatar name={user.name} size="sm" />
-          </Link>
-        </div>
-      </header>
-    );
-  }
-
-  if (variant === "study") {
-    return (
-      <header
-        className={cn(
-          "sticky top-0 z-20 grid min-h-[4.5rem] items-center gap-2 border-b border-aidocs-line bg-card/95 px-3 backdrop-blur md:hidden",
-          back ? "grid-cols-[auto_auto_minmax(0,1fr)_auto]" : "grid-cols-[auto_minmax(0,1fr)_auto]",
-        )}
-        style={{ paddingTop: "env(safe-area-inset-top)" }}
-      >
-        {back && (
-          <IconButton label="Back" onClick={() => router.history.back()} className="size-9">
-            <ChevronLeft className="size-5" />
-          </IconButton>
-        )}
-        <StudyWorkspaceIcon />
-        <div className="min-w-0">
-          <p className="truncate text-[15px] font-bold leading-tight text-foreground [font-family:'Space_Grotesk',sans-serif]">
-            {title}
-          </p>
-          <p className="mt-0.5 truncate text-[11px] leading-tight text-muted-foreground">Your AI teaching workspace</p>
-        </div>
-        <Link
-          to="/notifications"
-          aria-label="Notifications"
-          className="press relative inline-flex size-10 items-center justify-center rounded-xl border border-border bg-background text-muted-foreground"
-        >
-          <Bell className="size-[18px]" />
-          {unread > 0 && <span className="absolute right-2 top-2 size-2 rounded-full bg-primary ring-2 ring-card" />}
-        </Link>
+        <Avatar name={user.name} size="sm" />
       </header>
     );
   }
@@ -447,23 +271,19 @@ function MobileTopBar({
           <ChevronLeft className="size-5" />
         </IconButton>
       ) : (
-        <Link to="/settings" aria-label="Your profile" className="p-1.5">
-          <Avatar name={user.name} size="sm" />
-        </Link>
+        <BookOpenCheck className="ml-1 size-5 text-primary" />
       )}
       <p className="flex-1 truncate text-center text-sm font-semibold text-foreground">{title}</p>
       <Link
-        to="/notifications"
-        aria-label="Notifications"
-        className="press relative inline-flex size-11 items-center justify-center rounded-xl text-muted-foreground"
+        to="/student-view"
+        aria-label="Share class code"
+        className="press inline-flex size-11 items-center justify-center rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
       >
-        <Bell className="size-5" />
-        {unread > 0 && <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-primary" />}
+        <Share2 className="size-5" />
       </Link>
     </header>
   );
 }
-
 
 function BottomTabs({ onCreate }: { onCreate: () => void }) {
   const pathname = usePathname();
@@ -501,9 +321,7 @@ function BottomTabs({ onCreate }: { onCreate: () => void }) {
               >
                 <tab.icon className={cn("size-5 transition-transform", active && "scale-110")} />
                 {tab.label}
-                {active && (
-                  <span className="absolute bottom-1.5 h-1 w-1 rounded-full bg-primary" />
-                )}
+                {active && <span className="absolute bottom-1.5 h-1 w-1 rounded-full bg-primary" />}
               </Link>
             </li>
           );
@@ -512,8 +330,6 @@ function BottomTabs({ onCreate }: { onCreate: () => void }) {
     </nav>
   );
 }
-
-/* ---------------- Shell ---------------- */
 
 export function AppShell({
   title,
@@ -535,7 +351,7 @@ export function AppShell({
   const [createOpen, setCreateOpen] = useState(false);
   const openCreate = () => setCreateOpen(true);
   const pathname = useLocation().pathname;
-  const noFloat = pathname === "/ai-chat" || pathname === "/quizzes" || pathname === "/aidocs";
+  const noFloat = pathname === "/ai-chat";
   return (
     <div className="flex min-h-screen w-full bg-background">
       <Sidebar onCreate={openCreate} />
@@ -556,11 +372,10 @@ export function AppShell({
         {!hideFooter && <BottomTabs onCreate={openCreate} />}
       </div>
       <CreateSheet open={createOpen} onClose={() => setCreateOpen(false)} />
-      {!noFloat && <AskAiFloatButton />}
+      {noFloat && null}
     </div>
   );
 }
-
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -572,8 +387,8 @@ export function AuthLayout({ children }: { children: ReactNode }) {
               {INSTITUTION.logoInitials}
             </span>
             <div>
-              <p className="text-sm font-semibold text-foreground">Aarth Educator</p>
-              <p className="text-[11px] text-muted-foreground">Management Portal</p>
+              <p className="text-sm font-semibold text-foreground">Aarth Notes AI</p>
+              <p className="text-[11px] text-muted-foreground">Teacher notes workspace</p>
             </div>
           </div>
           {children}
@@ -583,7 +398,7 @@ export function AuthLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-md flex-wrap items-center justify-between gap-3 text-[11px] text-muted-foreground">
           <span>© 2026 Aarth</span>
           <div className="flex gap-4">
-            <Link to="/help">Contact</Link>
+            <Link to="/student-view">Student code</Link>
             <a href="#terms">Terms</a>
             <a href="#privacy">Privacy</a>
           </div>

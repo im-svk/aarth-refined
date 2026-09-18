@@ -30,11 +30,13 @@ import { Route as QuizzesRouteImport } from './routes/quizzes'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as StudentViewRouteImport } from './routes/student-view'
 import { Route as StudentsRouteImport } from './routes/students'
 import { Route as TeachersRouteImport } from './routes/teachers'
 import { Route as TextbooksRouteImport } from './routes/textbooks'
 import { Route as ClassPlannerIndexRouteImport } from './routes/class-planner.index'
 import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as JoinRouteImport } from './routes/join.'
 import { Route as JoinTokenRouteImport } from './routes/join.$token'
 import { Route as ClassPlannerClassIdIndexRouteImport } from './routes/class-planner.$classId.index'
 import { Route as ClassesClassIdIndexRouteImport } from './routes/classes.$classId.index'
@@ -146,6 +148,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentViewRoute = StudentViewRouteImport.update({
+  id: '/student-view',
+  path: '/student-view',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentsRoute = StudentsRouteImport.update({
   id: '/students',
   path: '/students',
@@ -169,6 +176,11 @@ const ClassPlannerIndexRoute = ClassPlannerIndexRouteImport.update({
 const ClassesIndexRoute = ClassesIndexRouteImport.update({
   id: '/classes/',
   path: '/classes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinRoute = JoinRouteImport.update({
+  id: '/join/',
+  path: '/join/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JoinTokenRoute = JoinTokenRouteImport.update({
@@ -222,9 +234,11 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/student-view': typeof StudentViewRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
   '/textbooks': typeof TextbooksRoute
+  '/join/': typeof JoinRoute
   '/join/$token': typeof JoinTokenRoute
   '/class-planner/': typeof ClassPlannerIndexRoute
   '/classes/': typeof ClassesIndexRoute
@@ -255,9 +269,11 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/student-view': typeof StudentViewRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
   '/textbooks': typeof TextbooksRoute
+  '/join': typeof JoinRoute
   '/join/$token': typeof JoinTokenRoute
   '/class-planner': typeof ClassPlannerIndexRoute
   '/classes': typeof ClassesIndexRoute
@@ -289,9 +305,11 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
+  '/student-view': typeof StudentViewRoute
   '/students': typeof StudentsRoute
   '/teachers': typeof TeachersRoute
   '/textbooks': typeof TextbooksRoute
+  '/join/': typeof JoinRoute
   '/join/$token': typeof JoinTokenRoute
   '/class-planner/': typeof ClassPlannerIndexRoute
   '/classes/': typeof ClassesIndexRoute
@@ -324,9 +342,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/settings'
+    | '/student-view'
     | '/students'
     | '/teachers'
     | '/textbooks'
+    | '/join/'
     | '/join/$token'
     | '/class-planner/'
     | '/classes/'
@@ -357,9 +377,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/settings'
+    | '/student-view'
     | '/students'
     | '/teachers'
     | '/textbooks'
+    | '/join'
     | '/join/$token'
     | '/class-planner'
     | '/classes'
@@ -390,9 +412,11 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/settings'
+    | '/student-view'
     | '/students'
     | '/teachers'
     | '/textbooks'
+    | '/join/'
     | '/join/$token'
     | '/class-planner/'
     | '/classes/'
@@ -424,9 +448,11 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
+  StudentViewRoute: typeof StudentViewRoute
   StudentsRoute: typeof StudentsRoute
   TeachersRoute: typeof TeachersRoute
   TextbooksRoute: typeof TextbooksRoute
+  JoinRoute: typeof JoinRoute
   JoinTokenRoute: typeof JoinTokenRoute
   ClassPlannerIndexRoute: typeof ClassPlannerIndexRoute
   ClassesIndexRoute: typeof ClassesIndexRoute
@@ -585,6 +611,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student-view': {
+      id: '/student-view'
+      path: '/student-view'
+      fullPath: '/student-view'
+      preLoaderRoute: typeof StudentViewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/students': {
       id: '/students'
       path: '/students'
@@ -618,6 +651,13 @@ declare module '@tanstack/react-router' {
       path: '/classes'
       fullPath: '/classes/'
       preLoaderRoute: typeof ClassesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/': {
+      id: '/join/'
+      path: '/join'
+      fullPath: '/join/'
+      preLoaderRoute: typeof JoinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/join/$token': {
@@ -680,9 +720,11 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
+  StudentViewRoute: StudentViewRoute,
   StudentsRoute: StudentsRoute,
   TeachersRoute: TeachersRoute,
   TextbooksRoute: TextbooksRoute,
+  JoinRoute: JoinRoute,
   JoinTokenRoute: JoinTokenRoute,
   ClassPlannerIndexRoute: ClassPlannerIndexRoute,
   ClassesIndexRoute: ClassesIndexRoute,

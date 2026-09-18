@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Eye, EyeOff, Mail, MailCheck } from "lucide-react";
+import { CheckCircle2, KeyRound, School, Sparkles, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { AuthLayout } from "./app-shell";
 import { Button, Spinner } from "./primitives";
 import { cn } from "@/lib/utils";
+import { useApp, type TeacherProfile } from "@/lib/app-context";
 import { INSTITUTION } from "@/data/mock";
 
 export const inputClass =
   "h-11 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:border-primary/50";
 
-/* Grouped inset field, Apple Settings style */
 function GroupField({
   label,
   error,
@@ -25,9 +25,7 @@ function GroupField({
   return (
     <div className={cn("px-4 py-3", !last && "border-b border-primary/10")}>
       <label className="block">
-        <span className="block text-[11px] font-medium tracking-[-0.005em] text-primary/70">
-          {label}
-        </span>
+        <span className="block text-[11px] font-medium text-primary/70">{label}</span>
         {children}
       </label>
       {error && <span className="mt-1 block text-[11px] text-destructive">{error}</span>}
@@ -38,253 +36,172 @@ function GroupField({
 const bareInput =
   "mt-0.5 w-full border-0 bg-transparent p-0 text-[15px] font-medium text-foreground outline-none placeholder:font-normal placeholder:text-muted-foreground/70";
 
-function GoogleMark({ className }: { className?: string }) {
+const INVITE_PROFILES: Record<string, TeacherProfile> = {
+  "SV-2026-TEACH": {
+    name: "Ananya Krishnan",
+    email: "ananya.krishnan@sringeri.edu.in",
+    inviteCode: "SV-2026-TEACH",
+    institution: INSTITUTION.name,
+    subjects: ["Physics", "Science"],
+    classCodes: ["SV-11A", "SV-10A"],
+  },
+  "SV-PHY-11A": {
+    name: "Meera Nair",
+    email: "meera.nair@sringeri.edu.in",
+    inviteCode: "SV-PHY-11A",
+    institution: INSTITUTION.name,
+    subjects: ["Physics"],
+    classCodes: ["SV-11A"],
+  },
+};
+
+function normaliseCode(value: string) {
+  return value.trim().toUpperCase().replace(/\s+/g, "-");
+}
+
+function WorkspaceIllustration() {
   return (
-    <svg className={className} viewBox="0 0 48 48" aria-hidden="true">
-      <path
-        fill="#4285F4"
-        d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17Z"
-      />
-      <path
-        fill="#34A853"
-        d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46Z"
-      />
-      <path
-        fill="#FBBC05"
-        d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7Z"
-      />
-      <path
-        fill="#EA4335"
-        d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07Z"
-      />
+    <svg viewBox="0 0 220 140" className="h-auto w-full" aria-hidden="true">
+      <defs>
+        <linearGradient id="login-card" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--ev-1-bg)" />
+          <stop offset="100%" stopColor="var(--ev-1)" stopOpacity="0.24" />
+        </linearGradient>
+      </defs>
+      <rect x="16" y="18" width="188" height="104" rx="24" fill="url(#login-card)" />
+      <rect x="46" y="36" width="70" height="86" rx="12" fill="var(--card)" stroke="var(--ev-1)" strokeWidth="2" />
+      <path d="M60 58h42M60 72h34M60 86h42" stroke="var(--ev-1)" strokeWidth="4" strokeLinecap="round" opacity="0.28" />
+      <rect x="126" y="48" width="50" height="50" rx="14" fill="var(--card)" stroke="var(--ev-2)" strokeWidth="2" />
+      <path d="M151 61v24M139 73h24" stroke="var(--ev-2)" strokeWidth="5" strokeLinecap="round" />
+      <circle cx="170" cy="38" r="12" fill="var(--ev-4)" />
+      <path d="m170 31 1.6 4.3 4.4 1.6-4.4 1.6-1.6 4.5-1.6-4.5-4.4-1.6 4.4-1.6z" fill="var(--card)" />
+      <rect x="70" y="104" width="92" height="10" rx="5" fill="var(--ev-1)" opacity="0.18" />
     </svg>
   );
 }
 
-
 export function LoginScreen() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"login" | "reset" | "reset_sent">("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [show, setShow] = useState(false);
+  const { setTeacherProfile } = useApp();
+  const [inviteCode, setInviteCode] = useState("SV-2026-TEACH");
+  const [teacherName, setTeacherName] = useState("Ananya Krishnan");
+  const [subject, setSubject] = useState("Physics");
   const [busy, setBusy] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-
-  function oauth() {
-    setBusy(true);
-    setTimeout(() => {
-      setBusy(false);
-      toast.success("Signed in with Google", {
-        description: "Welcome back to Aarth Educator.",
-      });
-      navigate({ to: "/classes" });
-    }, 900);
-  }
+  const [errors, setErrors] = useState<{ inviteCode?: string; teacherName?: string }>({});
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
+    const code = normaliseCode(inviteCode);
     const next: typeof errors = {};
-    if (!/^\S+@\S+\.\S+$/.test(email)) next.email = "Enter a valid email address";
-    if (password.length < 6) next.password = "Password must be at least 6 characters";
+    if (code.length < 6) next.inviteCode = "Enter the code shared by your university";
+    if (teacherName.trim().length < 2) next.teacherName = "Enter your name";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
-    setBusy(true);
-    setTimeout(() => {
-      setBusy(false);
-      toast.success("Signed in", { description: "Welcome back to Aarth Educator." });
-      navigate({ to: "/classes" });
-    }, 900);
-  }
 
-  function sendReset(event: React.FormEvent) {
-    event.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setErrors({ email: "Enter a valid email address" });
-      return;
-    }
+    const matched = INVITE_PROFILES[code];
+    const profile: TeacherProfile = matched ?? {
+      name: teacherName.trim(),
+      email: `${teacherName.trim().toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.|\.$/g, "") || "teacher"}@demo.aarth.app`,
+      inviteCode: code,
+      institution: INSTITUTION.name,
+      subjects: [subject.trim() || "General"],
+      classCodes: [`${code.split("-")[0] || "CLS"}-NOTES`],
+    };
+
     setBusy(true);
     setTimeout(() => {
+      setTeacherProfile(profile);
       setBusy(false);
-      setMode("reset_sent");
-    }, 800);
+      toast.success("Workspace ready", {
+        description: `${profile.institution} is connected to your teacher code.`,
+      });
+      navigate({ to: "/dashboard" });
+    }, 650);
   }
 
   return (
     <AuthLayout>
-      <div className="sm:hairline-card sm:p-7">
-        {mode === "login" && (
-          <>
-            <div className="text-center sm:text-left">
-              <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-primary text-base font-bold text-primary-foreground shadow-sm sm:hidden">
-                {INSTITUTION.logoInitials}
-              </span>
-              <h1 className="display mt-5 text-[1.75rem] leading-tight text-foreground sm:mt-0 sm:text-[2.1rem]">
-                Sign in
-              </h1>
-              <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
-                to continue to Aarth Educator
-              </p>
-            </div>
+      <div className="grid gap-6 sm:hairline-card sm:p-6">
+        <div className="rounded-3xl border border-border bg-tint/60 p-4">
+          <WorkspaceIllustration />
+        </div>
 
-            <form onSubmit={submit} className="mt-7">
-              <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
-                <GroupField label="Email" {...(errors.email ? { error: errors.email } : {})}>
-                  <input
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@institution.edu.in"
-                    className={bareInput}
-                  />
-                </GroupField>
-                <GroupField
-                  label="Password"
-                  last
-                  {...(errors.password ? { error: errors.password } : {})}
-                >
-                  <div className="flex items-center gap-2">
-                    <input
-                      type={show ? "text" : "password"}
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
-                      className={bareInput}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShow((v) => !v)}
-                      aria-label={show ? "Hide password" : "Show password"}
-                      className="shrink-0 text-muted-foreground"
-                    >
-                      {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                    </button>
-                  </div>
-                </GroupField>
+        <div className="text-center sm:text-left">
+          <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground sm:mx-0">
+            <KeyRound className="size-5" />
+          </span>
+          <h1 className="display mt-4 text-[1.75rem] leading-tight text-foreground sm:text-[2.05rem]">
+            Teacher code login
+          </h1>
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-muted-foreground">
+            Enter the university code once. Your notes and AI study material stay organised by subject and class.
+          </p>
+        </div>
+
+        <form onSubmit={submit}>
+          <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
+            <GroupField label="University teacher code" {...(errors.inviteCode ? { error: errors.inviteCode } : {})}>
+              <div className="flex items-center gap-2">
+                <School className="size-4 shrink-0 text-primary" />
+                <input
+                  autoComplete="one-time-code"
+                  value={inviteCode}
+                  onChange={(event) => setInviteCode(event.target.value)}
+                  placeholder="SV-2026-TEACH"
+                  className={bareInput}
+                />
               </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setErrors({});
-                  setMode("reset");
-                }}
-                className="mt-3 block text-[13px] font-semibold text-primary"
-              >
-                Forgot password?
-              </button>
-
-              <Button
-                type="submit"
-                disabled={busy}
-                className="mt-6 h-12 w-full rounded-full text-[15px]"
-              >
-                {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Sign in"}
-              </Button>
-            </form>
-
-            <div className="my-5 flex items-center gap-3">
-              <span className="h-px flex-1 bg-border" />
-              <span className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">
-                or
-              </span>
-              <span className="h-px flex-1 bg-border" />
-            </div>
-
-            <button
-              type="button"
-              onClick={oauth}
-              disabled={busy}
-              className="press flex h-12 w-full items-center justify-center gap-3 rounded-full border border-primary/10 bg-primary/5 text-[15px] font-semibold text-foreground shadow-sm transition-colors hover:bg-primary/10 disabled:opacity-60 dark:bg-primary/10 dark:hover:bg-primary/15"
-            >
-              <GoogleMark className="size-[18px]" />
-              Continue with Google
-            </button>
-
-            <p className="mt-7 text-center text-[13px] text-muted-foreground">
-              New institution?{" "}
-              <Link to="/register" className="font-semibold text-primary">
-                Create an account
-              </Link>
-            </p>
-          </>
-        )}
-
-        {mode === "reset" && (
-          <>
-            <div className="text-center sm:text-left">
-              <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-tint text-tint-foreground sm:mx-0 sm:size-11 sm:rounded-xl">
-                <Mail className="size-5" />
-              </span>
-              <h1 className="display mt-5 text-[1.6rem] leading-tight text-foreground sm:mt-4 sm:text-3xl">
-                Reset your password
-              </h1>
-              <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
-                We'll email a secure link to set a new password.
-              </p>
-            </div>
-            <form onSubmit={sendReset} className="mt-7">
-              <div className="overflow-hidden rounded-2xl border border-primary/10 bg-primary/5 shadow-sm dark:bg-primary/10">
-                <GroupField label="Email" last {...(errors.email ? { error: errors.email } : {})}>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@institution.edu.in"
-                    className={bareInput}
-                  />
-                </GroupField>
+            </GroupField>
+            <GroupField label="Your name" {...(errors.teacherName ? { error: errors.teacherName } : {})}>
+              <div className="flex items-center gap-2">
+                <UserRound className="size-4 shrink-0 text-primary" />
+                <input
+                  autoComplete="name"
+                  value={teacherName}
+                  onChange={(event) => setTeacherName(event.target.value)}
+                  placeholder="Teacher name"
+                  className={bareInput}
+                />
               </div>
-              <Button
-                type="submit"
-                disabled={busy}
-                className="mt-6 h-12 w-full rounded-full text-[15px]"
-              >
-                {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Send reset link"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                className="mt-2 h-11 w-full rounded-full"
-                onClick={() => setMode("login")}
-              >
-                Back to sign in
-              </Button>
-            </form>
-          </>
-        )}
+            </GroupField>
+            <GroupField label="Primary subject" last>
+              <div className="flex items-center gap-2">
+                <Sparkles className="size-4 shrink-0 text-primary" />
+                <input
+                  value={subject}
+                  onChange={(event) => setSubject(event.target.value)}
+                  placeholder="Physics"
+                  className={bareInput}
+                />
+              </div>
+            </GroupField>
+          </div>
 
-        {mode === "reset_sent" && (
-          <div className="py-4 text-center">
-            <span className="mx-auto flex size-14 items-center justify-center rounded-[1.15rem] bg-tint text-tint-foreground">
-              <MailCheck className="size-5" />
+          <Button type="submit" disabled={busy} className="mt-6 h-12 w-full rounded-full text-[15px]">
+            {busy ? <Spinner className="size-4 text-primary-foreground" /> : "Open teacher workspace"}
+          </Button>
+        </form>
+
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl bg-success/10 text-success">
+              <CheckCircle2 className="size-4" />
             </span>
-            <h1 className="display mt-5 text-[1.6rem] leading-tight text-foreground">
-              Check your email
-            </h1>
-            <p className="mt-1.5 text-[0.9375rem] text-muted-foreground">
-              We sent a reset link to {email}. It expires in 30 minutes.
-            </p>
-            <div className="mt-7 space-y-2">
-              <Button
-                variant="outline"
-                className="h-12 w-full rounded-full text-[15px]"
-                onClick={() => setMode("reset")}
-              >
-                Try a different email
-              </Button>
-              <Button
-                variant="ghost"
-                className="h-11 w-full rounded-full"
-                onClick={() => setMode("login")}
-              >
-                Back to sign in
-              </Button>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Preview code ready</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Use <span className="font-mono text-foreground">SV-2026-TEACH</span> to enter the demo workspace.
+              </p>
             </div>
           </div>
-        )}
+        </div>
+
+        <p className="text-center text-[12px] text-muted-foreground">
+          Students do not need an account. Share a class code from the workspace.
+        </p>
+        <p className="sr-only">
+          <Link to="/register">Institution registration</Link>
+        </p>
       </div>
     </AuthLayout>
   );
